@@ -1,0 +1,3 @@
+Indel-Seq-Gen Test: ./indel-seq-gen --matrix HKY --outfile DNA_out < simple_nuc.tree
+
+
