@@ -101,7 +101,6 @@ class GTRIndelParameterExtractor:
                 
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-   
             if result.returncode == 0:
                 return self.parse_modeltest_output(output_prefix)
             else:
@@ -116,6 +115,8 @@ class GTRIndelParameterExtractor:
             print(f"Error running ModelTest-NG on {alignment_file}: {e}")
             return None
     
+    
+    
     def parse_modeltest_output(self, output_prefix):
         """Parse ModelTest-NG output files"""
         log_file = output_prefix + ".log"
@@ -129,94 +130,102 @@ class GTRIndelParameterExtractor:
             with open(log_file, 'r') as f:
                 content = f.read()
             
-            # Extract GTR rates (a, b, c, d, e, f where f=1.0)
-            # Looking for pattern like: "Substitution rates: a=1.234 b=2.345 c=3.456 d=4.567 e=5.678 f=1.000"
-            rate_pattern = r'Substitution rates:\s*a=([0-9.]+)\s*b=([0-9.]+)\s*c=([0-9.]+)\s*d=([0-9.]+)\s*e=([0-9.]+)\s*f=([0-9.]+)'
-            rate_match = re.search(rate_pattern, content)
+            # Find the best model section - look for GTR+I or GTR+I+G4
+            best_model_match = re.search(r'Best model according to AIC.*?Model:\s+(GTR\+[IG4+]+)', content, re.DOTALL)
+            if best_model_match:
+                params['best_model'] = best_model_match.group(1)
             
-            if rate_match:
-                # GTR rates: a=A-C, b=A-G, c=A-T, d=C-G, e=C-T, f=G-T
-                params['rate_AC'] = float(rate_match.group(1))
-                params['rate_AG'] = float(rate_match.group(2))
-                params['rate_AT'] = float(rate_match.group(3))
-                params['rate_CG'] = float(rate_match.group(4))
-                params['rate_CT'] = float(rate_match.group(5))
-                params['rate_GT'] = float(rate_match.group(6))
+            # Extract log likelihood from best model section
+            lnl_pattern = r'lnL:\s+([-\d\.]+)'
+            lnl_match = re.search(lnl_pattern, content)
+            if lnl_match:
+                params['log_likelihood'] = float(lnl_match.group(1))
             
-            # Extract base frequencies
-            freq_pattern = r'Base frequencies:\s*A=([0-9.]+)\s*C=([0-9.]+)\s*G=([0-9.]+)\s*T=([0-9.]+)'
+            # Extract base frequencies - look for pattern like "0.4235 0.1520 0.2021 0.2224"
+            freq_pattern = r'Frequencies:\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)'
             freq_match = re.search(freq_pattern, content)
-            
             if freq_match:
                 params['freq_A'] = float(freq_match.group(1))
                 params['freq_C'] = float(freq_match.group(2))
                 params['freq_G'] = float(freq_match.group(3))
                 params['freq_T'] = float(freq_match.group(4))
             
-            # Extract gamma shape parameter
-            gamma_pattern = r'Gamma shape parameter:\s*([0-9.]+)'
-            gamma_match = re.search(gamma_pattern, content)
-            
-            if gamma_match:
-                params['gamma_shape'] = float(gamma_match.group(1))
+            # Extract substitution rates - pattern like "0.8709 0.4190 0.6092 1.2658 0.9465 1.0000"
+            # Order is typically: A-C, A-G, A-T, C-G, C-T, G-T
+            rates_pattern = r'Subst\. Rates:\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)'
+            rates_match = re.search(rates_pattern, content)
+            if rates_match:
+                params['rate_AC'] = float(rates_match.group(1))
+                params['rate_AG'] = float(rates_match.group(2))
+                params['rate_AT'] = float(rates_match.group(3))
+                params['rate_CG'] = float(rates_match.group(4))
+                params['rate_CT'] = float(rates_match.group(5))
+                params['rate_GT'] = float(rates_match.group(6))
             
             # Extract proportion of invariant sites
-            pinv_pattern = r'Proportion of invariant sites:\s*([0-9.]+)'
+            pinv_pattern = r'P\.Inv:\s+([\d\.]+)'
             pinv_match = re.search(pinv_pattern, content)
-            
             if pinv_match:
                 params['prop_invariant'] = float(pinv_match.group(1))
             
-            # Alternative patterns for different ModelTest-NG versions
-            if not rate_match:
-                # Try alternative rate pattern
-                alt_rate_pattern = r'Rate matrix:\s*AC=([0-9.]+)\s*AG=([0-9.]+)\s*AT=([0-9.]+)\s*CG=([0-9.]+)\s*CT=([0-9.]+)\s*GT=([0-9.]+)'
-                alt_rate_match = re.search(alt_rate_pattern, content, re.IGNORECASE)
-                if alt_rate_match:
-                    params['rate_AC'] = float(alt_rate_match.group(1))
-                    params['rate_AG'] = float(alt_rate_match.group(2))
-                    params['rate_AT'] = float(alt_rate_match.group(3))
-                    params['rate_CG'] = float(alt_rate_match.group(4))
-                    params['rate_CT'] = float(alt_rate_match.group(5))
-                    params['rate_GT'] = float(alt_rate_match.group(6))
+            # Extract gamma shape parameter from model averaged estimates
+            # Look for "Alpha:" followed by a number
+            alpha_pattern = r'Alpha:\s+([\d\.]+)'
+            alpha_match = re.search(alpha_pattern, content)
+            if alpha_match:
+                params['gamma_shape'] = float(alpha_match.group(0).split(' ')[-1].strip()) #some changes
+            
+            # Also try to get gamma shape from "Gamma shape:" line (might be "-" if not applicable)
+            gamma_shape_pattern = r'Gamma shape:\s+([\d\.\-]+)'
+            gamma_shape_match = re.search(gamma_shape_pattern, content)
+            if gamma_shape_match and gamma_shape_match.group(1) != '-':
+                # Only override if we got a numeric value
+                try:
+                    params['gamma_shape'] = float(gamma_shape_match.group(1))
+                except ValueError:
+                    pass  # Keep the previous value if this is "-"
+            
+            # Extract AIC score
+            aic_pattern = r'Score:\s+([\d\.]+)'
+            aic_match = re.search(aic_pattern, content)
+            if aic_match:
+                params['aic_score'] = float(aic_match.group(1))
+            
+            # Extract model weight
+            weight_pattern = r'Weight:\s+([\d\.]+)'
+            weight_match = re.search(weight_pattern, content)
+            if weight_match:
+                params['model_weight'] = float(weight_match.group(1))
+            
+            # Try to extract model-averaged P.Inv if available
+            model_avg_pinv_pattern = r'Model averaged estimates.*?P\.Inv:\s+([\d\.]+)'
+            model_avg_pinv_match = re.search(model_avg_pinv_pattern, content, re.DOTALL)
+            if model_avg_pinv_match:
+                params['model_avg_p_inv'] = float(model_avg_pinv_match.group(0).split()[-1])
+            
+            # Try to extract model-averaged frequencies if available
+            model_avg_freq_pattern = r'Model averaged estimates.*?Frequencies:\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)'
+            model_avg_freq_match = re.search(model_avg_freq_pattern, content, re.DOTALL)
+            if model_avg_freq_match:
+                params['model_avg_freq_A'] = float(model_avg_freq_match.group(1))
+                params['model_avg_freq_C'] = float(model_avg_freq_match.group(2))
+                params['model_avg_freq_G'] = float(model_avg_freq_match.group(3))
+                params['model_avg_freq_T'] = float(model_avg_freq_match.group(4))
             
             return params if params else None
             
         except Exception as e:
-            print(f"Error parsing ModelTest-NG output: {e}")
-            return None
-        """Read FASTA alignment file"""
-        try:
-            alignment = AlignIO.read(filepath, "fasta")
-            return alignment
-        except Exception as e:
-            print(f"Error reading {filepath}: {e}")
+            print(f"Error extracting GTR parameters: {e}")
             return None
     
     
     def estimate_gtr_parameters_modeltest(self, alignment_file):
         """Estimate GTR parameters using ModelTest-NG"""
-        
-        '''
-        # Convert to PHYLIP format
-        base_name = os.path.splitext(os.path.basename(alignment_file))[0]
-        phylip_file = os.path.join(self.temp_dir, f"{base_name}.phy")
-        
-        if not self.convert_to_phylip(alignment_file, phylip_file):
-            return None
-        
-        # Run ModelTest-NG
-        params = self.run_modeltest_ng(phylip_file)
-        
-        # Clean up temporary PHYLIP file
-        if os.path.exists(phylip_file):
-            os.remove(phylip_file)
-        '''
-        
-        #! Non-phylip format (fasta)
-        params = self.run_modeltest_ng(alignment_file) #! Not returning params
+            
+        params = self.run_modeltest_ng(alignment_file) 
         
         return params
+    
         """Calculate base frequencies from alignment"""
         base_counts = Counter()
         total_bases = 0
@@ -232,7 +241,6 @@ class GTRIndelParameterExtractor:
             return {'A': 0.25, 'C': 0.25, 'G': 0.25, 'T': 0.25}
         
         return {base: count/total_bases for base, count in base_counts.items()}
-    
     
     
     def count_substitutions(self, alignment):
@@ -486,10 +494,14 @@ class GTRIndelParameterExtractor:
         return result
     
     def cleanup(self):
+        pass #! temporary
         """Clean up temporary files"""
+        
+        '''
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
             print("Cleaned up temporary files")
+        '''
     
     def process_folder(self):
         """Process all FASTA files in the input folder"""
@@ -625,7 +637,7 @@ def main():
         sys.exit(1)
     
     # Initialize extractor
-    extractor = GTRIndelParameterExtractor(input_folder, modeltest_path=modeltest_path)
+    extractor = GTRIndelParameterExtractor(input_folder, modeltest_path=modeltest_path, output_folder="data/algn_params")
     
     # Process all alignments
     extractor.process_folder()
