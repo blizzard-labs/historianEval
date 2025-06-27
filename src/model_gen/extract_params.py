@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 GTR+IG Parameter Extraction Script using ModelTest-NG
+Indel Parameters from Basic Estimation
+Tree Topology Parameters from TreePar (R)
 
 This script processes a folder of FASTA multiple sequence alignments and extracts:
 1. GTR+IG substitution parameters (6 substitution rates + gamma shape + proportion invariant)
