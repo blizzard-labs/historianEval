@@ -1,0 +1,231 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Partition DATA: Sequences Vulpes_lagopus and Vulpes_vulpes are identical
+WARNING: Partition DATA: Sequences Ursus_arctos and Ursus_americanus are identical
+WARNING: Partition DATA: Sequences Halichoerus_grypus and Phoca_vitulina are identical
+WARNING: Partition DATA: Sequences Mirounga_angustirostris and Mirounga_leonina are identical
+WARNING: Partition DATA: Sequences Balaenoptera_acutorostrata_scammoni and Balaenoptera_musculus are identical
+WARNING: Partition DATA: Sequences Delphinapterus_leucas and Monodon_monoceros are identical
+WARNING: Partition DATA: Sequences Equus_caballus and Equus_przewalskii are identical
+WARNING: Partition DATA: Sequences Macaca_fascicularis and Macaca_thibetana_thibetana are identical
+WARNING: Partition DATA: Sequences Macaca_fascicularis and Macaca_mulatta are identical
+WARNING: Partition DATA: Sequences Papio_anubis and Theropithecus_gelada are identical
+WARNING: Partition DATA: Sequences Rhinopithecus_bieti and Rhinopithecus_roxellana are identical
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V0_sample/alignments/10010_NT_AL.fasta
+  Tree:       Maximum likelihood
+    file:           -
+  #taxa:            189
+  #sites:           1323
+  #patterns:        1068
+  Max. thread mem:  99 MB
+
+Output:
+  Log:           data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.log
+  Starting tree: data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.tree
+  Results:       data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.out
+
+Selection options:
+  # dna schemes:      1
+  # dna models:       8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: true
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          5/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -o data/model_gen/V0_sample/temp_modeltest/10010_NT_AL -m GTR -t ml -p 5 --force 
+
+
+Partition 1/1
+
+ ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
+
+Computation of likelihood scores completed. It took 0h:02:15
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  GTR+I+G4          10    -26514.0148     55795.2775         0.0000    1.0000
+       2  GTR+G4             9    -26540.9037     55841.8678        46.5903    0.0000
+       3  SYM+I+G4           7    -26578.0024     55901.6898       106.4123    0.0000
+       4  SYM+G4             6    -26602.5838     55943.6650       148.3874    0.0000
+       5  GTR+I              9    -26861.7097     56483.4797       688.2022    0.0000
+       6  SYM+I              6    -26933.8696     56606.2366       810.9591    0.0000
+       7  GTR                8    -27431.3792     57615.6311      1820.3535    0.0000
+       8  SYM                5    -27512.5785     57756.4668      1961.1893    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              GTR+I+G4
+lnL:                -26514.0148
+Frequencies:        0.3333 0.2183 0.1883 0.2601
+Subst. Rates:       0.9926 4.7175 0.7215 1.1310 3.9577 1.0000 
+Inv. sites prop:    0.1578
+Gamma shape:        1.6721
+Score:              55795.2775
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.2195
+Alpha:              0.9000
+Alpha-P.Inv:        1.6721
+P.Inv-Alpha:        0.1578
+Frequencies:        0.3333 0.2183 0.1883 0.2601 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m 012345 -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTRGAMMAIX -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample/alignments/10010_NT_AL.fasta --model GTR+I+G4
+  > paup -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta
+  > iqtree -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTR+I+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  GTR+I+G4          10    -26514.0148     53798.0295         0.0000    1.0000
+       2  GTR+G4             9    -26540.9037     53849.8075        51.7780    0.0000
+       3  SYM+I+G4           7    -26578.0024     53920.0048       121.9753    0.0000
+       4  SYM+G4             6    -26602.5838     53967.1676       169.1381    0.0000
+       5  GTR+I              9    -26861.7097     54491.4194       693.3899    0.0000
+       6  SYM+I              6    -26933.8696     54629.7392       831.7097    0.0000
+       7  GTR                8    -27431.3792     55628.7584      1830.7289    0.0000
+       8  SYM                5    -27512.5785     55785.1570      1987.1275    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              GTR+I+G4
+lnL:                -26514.0148
+Frequencies:        0.3333 0.2183 0.1883 0.2601
+Subst. Rates:       0.9926 4.7175 0.7215 1.1310 3.9577 1.0000 
+Inv. sites prop:    0.1578
+Gamma shape:        1.6721
+Score:              53798.0295
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.2195
+Alpha:              0.9000
+Alpha-P.Inv:        1.6721
+P.Inv-Alpha:        0.1578
+Frequencies:        0.3333 0.2183 0.1883 0.2601 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m 012345 -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTRGAMMAIX -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample/alignments/10010_NT_AL.fasta --model GTR+I+G4
+  > paup -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta
+  > iqtree -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTR+I+G4
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  GTR+I+G4          10    -26514.0148     54115.0295         0.0000    1.0000
+       2  GTR+G4             9    -26540.9037     54164.8075        49.7780    0.0000
+       3  SYM+I+G4           7    -26578.0024     54231.0048       115.9753    0.0000
+       4  SYM+G4             6    -26602.5838     54276.1676       161.1381    0.0000
+       5  GTR+I              9    -26861.7097     54806.4194       691.3899    0.0000
+       6  SYM+I              6    -26933.8696     54938.7392       823.7097    0.0000
+       7  GTR                8    -27431.3792     55941.7584      1826.7289    0.0000
+       8  SYM                5    -27512.5785     56092.1570      1977.1275    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              GTR+I+G4
+lnL:                -26514.0148
+Frequencies:        0.3333 0.2183 0.1883 0.2601
+Subst. Rates:       0.9926 4.7175 0.7215 1.1310 3.9577 1.0000 
+Inv. sites prop:    0.1578
+Gamma shape:        1.6721
+Score:              54115.0295
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.2195
+Alpha:              0.9000
+Alpha-P.Inv:        1.6721
+P.Inv-Alpha:        0.1578
+Frequencies:        0.3333 0.2183 0.1883 0.2601 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m 012345 -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTRGAMMAIX -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample/alignments/10010_NT_AL.fasta --model GTR+I+G4
+  > paup -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta
+  > iqtree -s data/model_gen/V0_sample/alignments/10010_NT_AL.fasta -m GTR+I+G4
+
+There are 8 different topologies
+Topologies written to data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.topos
+
+topo_id   models_count   bic_support   aic_support   aicc_support
+-----------------------------------------------------------------
+      1              1       1.00000       1.00000       1.00000
+      3              1       0.00000       0.00000       0.00000
+      2              1       0.00000       0.00000       0.00000
+      4              1       0.00000       0.00000       0.00000
+      5              1       0.00000       0.00000       0.00000
+      6              1       0.00000       0.00000       0.00000
+      7              1       0.00000       0.00000       0.00000
+      8              1       0.00000       0.00000       0.00000
+
+extended majority-rule consensus: ((Panthera_pardus,(Panthera_leo,(Panthera_tigris,Panthera_uncia)[1.00000])[1.00000])[1.00000],((((Manis_pentadactyla,Manis_javanica)[1.00000],(((((Desmodus_rotundus,((Sturnira_hondurensis,Artibeus_jamaicensis)[1.00000],(Phyllostomus_hastatus,Phyllostomus_discolor)[1.00000])[1.00000])[1.00000],(Molossus_molossus,(Miniopterus_natalensis,(((Myotis_lucifugus,Myotis_brandtii)[1.00000],(Myotis_davidii,Myotis_myotis)[1.00000])[1.00000],(Pipistrellus_kuhlii,Eptesicus_fuscus)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],((Rousettus_aegyptiacus,(Pteropus_alecto,(Pteropus_vampyrus,Pteropus_giganteus)[1.00000])[1.00000])[1.00000],(Rhinolophus_ferrumequinum,Hipposideros_armiger)[1.00000])[1.00000])[1.00000],((Ceratotherium_simum_simum,((Equus_quagga,Equus_asinus)[1.00000],(Equus_przewalskii,Equus_caballus)[1.00000])[1.00000])[1.00000],((Vicugna_pacos,(Camelus_dromedarius,(Camelus_ferus,Camelus_bactrianus)[1.00000])[1.00000])[1.00000],(Sus_scrofa,(((Balaenoptera_musculus,Balaenoptera_acutorostrata_scammoni)[1.00000],(Physeter_catodon,(Lipotes_vexillifer,(((Orcinus_orca,Globicephala_melas)[1.00000],(Tursiops_truncatus,Lagenorhynchus_obliquidens)[1.00000])[1.00000],((Monodon_monoceros,Delphinapterus_leucas)[1.00000],(Phocoena_sinus,Neophocaena_asiaeorientalis_asiaeorientalis)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(((Oryx_dammah,(Budorcas_taxicolor,(Ovis_aries,Capra_hircus)[1.00000])[1.00000])[1.00000],(Bubalus_bubalis,(Bison_bison_bison,(Bos_mutus,(Bos_taurus,Bos_indicus)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Odocoileus_virginianus_texanus,(Cervus_elaphus,Cervus_canadensis)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(((((Tachyglossus_aculeatus,Ornithorhynchus_anatinus)[1.00000],((Gracilinanus_agilis,Monodelphis_domestica)[1.00000],((Dromiciops_gliroides,(Sarcophilus_harrisii,Antechinus_flavipes)[1.00000])[1.00000],(Trichosurus_vulpecula,(Vombatus_ursinus,Phascolarctos_cinereus)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],((Choloepus_didactylus,Dasypus_novemcinctus)[1.00000],((Trichechus_manatus_latirostris,(Loxodonta_africana,Elephas_maximus_indicus)[1.00000])[1.00000],((Echinops_telfairi,Chrysochloris_asiatica)[1.00000],(Orycteropus_afer_afer,Elephantulus_edwardii)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],((Tupaia_chinensis,((Galeopterus_variegatus,(Oryctolagus_cuniculus,(Ochotona_curzoniae,Ochotona_princeps)[1.00000])[1.00000])[1.00000],((Carlito_syrichta,(((((Colobus_angolensis_palliatus,Piliocolobus_tephrosceles)[1.00000],(Trachypithecus_francoisi,(Rhinopithecus_roxellana,Rhinopithecus_bieti)[1.00000])[1.00000])[1.00000],(Chlorocebus_sabaeus,((Theropithecus_gelada,(Papio_anubis,(Mandrillus_leucophaeus,Cercocebus_atys)[1.00000])[1.00000])[1.00000],(Macaca_fascicularis,(Macaca_mulatta,(Macaca_thibetana_thibetana,Macaca_nemestrina)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Pongo_abelii,((Gorilla_gorilla_gorilla,(Homo_sapiens,(Pan_troglodytes,Pan_paniscus)[1.00000])[1.00000])[1.00000],(Nomascus_leucogenys,Hylobates_moloch)[1.00000])[1.00000])[1.00000])[1.00000],((Sapajus_apella,Cebus_imitator)[1.00000],(Saimiri_boliviensis_boliviensis,(Callithrix_jacchus,Aotus_nancymaae)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Otolemur_garnettii,(Propithecus_coquereli,(Microcebus_murinus,Lemur_catta)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(((Marmota_flaviventris,(Marmota_monax,Marmota_marmota_marmota)[1.00000])[1.00000],(Urocitellus_parryii,Ictidomys_tridecemlineatus)[1.00000])[1.00000],(((Cavia_porcellus,(Octodon_degus,Chinchilla_lanigera)[1.00000])[1.00000],(Fukomys_damarensis,Heterocephalus_glaber)[1.00000])[1.00000],((Jaculus_jaculus,(Nannospalax_galili,((((Onychomys_torridus,(Peromyscus_californicus_insignis,(Peromyscus_leucopus,Peromyscus_maniculatus_bairdii)[1.00000])[1.00000])[1.00000],(Myodes_glareolus,(Arvicola_amphibius,(Microtus_fortis,(Microtus_oregoni,Microtus_ochrogaster)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Cricetulus_griseus,(Mesocricetus_auratus,Phodopus_roborovskii)[1.00000])[1.00000])[1.00000],(((Rattus_rattus,Rattus_norvegicus)[1.00000],((Grammomys_surdaster,Arvicanthis_niloticus)[1.00000],(Apodemus_sylvaticus,(Mastomys_coucha,(Mus_caroli,(Mus_pahari,Mus_musculus)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Meriones_unguiculatus,Acomys_russatus)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Castor_canadensis,(Perognathus_longimembris_pacificus,(Dipodomys_spectabilis,Dipodomys_ordii)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],((Suncus_etruscus,Sorex_araneus)[1.00000],(Erinaceus_europaeus,(Talpa_occidentalis,Condylura_cristata)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],((((Ailuropoda_melanoleuca,(Ursus_maritimus,(Ursus_americanus,Ursus_arctos)[1.00000])[1.00000])[1.00000],((Odobenus_rosmarus_divergens,(Eumetopias_jubatus,Zalophus_californianus)[1.00000])[1.00000],((Phoca_vitulina,Halichoerus_grypus)[1.00000],(Neomonachus_schauinslandi,(Leptonychotes_weddellii,(Mirounga_leonina,Mirounga_angustirostris)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Canis_lupus_dingo,(Vulpes_vulpes,Vulpes_lagopus)[1.00000])[1.00000])[1.00000],((Meles_meles,(Enhydra_lutris_kenyoni,Lontra_canadensis)[1.00000])[1.00000],(Neogale_vison,(Mustela_putorius_furo,Mustela_erminea)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(Suricata_suricatta,Hyaena_hyaena)[1.00000])[1.00000],(Leopardus_geoffroyi,(Prionailurus_bengalensis,(Lynx_canadensis,(Felis_catus,(Acinonyx_jubatus,(Puma_yagouaroundi,Puma_concolor)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000]);
+strict consensus: (Cervus_canadensis,Dipodomys_spectabilis,Dipodomys_ordii,Perognathus_longimembris_pacificus,Jaculus_jaculus,Onychomys_torridus,Peromyscus_californicus_insignis,Erinaceus_europaeus,Vicugna_pacos,Camelus_ferus,Camelus_dromedarius,Camelus_bactrianus,Echinops_telfairi,Chrysochloris_asiatica,Orycteropus_afer_afer,Loxodonta_africana,Elephas_maximus_indicus,Trichechus_manatus_latirostris,Ochotona_curzoniae,Nannospalax_galili,Urocitellus_parryii,Ictidomys_tridecemlineatus,Choloepus_didactylus,Oryctolagus_cuniculus,Galeopterus_variegatus,Carlito_syrichta,Castor_canadensis,Microcebus_murinus,Otolemur_garnettii,Nomascus_leucogenys,Hylobates_moloch,Pongo_abelii,Colobus_angolensis_palliatus,Trachypithecus_francoisi,Rhinopithecus_roxellana,Rhinopithecus_bieti,Piliocolobus_tephrosceles,Chlorocebus_sabaeus,Theropithecus_gelada,Mandrillus_leucophaeus,Macaca_mulatta,Papio_anubis,Macaca_thibetana_thibetana,Macaca_nemestrina,Macaca_fascicularis,Cercocebus_atys,Sapajus_apella,Cebus_imitator,Callithrix_jacchus,Saimiri_boliviensis_boliviensis,Aotus_nancymaae,Talpa_occidentalis,Condylura_cristata,Pteropus_alecto,Pteropus_vampyrus,Pteropus_giganteus,Rousettus_aegyptiacus,Rhinolophus_ferrumequinum,Desmodus_rotundus,Sturnira_hondurensis,Phyllostomus_hastatus,Phyllostomus_discolor,Artibeus_jamaicensis,Manis_pentadactyla,Manis_javanica,Equus_przewalskii,Equus_caballus,Equus_quagga,Equus_asinus,Physeter_catodon,Lipotes_vexillifer,Orcinus_orca,Tursiops_truncatus,Lagenorhynchus_obliquidens,Globicephala_melas,Phocoena_sinus,Neophocaena_asiaeorientalis_asiaeorientalis,Monodon_monoceros,Delphinapterus_leucas,Balaenoptera_musculus,Balaenoptera_acutorostrata_scammoni,Mesocricetus_auratus,Cricetulus_griseus,Neomonachus_schauinslandi,Mirounga_leonina,Mirounga_angustirostris,Leptonychotes_weddellii,Phoca_vitulina,Halichoerus_grypus,Odobenus_rosmarus_divergens,Eumetopias_jubatus,Zalophus_californianus,Enhydra_lutris_kenyoni,Lontra_canadensis,Meles_meles,Neogale_vison,Mustela_putorius_furo,Mustela_erminea,Ursus_americanus,Ursus_arctos,Ursus_maritimus,Ailuropoda_melanoleuca,Suricata_suricatta,Hyaena_hyaena,Felis_catus,Panthera_tigris,Panthera_pardus,Panthera_uncia,Panthera_leo,Leopardus_geoffroyi,Puma_yagouaroundi,Puma_concolor,Lynx_canadensis,Prionailurus_bengalensis,Acinonyx_jubatus,Gracilinanus_agilis,Myodes_glareolus,Microtus_fortis,Arvicola_amphibius,Trichosurus_vulpecula,Microtus_oregoni,Microtus_ochrogaster,Peromyscus_leucopus,Peromyscus_maniculatus_bairdii,Marmota_monax,Marmota_marmota_marmota,Marmota_flaviventris,Pan_troglodytes,Pan_paniscus,Homo_sapiens,Gorilla_gorilla_gorilla,Tachyglossus_aculeatus,Ornithorhynchus_anatinus,Dromiciops_gliroides,Vombatus_ursinus,Phascolarctos_cinereus,Monodelphis_domestica,Ochotona_princeps,Suncus_etruscus,Dasypus_novemcinctus,Elephantulus_edwardii,Tupaia_chinensis,Lemur_catta,Sus_scrofa,Ceratotherium_simum_simum,Octodon_degus,Fukomys_damarensis,Chinchilla_lanigera,Cavia_porcellus,Heterocephalus_glaber,Sarcophilus_harrisii,Phodopus_roborovskii,Antechinus_flavipes,Sorex_araneus,Propithecus_coquereli,Miniopterus_natalensis,Pipistrellus_kuhlii,Myotis_davidii,Eptesicus_fuscus,Myotis_myotis,Myotis_lucifugus,Molossus_molossus,Hipposideros_armiger,Rattus_rattus,Rattus_norvegicus,Mastomys_coucha,Mus_pahari,Mus_musculus,Mus_caroli,Grammomys_surdaster,Arvicanthis_niloticus,Meriones_unguiculatus,Acomys_russatus,Apodemus_sylvaticus,Ovis_aries,Capra_hircus,Budorcas_taxicolor,Oryx_dammah,Bubalus_bubalis,Bos_taurus,Bos_indicus,Bos_mutus,Bison_bison_bison,Odocoileus_virginianus_texanus,Cervus_elaphus,Canis_lupus_dingo,Vulpes_vulpes,Vulpes_lagopus,Myotis_brandtii);
+
+Summary:
+
+Partition 1/1:
+                         Model         Score        Weight
+----------------------------------------------------------
+       BIC            GTR+I+G4    55795.2775        1.0000
+       AIC            GTR+I+G4    53798.0295        1.0000
+      AICc            GTR+I+G4    54115.0295        1.0000
+
+Execution results written to data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.out
+Starting tree written to data/model_gen/V0_sample/temp_modeltest/10010_NT_AL.tree

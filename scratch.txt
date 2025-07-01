@@ -1,0 +1,155 @@
+fit_model <- function(tree, model, crown_age) {
+  n <- Ntip(tree)
+
+  # Estimate initial lambda using Yule approximation
+  lambda_start <- log(n) / crown_age
+  mu_start <- 0.01  # small extinction rate
+
+  result <- NULL
+
+  if (model == "constant") {
+    # Constant birth-death model
+    result <- fit_bd(tree, crown_age,
+                     cst.lamb = TRUE,
+                     cst.mu = TRUE,
+                     lamb_par = lambda_start,
+                     mu_par = mu_start)
+
+    lambda_present <- result$lamb_par
+
+  } else if (model == "exponential") {
+    # Exponential time-varying speciation
+    result <- fit_bd(tree, crown_age,
+                     cst.lamb = FALSE,
+                     expo.lamb = TRUE,
+                     cst.mu = TRUE,
+                     expo.mu = FALSE,
+                     lamb_par = c(lambda_start, 0.01),  # λ0, α
+                     mu_par = mu_start)
+
+    # Get present-day speciation rate: λ(t) = λ₀ * exp(α * t)
+    lambda_present <- result$lamb_par[1] * exp(result$lamb_par[2] * crown_age)
+
+  } else if (model == "linear") {
+    # Linear time-varying speciation
+    result <- fit_bd(tree, crown_age,
+                     cst.lamb = FALSE,
+                     expo.lamb = FALSE,
+                     cst.mu = TRUE,
+                     expo.mu = FALSE,
+                     lamb_par = c(lambda_start, 0.001),  # λ0, α
+                     mu_par = mu_start)
+
+    # Get present-day speciation rate: λ(t) = λ₀ + α * t
+    lambda_present <- result$lamb_par[1] + result$lamb_par[2] * crown_age
+
+  } else {
+    stop(sprintf("Unknown model: %s", model))
+  }
+
+  # Handle possible fit errors
+  if (is.null(result) || is.null(result$mu_par) || is.null(lambda_present)) {
+    stop("RPANDA model fit returned incomplete result")
+  }
+
+  return(list(
+    lambda = lambda_present,
+    mu = result$mu_par,
+    lambda_ci_lower = NA,
+    lambda_ci_upper = NA,
+    mu_ci_lower = NA,
+    mu_ci_upper = NA,
+    loglik = result$LH,
+    aic = result$aicc,
+    aicc = result$aicc,
+    convergence = result$conv
+  ))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fit_model <- function(tree, model, crown_age) {
+  
+  if (model == "constant") {
+    # Constant birth-death model
+    cat("ASDFKASDFJKLSDAJF")
+
+    result <- fit_bd(tree, crown_age, cst.lamb = TRUE, cst.mu = TRUE)
+
+    return(list(
+      lambda = result$lamb_par,
+      mu = result$mu_par,
+      lambda_ci_lower = NA,
+      lambda_ci_upper = NA,
+      mu_ci_lower = NA,
+      mu_ci_upper = NA,
+      loglik = result$LH,
+      aic = result$aicc,
+      aicc = result$aicc,
+      convergence = result$conv
+    ))
+    
+  } else if (model == "exponential") {
+    # Exponential variation in birth rate
+    result <- fit_bd(tree, crown_age, cst.lamb = FALSE, cst.mu = TRUE, 
+                     expo.lamb = TRUE, expo.mu = FALSE)
+    
+    # Get present-day rates
+    lambda_0 <- result$lamb_par[1]
+    alpha <- result$lamb_par[2]
+    lambda_present <- lambda_0 * exp(alpha * crown_age)
+    
+    return(list(
+      lambda = lambda_present,
+      mu = result$mu_par,
+      lambda_ci_lower = NA,
+      lambda_ci_upper = NA,
+      mu_ci_lower = NA,
+      mu_ci_upper = NA,
+      loglik = result$LH,
+      aic = result$aicc,
+      aicc = result$aicc,
+      convergence = result$conv
+    ))
+    
+  } else if (model == "linear") {
+    # Linear variation in birth rate
+    result <- fit_bd(tree, crown_age, cst.lamb = FALSE, cst.mu = TRUE, 
+                     expo.lamb = FALSE, expo.mu = FALSE)
+    
+    # Get present-day rates
+    lambda_0 <- result$lamb_par[1]
+    alpha <- result$lamb_par[2]
+    lambda_present <- lambda_0 + alpha * crown_age
+    
+    return(list(
+      lambda = lambda_present,
+      mu = result$mu_par,
+      lambda_ci_lower = NA,
+      lambda_ci_upper = NA,
+      mu_ci_lower = NA,
+      mu_ci_upper = NA,
+      loglik = result$LH,
+      aic = result$aicc,
+      aicc = result$aicc,
+      convergence = result$conv
+    ))
+  }
+  
+  return(NULL)
+}

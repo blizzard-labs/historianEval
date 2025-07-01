@@ -4,14 +4,14 @@ import os
 import subprocess
 
 class modelConstructor:
-    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models"):
+    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none"):
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
         self.temp_folder = temp_folder + "/" + label
         self.output_folder = output_folder
         self.output_file = f"{self.output_folder}/{label}.json"
-        self.params_file = "none"
+        self.params_file = params_file
         
         os.makedirs(self.temp_folder, exist_ok=True)
         if (self.tree_folder == "none"):
@@ -46,7 +46,17 @@ class modelConstructor:
             print(f"Error finding parameters file in {self.temp_folder}: {e}")
             raise
         
-    
+    def cleanup_modeltest_trees(self):
+        modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
+        try:
+            for file in os.listdir(modeltest_folder):
+                if file.endswith(".tree"):
+                    os.rename(os.path.join(modeltest_folder, file), os.path.join(self.tree_folder, file))
+            print(f"Trees cleaned and moved to {self.tree_folder}.")
+        except Exception as e:
+            print(f"Error cleaning up trees: {e}")
+            raise
+               
     def generate_ml_trees(self, raxml_ng_path="tools/raxml-ng"):
         try:
             for alignment in os.listdir(self.alignment_folder):
@@ -85,6 +95,7 @@ class modelConstructor:
             print(f"Error cleaning tree names: {e}")
             raise
         
+         
     def extract_top_params(self):
         """Extracts tree topology parameters from the generated trees with rpanda."""
         if self.params_file == "none":
@@ -111,9 +122,9 @@ class modelConstructor:
         
   
 def main():
-    mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments")
-    mc.extract_substitution_params()
-    mc.generate_ml_trees()
+    mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments", params_file="data/model_gen/V0_sample/gtr_indel_parameters.csv")
+    #mc.extract_substitution_params()
+    #mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
     
     print('COMPLEETTEEEETETETETE!!!!')
@@ -123,5 +134,8 @@ if __name__ == "__main__":
     main()
         
         
+
+
+
         
     
