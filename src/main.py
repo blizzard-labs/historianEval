@@ -109,7 +109,6 @@ class modelConstructor:
             print(f"Command timed out: {e}")
             raise
         
-        
   
 def main():
     mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments")
