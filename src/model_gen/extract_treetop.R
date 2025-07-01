@@ -266,6 +266,7 @@ fit_model_combination <- function(tree, lamb_type, mu_type, crown_age, model_nam
     stop("RPANDA model fit returned incomplete result")
   }
 
+
   return(list(
     lambda = lambda_present,
     mu = mu_present,
