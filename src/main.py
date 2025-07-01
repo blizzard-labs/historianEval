@@ -139,3 +139,33 @@ if __name__ == "__main__":
 
         
     
+    
+'''
+# Check if we have any results
+if (length(rate_results) == 0) {
+  stop("No trees were successfully processed.")
+}
+
+cat('ASDKFAJSHDKF')
+print(rate_results)
+
+# Ensure all results have consistent structure
+rate_results <- lapply(rate_results, function(x) {
+  if (is.null(x)) return(NULL)
+  
+  # Convert to data frame to check structure
+  df_test <- tryCatch(data.frame(x, stringsAsFactors = FALSE), 
+                     error = function(e) NULL)
+  if (is.null(df_test)) return(NULL)
+  
+  return(x)
+})
+
+# Remove any NULL results
+rate_results <- rate_results[!sapply(rate_results, is.null)]
+
+if (length(rate_results) == 0) {
+  stop("No valid results after structure validation.")
+}
+
+'''
