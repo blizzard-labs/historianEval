@@ -624,20 +624,22 @@ class GTRIndelParameterExtractor:
 def main():
     print('started script')
     if len(sys.argv) < 2:
-        print("Usage: python gtr_extractor.py <input_folder> [modeltest_path]")
+        print("Usage: python gtr_extractor.py <input_folder> [output_folder] [modeltest_path]")
         print("Example: python gtr_extractor.py ./alignments/")
-        print("Example: python gtr_extractor.py ./alignments/ /usr/local/bin/modeltest-ng")
+        print("Example: python gtr_extractor.py ./alignments/ /output_folder/")
+        print("Example: python gtr_extractor.py ./alignments/ /output_folder/ /usr/local/bin/modeltest-ng")
         sys.exit(1)
     
     input_folder = sys.argv[1]
-    modeltest_path = sys.argv[2] if len(sys.argv) > 2 else "modeltest-ng"
+    output_folder = sys.argv[2] if len(sys.argv) > 2 else "data/algn_params"
+    modeltest_path = sys.argv[3] if len(sys.argv) > 3 else "modeltest-ng"
     
     if not os.path.exists(input_folder):
         print(f"Error: Input folder '{input_folder}' does not exist")
         sys.exit(1)
     
     # Initialize extractor
-    extractor = GTRIndelParameterExtractor(input_folder, modeltest_path=modeltest_path, output_folder="data/algn_params")
+    extractor = GTRIndelParameterExtractor(input_folder, modeltest_path=modeltest_path, output_folder=output_folder)
     
     # Process all alignments
     extractor.process_folder()
