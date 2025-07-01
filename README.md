@@ -1,0 +1,1 @@
+Rough Outline of pipeline: https://docs.google.com/drawings/d/11Kc25bbuWFrNCq3Fu4r4dVGeSukLBKzX2-4BSqsq4mY/edit?usp=sharing
