@@ -11,6 +11,7 @@ class modelConstructor:
         self.temp_folder = temp_folder + "/" + label
         self.output_folder = output_folder
         self.output_file = f"{self.output_folder}/{label}.json"
+        self.params_file = "none"
         
         os.makedirs(self.temp_folder, exist_ok=True)
         if (self.tree_folder == "none"):
@@ -36,11 +37,19 @@ class modelConstructor:
         except subprocess.TimeoutExpired as e:
             print(f"Command timed out: {e}")
             raise
+        
+        try:
+            for file in os.listdir(self.temp_folder):
+                if file.endswith(".csv"):
+                    self.params_file = os.path.join(self.temp_folder, file)
+        except Exception as e:
+            print(f"Error finding parameters file in {self.temp_folder}: {e}")
+            raise
+        
     
     def generate_ml_trees(self, raxml_ng_path="tools/raxml-ng"):
         try:
-            alignments = os.listdir(self.alignment_folder)
-            for alignment in alignments:
+            for alignment in os.listdir(self.alignment_folder):
                 if os.path.isfile(os.path.join(self.alignment_folder, alignment)):
                     cmd = [
                         "./" + raxml_ng_path,
@@ -62,9 +71,57 @@ class modelConstructor:
             print(f"Error reading alignments from {self.alignment_folder}.")
             raise
         
+        try:
+            for tree in os.listdir(self.tree_folder):
+                if os.path.isfile(os.path.join(self.tree_folder, tree)):
+                    if tree.endswith(".bestTree"):
+                        new_tree_name = tree.replace(".bestTree", ".tree")
+                        os.rename(os.path.join(self.tree_folder, tree), os.path.join(self.tree_folder, new_tree_name))
+                    else:
+                        os.remove(os.path.join(self.tree_folder, tree))
+            print(f"Tree names cleaned in {self.tree_folder}.")
+        
+        except Exception as e:
+            print(f"Error cleaning tree names: {e}")
+            raise
+        
+    def extract_top_params(self):
+        """Extracts tree topology parameters from the generated trees with rpanda."""
+        if self.params_file == "none":
+            print("No parameters file found. Please run extract_substitution_params() first.")
+            return
+        
+        cmd = [
+            "Rscript",
+            "src/model_gen/extract_treetop.R",
+            self.tree_folder,
+            self.params_file
+        ]
+        
+        try:
+            subprocess.run(cmd, check=True)
+            print(f"Tree topology parameters extracted for {self.label}.")
+            
+        except subprocess.CalledProcessError as e:
+            print(f"Error extracting topology parameters: {e}")
+            raise
+        except subprocess.TimeoutExpired as e:
+            print(f"Command timed out: {e}")
+            raise
+        
+        
+  
+def main():
+    mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments")
+    mc.extract_substitution_params()
+    mc.generate_ml_trees()
+    mc.extract_top_params()  
     
-        
-        
+    print('COMPLEETTEEEETETETETE!!!!')
+
+
+if __name__ == "__main__":
+    main()
         
         
         
