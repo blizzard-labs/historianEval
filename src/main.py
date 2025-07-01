@@ -37,7 +37,30 @@ class modelConstructor:
             print(f"Command timed out: {e}")
             raise
     
-    def generate_ml_trees(self):
+    def generate_ml_trees(self, raxml_ng_path="tools/raxml-ng"):
+        try:
+            alignments = os.listdir(self.alignment_folder)
+            for alignment in alignments:
+                if os.path.isfile(os.path.join(self.alignment_folder, alignment)):
+                    cmd = [
+                        "./" + raxml_ng_path,
+                        "--search1",
+                        "--msa", os.path.join(self.alignment_folder, alignment),
+                        "--model", "GTR+G",
+                        "--threads", "4",
+                        "--tree", "rand",
+                        "--prefix", os.path.join(self.tree_folder, alignment.split('.')[0]) + "/"
+                    ]
+                    
+                    subprocess.run(cmd, check=True)
+                    print(f"ML tree generated for {alignment}.")
+                    
+        except subprocess.CalledProcessError as e:
+            print(f"Error generating ML trees: {e}")
+            raise
+        except:
+            print(f"Error reading alignments from {self.alignment_folder}.")
+            raise
         
     
         

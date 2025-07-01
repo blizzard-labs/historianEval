@@ -1,3 +1,4 @@
 Indel-Seq-Gen Test: ./indel-seq-gen --matrix HKY --outfile DNA_out < simple_nuc.tree
 
+./raxml-ng --search1 --msa testDNA.fa --model GTR+G
 
