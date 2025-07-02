@@ -4,7 +4,7 @@ import os
 import subprocess
 
 class modelConstructor:
-    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none"):
+    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen_nt", output_folder="models", params_file="none"):
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
@@ -22,7 +22,7 @@ class modelConstructor:
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
         cmd = [
             "python",
-            "src/model_gen/extract_params.py",
+            "src/model_gen_nt/extract_params.py",
             self.alignment_folder,
             self.temp_folder,
             "tools/modeltest-ng-osx"
@@ -104,7 +104,7 @@ class modelConstructor:
         
         cmd = [
             "Rscript",
-            "src/model_gen/extract_treetop.R",
+            "src/model_gen_nt/extract_treetop.R",
             self.tree_folder,
             self.params_file
         ]
@@ -122,7 +122,7 @@ class modelConstructor:
         
   
 def main():
-    mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments", params_file="data/model_gen/V0_sample/gtr_indel_parameters.csv")
+    mc = modelConstructor('V0_sample', "data/model_gen_nt/V0_sample/alignments", params_file="data/model_gen_nt/V0_sample/gtr_indel_parameters.csv")
     #mc.extract_substitution_params()
     #mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
@@ -133,39 +133,3 @@ def main():
 if __name__ == "__main__":
     main()
         
-        
-
-
-
-        
-    
-    
-'''
-# Check if we have any results
-if (length(rate_results) == 0) {
-  stop("No trees were successfully processed.")
-}
-
-cat('ASDKFAJSHDKF')
-print(rate_results)
-
-# Ensure all results have consistent structure
-rate_results <- lapply(rate_results, function(x) {
-  if (is.null(x)) return(NULL)
-  
-  # Convert to data frame to check structure
-  df_test <- tryCatch(data.frame(x, stringsAsFactors = FALSE), 
-                     error = function(e) NULL)
-  if (is.null(df_test)) return(NULL)
-  
-  return(x)
-})
-
-# Remove any NULL results
-rate_results <- rate_results[!sapply(rate_results, is.null)]
-
-if (length(rate_results) == 0) {
-  stop("No valid results after structure validation.")
-}
-
-'''
