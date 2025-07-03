@@ -1,0 +1,42 @@
+2025-07-02 20:05:24,049 [INFO] Substitution parameters extracted for V0_sample_aa.
+2025-07-02 20:05:24,050 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+2025-07-02 20:05:33,968 [INFO] Error extracting topology parameters: Command '['Rscript', 'src/model_gen_nt/extract_treetop.R', 'data/model_gen/V0_sample_aa/trees', 'data/model_gen/V0_sample_aa/parameter_summary.csv']' returned non-zero exit status 1.
+2025-07-02 20:05:33,968 [ERROR] Traceback (most recent call last):
+2025-07-02 20:05:33,968 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 163, in <module>
+2025-07-02 20:05:33,968 [ERROR] main()
+2025-07-02 20:05:33,969 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 157, in main
+2025-07-02 20:05:33,969 [ERROR] mc.extract_top_params()
+2025-07-02 20:05:33,969 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 143, in extract_top_params
+2025-07-02 20:05:33,969 [ERROR] subprocess.run(cmd, check=True)
+2025-07-02 20:05:33,969 [ERROR]   File "/opt/anaconda3/envs/phylo/lib/python3.9/subprocess.py", line 528, in run
+2025-07-02 20:05:33,969 [ERROR] raise CalledProcessError(retcode, process.args,
+2025-07-02 20:05:33,969 [ERROR] subprocess
+2025-07-02 20:05:33,969 [ERROR] .
+2025-07-02 20:05:33,969 [ERROR] CalledProcessError
+2025-07-02 20:05:33,969 [ERROR] :
+2025-07-02 20:05:33,969 [ERROR] Command '['Rscript', 'src/model_gen_nt/extract_treetop.R', 'data/model_gen/V0_sample_aa/trees', 'data/model_gen/V0_sample_aa/parameter_summary.csv']' returned non-zero exit status 1.
+2025-07-02 20:10:36,286 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+2025-07-02 20:10:43,380 [INFO] Tree topology parameters extracted for V0_sample_aa.
+2025-07-02 20:10:43,381 [INFO] COMPLEETTEEEETETETETE!!!!
+2025-07-02 20:11:52,060 [INFO] Error cleaning up trees: [Errno 2] No such file or directory: 'data/model_gen/V0_sample_aa/temp_modeltest'
+2025-07-02 20:11:52,060 [ERROR] Traceback (most recent call last):
+2025-07-02 20:11:52,060 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 166, in <module>
+2025-07-02 20:11:52,060 [ERROR] main()
+2025-07-02 20:11:52,060 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 159, in main
+2025-07-02 20:11:52,061 [ERROR] mc.cleanup_modeltest_trees()
+2025-07-02 20:11:52,061 [ERROR]   File "/Users/krishna/Projects/historianEval/src/main_aa.py", line 84, in cleanup_modeltest_trees
+2025-07-02 20:11:52,061 [ERROR] for file in os.listdir(modeltest_folder):
+2025-07-02 20:11:52,061 [ERROR] FileNotFoundError
+2025-07-02 20:11:52,061 [ERROR] :
+2025-07-02 20:11:52,061 [ERROR] [Errno 2] No such file or directory: 'data/model_gen/V0_sample_aa/temp_modeltest'
+2025-07-02 20:12:49,202 [INFO] Substitution parameters extracted for V0_sample_aa.
+2025-07-02 20:12:49,202 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+2025-07-02 20:12:56,372 [INFO] Tree topology parameters extracted for V0_sample_aa.
+2025-07-02 20:12:56,372 [INFO] COMPLEETTEEEETETETETE!!!!
+2025-07-02 20:19:27,864 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+2025-07-02 20:19:38,250 [INFO] Tree topology parameters extracted for V0_sample_aa.
+2025-07-02 20:19:38,251 [INFO] COMPLEETTEEEETETETETE!!!!
+2025-07-02 20:22:44,708 [INFO] Substitution parameters extracted for V0_sample_aa.
+2025-07-02 20:22:44,709 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+2025-07-02 20:22:51,901 [INFO] Tree topology parameters extracted for V0_sample_aa.
+2025-07-02 20:22:51,901 [INFO] COMPLEETTEEEETETETETE!!!!

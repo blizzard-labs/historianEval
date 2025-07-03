@@ -1,0 +1,87 @@
+Started protein evolution parameter extraction script
+Found ModelTest-NG: _      _ _            _      _   _  _____ 
+                            | |    | | |          | |    | \ | |/ ____|
+         _ __ ___   ___   __| | ___| | |_ ___  ___| |_   |  \| | |  __ 
+        | '_ ` _ \ / _ \ / _` |/ _ \ | __/ _ \/ __| __|  | . ` | | |_ |
+        | | | | | | (_) | (_| |  __/ | ||  __/\__ \ |_   | |\  | |__| |
+        |_| |_| |_|\___/ \__,_|\___|_|\__\___||___/\__|  |_| \_|\_____|
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7 released on 17.03.2021 by The Exelixis Lab.
+Written by Diego Darriba.
+Contributors: Tomas Flouri, Alexey Kozlov, Benoit Morel, David Posada, 
+              Alexandros Stamatakis.
+Latest version: https://github.com/ddarriba/modeltest
+--------------------------------------------------------------------------------
+
+ModelTest-NG v0.1.7 released on 17.03.2021 by The Exelixis Lab.
+Written by Diego Darriba.
+Contributors: Tomas Flouri, Alexey Kozlov, Benoit Morel, David Posada, 
+              Alexandros Stamatakis.
+Latest version: https://github.com/ddarriba/modeltest
+Found 1 FASTA files
+Processing: ribosomal_l5_pf00673.fasta
+  - Using ModelTest-NG parameters
+Successfully processed 1 alignments
+Results saved to: data/model_gen/V0_sample_aa/protein_evolution_parameters.csv
+Summary statistics saved to: data/model_gen/V0_sample_aa/parameter_summary.csv
+Distribution plots saved to output folder
+Protein evolution analysis complete!
+2025-07-02 20:22:44,708 [INFO] Substitution parameters extracted for V0_sample_aa.
+2025-07-02 20:22:44,709 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
+Starting RPANDA analysis with all model combinations...
+Tree folder: data/model_gen/V0_sample_aa/trees
+CSV file: data/model_gen/V0_sample_aa/protein_evolution_parameters.csv
+Output file: data/model_gen/V0_sample_aa/protein_evolution_parameters_with_rates.csv
+
+=== MODEL COMBINATIONS TO BE TESTED ===
+BCSTDCST: Birth constant, Death constant
+BEXPCDST: Birth exponential, Death constant
+BLINCDST: Birth linear, Death constant
+BCSTDEXP: Birth constant, Death exponential
+BEXPDEXP: Birth exponential, Death exponential
+BLINDEXP: Birth linear, Death exponential
+BCSTDLIN: Birth constant, Death linear
+BEXPDLIN: Birth exponential, Death linear
+BLINDLIN: Birth linear, Death linear
+
+Reading CSV file...
+Found 1 tree files
+Processing tree: ribosomal_l5_pf00673.tree
+  Tree is not ultrametric, attempting to make ultrametric...
+  Tree is unrooted, rooting using midpoint...
+  Fitting BCSTDCST model...
+  Fitting BEXPCDST model...
+  Fitting BLINCDST model...
+  Fitting BCSTDEXP model...
+  Fitting BEXPDEXP model...
+  Fitting BLINDEXP model...
+  Fitting BCSTDLIN model...
+  Fitting BEXPDLIN model...
+  Fitting BLINDLIN model...
+Matching tree files with CSV entries...
+Merging data...
+Writing results...
+
+=== SUMMARY ===
+CSV entries: 1
+Tree files processed: 1
+Successful matches: 1
+Output written to: data/model_gen/V0_sample_aa/protein_evolution_parameters_with_rates.csv
+
+=== RATE ESTIMATES SUMMARY ===
+Speciation rate - Mean: 2.1197, Range: 2.1197 - 2.1197
+Extinction rate - Mean: 0.0000, Range: 0.0000 - 0.0000
+Net diversification - Mean: 2.1197, Range: 2.1197 - 2.1197
+
+=== BEST MODELS SELECTED ===
+RPANDA_BCSTDCST: 1 cases
+
+=== MODEL COMPARISON NOTES ===
+The output CSV now includes:
+- all_models_aic: AIC values for all fitted models
+- best_models_ranking: Models ranked by AIC (best to worst)
+- delta_aic: Delta AIC values relative to best model
+
+RPANDA analysis with all model combinations complete!
+2025-07-02 20:22:51,901 [INFO] Tree topology parameters extracted for V0_sample_aa.
+2025-07-02 20:22:51,901 [INFO] COMPLEETTEEEETETETETE!!!!

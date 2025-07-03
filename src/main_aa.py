@@ -8,7 +8,7 @@ import logging
 import sys
 
 class modelConstructor:
-    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none"):
+    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
@@ -25,18 +25,18 @@ class modelConstructor:
         if log_file == "none":
             self.log_file = os.path.join("data/logs", f"{label}_model_gen.log")
         
-
-        #Setting up logging
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s [%(levelname)s] %(message)s',
-            handlers=[
-                logging.FileHandler("output.log"),
-                logging.StreamHandler(sys.stdout)
-            ]
-        )
-        sys.stdout = utils.StreamToLogger(logging.getLogger(), logging.INFO)
-        sys.stderr = utils.StreamToLogger(logging.getLogger(), logging.ERROR) 
+        if log:
+            #Setting up logging
+            logging.basicConfig(
+                level=logging.DEBUG,
+                format='%(asctime)s [%(levelname)s] %(message)s',
+                handlers=[
+                    logging.FileHandler("output.log"),
+                    logging.StreamHandler(sys.stdout)
+                ]
+            )
+            sys.stdout = utils.StreamToLogger(logging.getLogger(), logging.INFO)
+            sys.stderr = utils.StreamToLogger(logging.getLogger(), logging.ERROR) 
         
 
     def extract_substitution_params(self):
@@ -59,13 +59,15 @@ class modelConstructor:
             print(f"Command timed out: {e}")
             raise
         
+        '''
         try:
             for file in os.listdir(self.temp_folder):
                 if file.endswith(".csv"):
                     self.params_file = os.path.join(self.temp_folder, file)
         except Exception as e:
             print(f"Error finding parameters file in {self.temp_folder}: {e}")
-            raise
+            raise      
+        '''
 
     def cleanup_modeltest_trees(self):
         modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
@@ -151,7 +153,7 @@ class modelConstructor:
             raise
 
 def main():
-    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv")
+    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
