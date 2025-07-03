@@ -4,7 +4,7 @@ import os
 import subprocess
 
 class modelConstructor:
-    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen_nt", output_folder="models", params_file="none"):
+    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none"):
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
@@ -122,9 +122,9 @@ class modelConstructor:
         
   
 def main():
-    mc = modelConstructor('V0_sample', "data/model_gen_nt/V0_sample/alignments", params_file="data/model_gen_nt/V0_sample/gtr_indel_parameters.csv")
-    #mc.extract_substitution_params()
-    #mc.cleanup_modeltest_trees()
+    mc = modelConstructor('V0_sample', "data/model_gen/V0_sample/alignments", params_file="data/model_gen/V0_sample/gtr_indel_parameters.csv")
+    mc.extract_substitution_params()
+    mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
     
     print('COMPLEETTEEEETETETETE!!!!')

@@ -1,0 +1,210 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta
+  Tree:       Maximum likelihood
+    file:           -
+  #taxa:            21
+  #sites:           113
+  #patterns:        111
+  Max. thread mem:  5 MB
+
+Output:
+  Log:           data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.log
+  Starting tree: data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.tree
+  Results:       data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -o data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673 -d aa -t ml -p 6 -m LG 
+
+
+Partition 1/1
+
+ ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
+
+Computation of likelihood scores completed. It took 0h:00:25
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1     -2872.9883      5935.0722         0.0000    0.5089
+       2  LG+I+G4            2     -2870.6604      5935.1438         0.0715    0.4911
+       3  LG+I               1     -2911.9550      6013.0055        77.9333    0.0000
+       4  LG+G4+F           20     -2871.3963      6021.7084        86.6362    0.0000
+       5  LG+I+G4+F         21     -2869.6844      6023.0120        87.9398    0.0000
+       6  LG                 0     -2933.6184      6051.6050       116.5328    0.0000
+       7  LG+I+F            20     -2906.1960      6091.3078       156.2356    0.0000
+       8  LG+F              19     -2929.0177      6132.2238       197.1516    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+G4
+lnL:                -2872.9883
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        1.5815
+Score:              5935.0722
+Weight:             0.5089
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.5089
+Gamma-Inv:          0.4911
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0764
+Alpha:              1.5815
+Alpha-P.Inv:        2.1130
+P.Inv-Alpha:        0.0498
+Frequencies:        0.0511 0.0873 0.0342 0.0608 0.0092 0.0207 0.0622 0.0907 0.0188 0.0743 0.0815 0.0781 0.0246 0.0704 0.0367 0.0420 0.0516 0.0058 0.0342 0.0656 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta --model LG+G4
+  > paup -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta
+  > iqtree -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m LG+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2     -2870.6604      5823.3208         0.0000    0.7905
+       2  LG+G4              1     -2872.9883      5825.9767         2.6558    0.2095
+       3  LG+I+G4+F         21     -2869.6844      5859.3687        36.0479    0.0000
+       4  LG+G4+F           20     -2871.3963      5860.7925        37.4717    0.0000
+       5  LG+I               1     -2911.9550      5903.9100        80.5891    0.0000
+       6  LG+I+F            20     -2906.1960      5930.3919       107.0711    0.0000
+       7  LG                 0     -2933.6184      5945.2369       121.9160    0.0000
+       8  LG+F              19     -2929.0177      5974.0353       150.7145    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+I+G4
+lnL:                -2870.6604
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.0498
+Gamma shape:        2.1130
+Score:              5823.3208
+Weight:             0.7905
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.2095
+Gamma-Inv:          0.7905
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0764
+Alpha:              1.5815
+Alpha-P.Inv:        2.1130
+P.Inv-Alpha:        0.0498
+Frequencies:        0.0511 0.0873 0.0342 0.0608 0.0092 0.0207 0.0622 0.0907 0.0188 0.0743 0.0815 0.0781 0.0246 0.0704 0.0367 0.0420 0.0516 0.0058 0.0342 0.0656 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta --model LG+I+G4
+  > paup -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta
+  > iqtree -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m LG+I+G4
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1     -2872.9883      5870.9767         0.0000    0.5429
+       2  LG+I+G4            2     -2870.6604      5871.3208         0.3442    0.4571
+       3  LG+I               1     -2911.9550      5948.9100        77.9333    0.0000
+       4  LG                 0     -2933.6184      5987.2369       116.2602    0.0000
+       5  LG+G4+F           20     -2871.3963      5993.7925       122.8159    0.0000
+       6  LG+I+G4+F         21     -2869.6844      5999.3687       128.3920    0.0000
+       7  LG+I+F            20     -2906.1960      6063.3919       192.4152    0.0000
+       8  LG+F              19     -2929.0177      6100.0353       229.0586    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+G4
+lnL:                -2872.9883
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        1.5815
+Score:              5870.9767
+Weight:             0.5429
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.5429
+Gamma-Inv:          0.4571
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0764
+Alpha:              1.5815
+Alpha-P.Inv:        2.1130
+P.Inv-Alpha:        0.0498
+Frequencies:        0.0511 0.0873 0.0342 0.0608 0.0092 0.0207 0.0622 0.0907 0.0188 0.0743 0.0815 0.0781 0.0246 0.0704 0.0367 0.0420 0.0516 0.0058 0.0342 0.0656 
+
+Commands:
+  > phyml  -i data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta --model LG+G4
+  > paup -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta
+  > iqtree -s data/model_gen/V0_sample_aa/alignments/ribosomal_l5_pf00673.fasta -m LG+G4
+
+There are 3 different topologies
+Topologies written to data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.topos
+
+topo_id   models_count   bic_support   aic_support   aicc_support
+-----------------------------------------------------------------
+      1              4       1.00000       1.00000       1.00000
+      3              3       0.00000       0.00000       0.00000
+      2              1       0.00000       0.00000       0.00000
+
+extended majority-rule consensus: ((RL5_BUCAK,RL5_MICLU)[1.00000],((RK5_ODOSI,RL5_MYCGE)[1.00000],(RK5_CYAPA,(RK5_EUGGR,(RL5_MYCCA,(RL5_SULAC,(RL5_HALMA,((((RL11_LEICH,(RL11_HUMAN,RL11_DROME)[1.00000])[1.00000],(R111_ARATH,RL11_CHLRE)[1.00000])[1.00000],(RL11_TETTH,(RL11_SCHPO,RL11_YEAST)[1.00000])[1.00000])[1.00000],(RL5_METJA,RL5_METVA)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(RL5_THEMA,RL5X_THETH)[1.00000]);
+strict consensus: ((RL5_BUCAK,RL5_MICLU)[1.00000],((RK5_ODOSI,RL5_MYCGE)[1.00000],(RK5_CYAPA,(RK5_EUGGR,(RL5_MYCCA,(RL5_SULAC,(RL5_HALMA,((((RL11_LEICH,(RL11_HUMAN,RL11_DROME)[1.00000])[1.00000],(R111_ARATH,RL11_CHLRE)[1.00000])[1.00000],(RL11_TETTH,(RL11_SCHPO,RL11_YEAST)[1.00000])[1.00000])[1.00000],(RL5_METJA,RL5_METVA)[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000])[1.00000],(RL5_THEMA,RL5X_THETH)[1.00000]);
+
+Summary:
+
+Partition 1/1:
+                         Model         Score        Weight
+----------------------------------------------------------
+       BIC               LG+G4     5935.0722        0.5089
+       AIC             LG+I+G4     5823.3208        0.7905
+      AICc               LG+G4     5870.9767        0.5429
+
+Execution results written to data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.out
+Starting tree written to data/model_gen/V0_sample/temp_modeltest/ribosomal_l5_pf00673.tree
