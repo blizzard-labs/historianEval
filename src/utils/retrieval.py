@@ -55,47 +55,149 @@ class TreeFamDownloader:
         """Simple rate limiting to be respectful to servers"""
         time.sleep(self.request_delay)
     
+    def validate_fasta_content(self, content: str) -> bool:
+        """Validate that content is a proper FASTA file"""
+        if not content or not content.strip():
+            return False
+        
+        lines = content.strip().split('\n')
+        if not lines:
+            return False
+        
+        # Must start with a header
+        if not lines[0].startswith('>'):
+            return False
+        
+        # Check for at least one sequence line
+        has_sequence = False
+        for line in lines[1:]:
+            if line.strip() and not line.startswith('>'):
+                has_sequence = True
+                break
+        
+        return has_sequence
+    
+    def validate_newick_content(self, content: str) -> bool:
+        """Validate that content is a proper Newick tree"""
+        if not content or not content.strip():
+            return False
+        
+        content = content.strip()
+        
+        # Basic Newick format checks
+        if not content.startswith('('):
+            return False
+        
+        if not content.endswith(';'):
+            return False
+        
+        # Check balanced parentheses
+        open_count = 0
+        for char in content:
+            if char == '(':
+                open_count += 1
+            elif char == ')':
+                open_count -= 1
+                if open_count < 0:
+                    return False
+        
+        # Should end with balanced parentheses
+        if open_count != 0:
+            return False
+        
+        # Should contain at least one leaf (some text between parentheses or commas)
+        # This is a simple check - a proper tree should have identifiers
+        if not re.search(r'[a-zA-Z0-9_]', content):
+            return False
+        
+        return True
+    
     def download_treefam_family(self, family_id: str) -> Dict[str, bool]:
         """Download alignment and tree for a TreeFam family ID"""
         results = {"alignment": False, "tree": False}
         
         try:
-            # Try multiple TreeFam endpoints
+            # Try multiple TreeFam endpoints with different URL formats
             treefam_urls = [
-                self.treefam_archive,
-                self.treefam_base
+                "http://www.treefam.org",
+                "https://treefam.genomics.org.cn"
             ]
             
             for base_url in treefam_urls:
                 try:
-                    # Download alignment
-                    alignment_url = f"{base_url}/family/{family_id}/alignment"
-                    alignment_response = self.session.get(alignment_url, timeout=30)
+                    # First check if family exists
+                    family_url = f"{base_url}/family/{family_id}"
+                    family_response = self.session.get(family_url, timeout=30)
                     
-                    if alignment_response.status_code == 200:
-                        # Check if it's actually a FASTA file
-                        content = alignment_response.text
-                        if content.strip() and ('>' in content or 'FASTA' in content):
-                            alignment_file = self.fasta_dir / f"{family_id}_treefam.fasta"
-                            with open(alignment_file, 'w') as f:
-                                f.write(content)
-                            results["alignment"] = True
-                            logger.info(f"Downloaded alignment for {family_id} from TreeFam")
+                    if family_response.status_code != 200:
+                        logger.warning(f"Family {family_id} not found at {base_url}")
+                        continue
+                    
+                    # Try different alignment URL formats
+                    alignment_urls = [
+                        f"{base_url}/family/{family_id}/alignment",
+                        f"{base_url}/family/{family_id}/alignment/fasta",
+                        f"{base_url}/family/{family_id}.fasta"
+                    ]
+                    
+                    for alignment_url in alignment_urls:
+                        try:
+                            logger.debug(f"Trying alignment URL: {alignment_url}")
+                            alignment_response = self.session.get(alignment_url, timeout=30)
+                            
+                            if alignment_response.status_code == 200:
+                                content = alignment_response.text
+                                if self.validate_fasta_content(content):
+                                    alignment_file = self.fasta_dir / f"{family_id}_treefam.fasta"
+                                    with open(alignment_file, 'w') as f:
+                                        f.write(content)
+                                    results["alignment"] = True
+                                    logger.info(f"Downloaded alignment for {family_id} from TreeFam")
+                                    break
+                                else:
+                                    logger.debug(f"Invalid FASTA content for {family_id} from {alignment_url}")
+                            else:
+                                logger.debug(f"Failed to download alignment for {family_id} from {alignment_url}: HTTP {alignment_response.status_code}")
+                        except requests.exceptions.RequestException as e:
+                            logger.debug(f"Request failed for {alignment_url}: {e}")
+                            continue
+                        except Exception as e:
+                            logger.debug(f"Unexpected error for {alignment_url}: {e}")
+                            continue
                     
                     self.rate_limit()
                     
-                    # Download tree
-                    tree_url = f"{base_url}/family/{family_id}/tree"
-                    tree_response = self.session.get(tree_url, timeout=30)
+                    # Try different tree URL formats
+                    tree_urls = [
+                        f"{base_url}/family/{family_id}/tree",
+                        f"{base_url}/family/{family_id}/tree/newick",
+                        f"{base_url}/family/{family_id}.nh"
+                    ]
                     
-                    if tree_response.status_code == 200:
-                        content = tree_response.text
-                        if content.strip() and ('(' in content and ')' in content):
-                            tree_file = self.tree_dir / f"{family_id}_treefam.newick"
-                            with open(tree_file, 'w') as f:
-                                f.write(content)
-                            results["tree"] = True
-                            logger.info(f"Downloaded tree for {family_id} from TreeFam")
+                    for tree_url in tree_urls:
+                        try:
+                            logger.debug(f"Trying tree URL: {tree_url}")
+                            tree_response = self.session.get(tree_url, timeout=30)
+                            
+                            if tree_response.status_code == 200:
+                                content = tree_response.text
+                                if self.validate_newick_content(content):
+                                    tree_file = self.tree_dir / f"{family_id}_treefam.newick"
+                                    with open(tree_file, 'w') as f:
+                                        f.write(content)
+                                    results["tree"] = True
+                                    logger.info(f"Downloaded tree for {family_id} from TreeFam")
+                                    break
+                                else:
+                                    logger.debug(f"Invalid Newick content for {family_id} from {tree_url}")
+                            else:
+                                logger.debug(f"Failed to download tree for {family_id} from {tree_url}: HTTP {tree_response.status_code}")
+                        except requests.exceptions.RequestException as e:
+                            logger.debug(f"Request failed for {tree_url}: {e}")
+                            continue
+                        except Exception as e:
+                            logger.debug(f"Unexpected error for {tree_url}: {e}")
+                            continue
                     
                     # If we got at least one file, break from trying other URLs
                     if results["alignment"] or results["tree"]:
@@ -133,7 +235,8 @@ class TreeFamDownloader:
                             family_id = family_match.group(1)
                             logger.info(f"Found TreeFam family {family_id} for gene {gene_id}")
                             break
-                except requests.exceptions.RequestException:
+                except requests.exceptions.RequestException as e:
+                    logger.debug(f"Failed to search for gene {gene_id} at {search_url}: {e}")
                     continue
             
             if family_id:
@@ -151,6 +254,8 @@ class TreeFamDownloader:
                     new_file = self.tree_dir / f"{gene_id}_{family_id}_treefam.newick"
                     if old_file.exists():
                         old_file.rename(new_file)
+            else:
+                logger.warning(f"Could not find TreeFam family for gene {gene_id}")
             
         except Exception as e:
             logger.error(f"Error finding TreeFam family for gene {gene_id}: {e}")
@@ -167,31 +272,45 @@ class TreeFamDownloader:
             
             # Download alignment
             alignment_params = {"content-type": "text/x-fasta", "aligned": "1"}
-            alignment_response = self.session.get(tree_url, params=alignment_params, timeout=30)
-            
-            if alignment_response.status_code == 200:
-                content = alignment_response.text
-                if content.strip() and content.startswith('>'):
-                    alignment_file = self.fasta_dir / f"{gene_id}_ensembl.fasta"
-                    with open(alignment_file, 'w') as f:
-                        f.write(content)
-                    results["alignment"] = True
-                    logger.info(f"Downloaded alignment for {gene_id} from Ensembl")
+            try:
+                alignment_response = self.session.get(tree_url, params=alignment_params, timeout=30)
+                
+                if alignment_response.status_code == 200:
+                    content = alignment_response.text
+                    if self.validate_fasta_content(content):
+                        alignment_file = self.fasta_dir / f"{gene_id}_ensembl.fasta"
+                        with open(alignment_file, 'w') as f:
+                            f.write(content)
+                        results["alignment"] = True
+                        logger.info(f"Downloaded alignment for {gene_id} from Ensembl")
+                    else:
+                        logger.debug(f"Invalid FASTA content for {gene_id} from Ensembl")
+                else:
+                    logger.debug(f"Failed to download alignment for {gene_id} from Ensembl: HTTP {alignment_response.status_code}")
+            except requests.exceptions.RequestException as e:
+                logger.debug(f"Failed to download alignment for {gene_id} from Ensembl: {e}")
             
             self.rate_limit()
             
             # Download tree
             tree_params = {"content-type": "text/x-nh"}
-            tree_response = self.session.get(tree_url, params=tree_params, timeout=30)
-            
-            if tree_response.status_code == 200:
-                content = tree_response.text
-                if content.strip() and ('(' in content and ')' in content):
-                    tree_file = self.tree_dir / f"{gene_id}_ensembl.newick"
-                    with open(tree_file, 'w') as f:
-                        f.write(content)
-                    results["tree"] = True
-                    logger.info(f"Downloaded tree for {gene_id} from Ensembl")
+            try:
+                tree_response = self.session.get(tree_url, params=tree_params, timeout=30)
+                
+                if tree_response.status_code == 200:
+                    content = tree_response.text
+                    if self.validate_newick_content(content):
+                        tree_file = self.tree_dir / f"{gene_id}_ensembl.newick"
+                        with open(tree_file, 'w') as f:
+                            f.write(content)
+                        results["tree"] = True
+                        logger.info(f"Downloaded tree for {gene_id} from Ensembl")
+                    else:
+                        logger.debug(f"Invalid Newick content for {gene_id} from Ensembl")
+                else:
+                    logger.debug(f"Failed to download tree for {gene_id} from Ensembl: HTTP {tree_response.status_code}")
+            except requests.exceptions.RequestException as e:
+                logger.debug(f"Failed to download tree for {gene_id} from Ensembl: {e}")
             
         except Exception as e:
             logger.error(f"Error downloading from Ensembl for {gene_id}: {e}")
@@ -250,11 +369,24 @@ class TreeFamDownloader:
         print(f"Output directory: {self.output_dir}")
         print(f"{'='*50}")
         
-        # Print failed downloads
-        failed = [gene for gene, result in results.items() 
-                 if not result["alignment"] and not result["tree"]]
-        if failed:
-            print(f"Failed downloads: {', '.join(failed)}")
+        # Print detailed results
+        alignment_only = [gene for gene, result in results.items() 
+                         if result["alignment"] and not result["tree"]]
+        tree_only = [gene for gene, result in results.items() 
+                    if result["tree"] and not result["alignment"]]
+        both = [gene for gene, result in results.items() 
+               if result["alignment"] and result["tree"]]
+        neither = [gene for gene, result in results.items() 
+                  if not result["alignment"] and not result["tree"]]
+        
+        if both:
+            print(f"Both alignment and tree: {', '.join(both)}")
+        if alignment_only:
+            print(f"Alignment only: {', '.join(alignment_only)}")
+        if tree_only:
+            print(f"Tree only: {', '.join(tree_only)}")
+        if neither:
+            print(f"Failed downloads: {', '.join(neither)}")
 
 def main():
     parser = argparse.ArgumentParser(description="Download gene family alignments and trees from TreeFam")
@@ -267,8 +399,14 @@ def main():
                        help="Don't use Ensembl as fallback if TreeFam fails")
     parser.add_argument("--delay", type=float, default=1.0, 
                        help="Delay between requests in seconds")
+    parser.add_argument("--verbose", action="store_true", 
+                       help="Enable debug logging")
     
     args = parser.parse_args()
+    
+    # Set logging level
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
     
     # Collect gene/family lists
     genes = []

@@ -69,6 +69,11 @@ class modelConstructor:
             raise      
         '''
 
+    def cleanup_trees(self):
+        for file in os.listdir(self.tree_folder):
+            if os.path.isfile(os.path.join(self.tree_folder, file)) and (file.endswith(".nhx") or file.endswith(".newick")):
+                utils.strip_metadata(os.path.join(self.tree_folder, file))
+    
     def cleanup_modeltest_trees(self):
         modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
         try:
@@ -76,14 +81,12 @@ class modelConstructor:
             for file in os.listdir(self.tree_folder):
                 if os.path.isfile(os.path.join(self.tree_folder, file)):
                     existant_files.append(file.split(".")[0])
-                    
-                    if file.endswith(".nhx"): #Ensure that tree is not in extended newick format
-                        utils.strip_metadata(os.path.join(self.tree_folder, file))
             
             for file in os.listdir(modeltest_folder):
                 if file.endswith(".tree") and file.split(".")[0] not in existant_files:
                     os.rename(os.path.join(modeltest_folder, file), os.path.join(self.tree_folder, file))
             
+            self.cleanup_trees()
             print(f"Trees cleaned and moved to {self.tree_folder}.")
         except Exception as e:
             print(f"Error cleaning up trees: {e}")
@@ -153,7 +156,8 @@ class modelConstructor:
             raise
 
 def main():
-    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
+    mc = modelConstructor('V0_mammilian_aa', "data/model_gen/V0_mammilian_aa/alignments", params_file="data/model_gen/V0_mammilian_aa/protein_evolution_parameters.csv", log=False)
+    mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
