@@ -1,0 +1,41 @@
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V1_sample_aa/alignments/TF105060.fa
+  Tree:       Maximum likelihood
+    file:           -
+  #taxa:            42
+  #sites:           2094
+  #patterns:        2029
+  Max. thread mem:  202 MB
+
+Output:
+  Log:           data/model_gen/V1_sample_aa/temp_modeltest/TF105060.log
+  Starting tree: data/model_gen/V1_sample_aa/temp_modeltest/TF105060.tree
+  Results:       data/model_gen/V1_sample_aa/temp_modeltest/TF105060.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------

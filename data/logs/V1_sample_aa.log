@@ -18,20 +18,28 @@ Written by Diego Darriba.
 Contributors: Tomas Flouri, Alexey Kozlov, Benoit Morel, David Posada, 
               Alexandros Stamatakis.
 Latest version: https://github.com/ddarriba/modeltest
-Found 1 FASTA files
-Processing: ribosomal_l5_pf00673.fasta
-  - Using ModelTest-NG parameters
-Successfully processed 1 alignments
-Results saved to: data/model_gen/V0_sample_aa/protein_evolution_parameters.csv
-Summary statistics saved to: data/model_gen/V0_sample_aa/parameter_summary.csv
+Found 3 FASTA files
+Processing: TF312796.fa
+ModelTest-NG timed out for data/model_gen/V1_sample_aa/alignments/TF312796.fa
+  - Using fallback parameter estimation
+USING FALLBACK METHOD FOR PROTEIN PARAMETERS...
+Processing: TF106101.fa
+ModelTest-NG timed out for data/model_gen/V1_sample_aa/alignments/TF106101.fa
+  - Using fallback parameter estimation
+USING FALLBACK METHOD FOR PROTEIN PARAMETERS...
+Processing: TF105060.fa
+ModelTest-NG timed out for data/model_gen/V1_sample_aa/alignments/TF105060.fa
+  - Using fallback parameter estimation
+USING FALLBACK METHOD FOR PROTEIN PARAMETERS...
+Successfully processed 3 alignments
+Results saved to: data/model_gen/V1_sample_aa/protein_evolution_parameters.csv
+Summary statistics saved to: data/model_gen/V1_sample_aa/parameter_summary.csv
 Distribution plots saved to output folder
 Protein evolution analysis complete!
-2025-07-02 20:22:44,708 [INFO] Substitution parameters extracted for V0_sample_aa.
-2025-07-02 20:22:44,709 [INFO] Trees cleaned and moved to data/model_gen/V0_sample_aa/trees.
 Starting RPANDA analysis with all model combinations...
-Tree folder: data/model_gen/V0_sample_aa/trees
-CSV file: data/model_gen/V0_sample_aa/protein_evolution_parameters.csv
-Output file: data/model_gen/V0_sample_aa/protein_evolution_parameters_with_rates.csv
+Tree folder: data/model_gen/V1_sample_aa/trees
+CSV file: data/model_gen/V1_sample_aa/protein_evolution_parameters.csv
+Output file: data/model_gen/V1_sample_aa/protein_evolution_parameters_with_rates.csv
 
 === MODEL COMBINATIONS TO BE TESTED ===
 BCSTDCST: Birth constant, Death constant
@@ -45,10 +53,31 @@ BEXPDLIN: Birth exponential, Death linear
 BLINDLIN: Birth linear, Death linear
 
 Reading CSV file...
-Found 1 tree files
-Processing tree: ribosomal_l5_pf00673.tree
+Found 3 tree files
+Processing tree: TF105060.tree
   Tree is not ultrametric, attempting to make ultrametric...
-  Tree is unrooted, rooting using midpoint...
+  Fitting BCSTDCST model...
+  Fitting BEXPCDST model...
+  Fitting BLINCDST model...
+  Fitting BCSTDEXP model...
+  Fitting BEXPDEXP model...
+  Fitting BLINDEXP model...
+  Fitting BCSTDLIN model...
+  Fitting BEXPDLIN model...
+  Fitting BLINDLIN model...
+Processing tree: TF106101.tree
+  Tree is not ultrametric, attempting to make ultrametric...
+  Fitting BCSTDCST model...
+  Fitting BEXPCDST model...
+  Fitting BLINCDST model...
+  Fitting BCSTDEXP model...
+  Fitting BEXPDEXP model...
+  Fitting BLINDEXP model...
+  Fitting BCSTDLIN model...
+  Fitting BEXPDLIN model...
+  Fitting BLINDLIN model...
+Processing tree: TF312796.tree
+  Tree is not ultrametric, attempting to make ultrametric...
   Fitting BCSTDCST model...
   Fitting BEXPCDST model...
   Fitting BLINCDST model...
@@ -63,18 +92,19 @@ Merging data...
 Writing results...
 
 === SUMMARY ===
-CSV entries: 1
-Tree files processed: 1
-Successful matches: 1
-Output written to: data/model_gen/V0_sample_aa/protein_evolution_parameters_with_rates.csv
+CSV entries: 3
+Tree files processed: 3
+Successful matches: 3
+Output written to: data/model_gen/V1_sample_aa/protein_evolution_parameters_with_rates.csv
 
 === RATE ESTIMATES SUMMARY ===
-Speciation rate - Mean: 2.1197, Range: 2.1197 - 2.1197
-Extinction rate - Mean: 0.0000, Range: 0.0000 - 0.0000
-Net diversification - Mean: 2.1197, Range: 2.1197 - 2.1197
+Speciation rate - Mean: 115.1294, Range: 19.5506 - 253.9297
+Extinction rate - Mean: 107.8623, Range: -14.7533 - 244.8900
+Net diversification - Mean: 7.2670, Range: -21.5425 - 34.3039
 
 === BEST MODELS SELECTED ===
 RPANDA_BCSTDCST: 1 cases
+RPANDA_BLINDLIN: 2 cases
 
 === MODEL COMPARISON NOTES ===
 The output CSV now includes:
@@ -83,5 +113,7 @@ The output CSV now includes:
 - delta_aic: Delta AIC values relative to best model
 
 RPANDA analysis with all model combinations complete!
-2025-07-02 20:22:51,901 [INFO] Tree topology parameters extracted for V0_sample_aa.
-2025-07-02 20:22:51,901 [INFO] COMPLEETTEEEETETETETE!!!!
+Substitution parameters extracted for V1_sample_aa.
+Trees cleaned and moved to data/model_gen/V1_sample_aa/trees.
+Tree topology parameters extracted for V1_sample_aa.
+COMPLEETTEEEETETETETE!!!!

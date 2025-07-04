@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import defaultdict, Counter
 from scipy import stats
-from Bio import AlignIO, SeqIO
+from Bio import AlignIO, SeqIO, Phylo
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import warnings
@@ -72,6 +72,15 @@ class ProteinParameterExtractor:
             print(f"Error reading {filepath}: {e}")
             return None
     
+    def read_tree(self, filepath):
+        """Read NEWICK tree file"""
+        try:
+            tree = Phylo.read(filepath, "newick")
+            return tree
+        except Exception as e:
+            print(f"Error reading {filepath}: {e}")
+            return None
+    
     def check_modeltest_ng(self):
         """Check if ModelTest-NG is available"""
         try:
@@ -86,20 +95,34 @@ class ProteinParameterExtractor:
             print(f"Warning: Could not run ModelTest-NG ({e})")
             print("Falling back to basic parameter estimation")
     
-    def run_modeltest_ng(self, alignment_file):
+    def run_modeltest_ng(self, alignment_file, tree_file="", model="LG"):
         """Run ModelTest-NG on protein alignment file"""
         base_name = os.path.splitext(os.path.basename(alignment_file))[0]
         output_prefix = os.path.join(self.temp_dir, base_name)
         
-        cmd = [
-            self.modeltest_path,
-            "-i", alignment_file,
-            "-o", output_prefix,
-            "-d", "aa",  # Specify amino acid data type
-            "-t", "ml",
-            "-p", "6",   # Number of threads 
-            "-m", "LG"
-        ]
+        if len(tree_file) > 0:
+            print("checkpoint 2")
+            print(tree_file)
+            cmd = [
+                self.modeltest_path,
+                "-i", alignment_file,
+                "-o", output_prefix,
+                "-d", "aa",
+                "-t", "user",
+                "--utree", tree_file,
+                "-p", "6",
+                "-m", model
+            ]
+        else:
+            cmd = [
+                self.modeltest_path,
+                "-i", alignment_file,
+                "-o", output_prefix,
+                "-d", "aa",  # Specify amino acid data type
+                "-t", "ml",
+                "-p", "6",   # Number of threads 
+                "-m", model
+            ]
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
@@ -349,7 +372,7 @@ class ProteinParameterExtractor:
             'prop_invariant': prop_invariant
         }
     
-    def process_alignment(self, filepath):
+    def process_alignment(self, filepath, tree_file=""):
         """Process a single protein alignment file"""
         print(f"Processing: {os.path.basename(filepath)}")
         
@@ -358,8 +381,19 @@ class ProteinParameterExtractor:
             print(f"Skipping {filepath}: Invalid alignment or too few sequences")
             return None
         
-        # Try ModelTest-NG first, fallback to basic estimation
-        modeltest_params = self.run_modeltest_ng(filepath)
+        if (len(tree_file) > 0):
+            tree = self.read_tree(tree_file)
+            
+            if tree is None:
+                print(f"Skipping reading tree {tree_file}: Invalid tree")
+                modeltest_params = self.run_modeltest_ng(filepath)
+            else:
+                print("checkpoint 1")
+                modeltest_params = self.run_modeltest_ng(filepath, tree_file=tree_file)
+        else:
+            # Try ModelTest-NG first, fallback to basic estimation
+            modeltest_params = self.run_modeltest_ng(filepath)
+        
         
         if modeltest_params and len(modeltest_params) > 4:
             print(f"  - Using ModelTest-NG parameters")
@@ -443,8 +477,21 @@ class ProteinParameterExtractor:
         
         print(f"Found {len(fasta_files)} FASTA files")
         
+        tree_folder = self.input_folder.replace("alignments", "trees")
+        
         for filepath in fasta_files:
-            result = self.process_alignment(filepath)
+            tree_file = ""
+            
+            for f in os.listdir(tree_folder): # checking for pre-existant tree file
+                if f.replace(".tree", "").strip() in filepath:
+                    tree_file = os.path.join(tree_folder, f)
+                    print(f"Pre-existant tree found for {f}!")
+            
+            if (len(tree_file) > 0):
+                print("checkpoint 0")
+                result = self.process_alignment(filepath, tree_file)
+            else:
+                result = self.process_alignment(filepath)
             if result:
                 self.results.append(result)
         

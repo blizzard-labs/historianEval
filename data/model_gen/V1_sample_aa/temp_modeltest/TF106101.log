@@ -1,0 +1,59 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Partition DATA: Sequences ENSPTRP00000027067 and ENSP00000264731 are identical
+WARNING: Partition DATA: Sequences ENSPTRP00000014836 and ENSP00000269305 are identical
+WARNING: Partition DATA: Sequences ENSNLEP00000008197 and ENSMMUP00000021634 are identical
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/V1_sample_aa/temp_modeltest/TF106101.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V1_sample_aa/alignments/TF106101.fa
+  Tree:       Maximum likelihood
+    file:           -
+  #taxa:            192
+  #sites:           1553
+  #patterns:        1360
+  Max. thread mem:  635 MB
+
+Output:
+  Log:           data/model_gen/V1_sample_aa/temp_modeltest/TF106101.log
+  Starting tree: data/model_gen/V1_sample_aa/temp_modeltest/TF106101.tree
+  Results:       data/model_gen/V1_sample_aa/temp_modeltest/TF106101.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V1_sample_aa/alignments/TF106101.fa -o data/model_gen/V1_sample_aa/temp_modeltest/TF106101 -d aa -t ml -p 6 -m LG 
+
+
+Partition 1/1
+
