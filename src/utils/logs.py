@@ -37,3 +37,4 @@ class StreamToLogger:
 
     def flush(self):
         pass  # Needed for compatibility
+

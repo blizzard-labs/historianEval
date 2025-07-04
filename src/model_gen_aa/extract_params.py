@@ -101,8 +101,6 @@ class ProteinParameterExtractor:
         output_prefix = os.path.join(self.temp_dir, base_name)
         
         if len(tree_file) > 0:
-            print("checkpoint 2")
-            print(tree_file)
             cmd = [
                 self.modeltest_path,
                 "-i", alignment_file,
@@ -388,7 +386,6 @@ class ProteinParameterExtractor:
                 print(f"Skipping reading tree {tree_file}: Invalid tree")
                 modeltest_params = self.run_modeltest_ng(filepath)
             else:
-                print("checkpoint 1")
                 modeltest_params = self.run_modeltest_ng(filepath, tree_file=tree_file)
         else:
             # Try ModelTest-NG first, fallback to basic estimation
@@ -488,7 +485,6 @@ class ProteinParameterExtractor:
                     print(f"Pre-existant tree found for {f}!")
             
             if (len(tree_file) > 0):
-                print("checkpoint 0")
                 result = self.process_alignment(filepath, tree_file)
             else:
                 result = self.process_alignment(filepath)

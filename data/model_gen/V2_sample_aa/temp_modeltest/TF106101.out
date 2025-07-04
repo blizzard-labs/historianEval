@@ -1,0 +1,170 @@
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V2_sample_aa/alignments/TF106101.fa
+  Tree:       Fixed user
+    file:           data/model_gen/V2_sample_aa/trees/TF106101.tree
+  #taxa:            192
+  #sites:           1553
+  #patterns:        1360
+  Max. thread mem:  635 MB
+
+Output:
+  Log:           data/model_gen/V2_sample_aa/temp_modeltest/TF106101.log
+  Results:       data/model_gen/V2_sample_aa/temp_modeltest/TF106101.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4+F           20    -67086.0973    137118.7201         0.0000    1.0000
+       2  LG+I+G4+F         21    -67109.0769    137172.0271        53.3071    0.0000
+       3  LG+G4              1    -67592.0191    137990.9527       872.2326    0.0000
+       4  LG+I+G4            2    -67614.8370    138043.9366       925.2165    0.0000
+       5  LG+F              19    -69158.6814    141256.5403      4137.8202    0.0000
+       6  LG+I+F            20    -69182.3040    141311.1334      4192.4133    0.0000
+       7  LG                 0    -69684.5281    142168.6227      5049.9027    0.0000
+       8  LG+I               1    -69708.0375    142222.9894      5104.2694    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+G4+F
+lnL:                -67086.0973
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506
+Inv. sites prop:    -
+Gamma shape:        1.2883
+Score:              137118.7201
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          0.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.2883
+Alpha-P.Inv:        1.3148
+P.Inv-Alpha:        0.0216
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506 
+
+Commands:
+  > phyml  -i data/model_gen/V2_sample_aa/alignments/TF106101.fa -d aa -m LG -f e -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m PROTGAMMALGF -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V2_sample_aa/alignments/TF106101.fa --model LG+G4+F
+  > paup -s data/model_gen/V2_sample_aa/alignments/TF106101.fa
+  > iqtree -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m LG+G4+F
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4+F           20    -67086.0973    134974.1946         0.0000    1.0000
+       2  LG+I+G4+F         21    -67109.0769    135022.1537        47.9591    0.0000
+       3  LG+G4              1    -67592.0191    135948.0381       973.8435    0.0000
+       4  LG+I+G4            2    -67614.8370    135995.6741      1021.4795    0.0000
+       5  LG+F              19    -69158.6814    139117.3627      4143.1682    0.0000
+       6  LG+I+F            20    -69182.3040    139166.6079      4192.4133    0.0000
+       7  LG                 0    -69684.5281    140131.0561      5156.8616    0.0000
+       8  LG+I               1    -69708.0375    140180.0749      5205.8803    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+G4+F
+lnL:                -67086.0973
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506
+Inv. sites prop:    -
+Gamma shape:        1.2883
+Score:              134974.1946
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          0.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.2883
+Alpha-P.Inv:        1.3148
+P.Inv-Alpha:        0.0216
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506 
+
+Commands:
+  > phyml  -i data/model_gen/V2_sample_aa/alignments/TF106101.fa -d aa -m LG -f e -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m PROTGAMMALGF -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V2_sample_aa/alignments/TF106101.fa --model LG+G4+F
+  > paup -s data/model_gen/V2_sample_aa/alignments/TF106101.fa
+  > iqtree -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m LG+G4+F
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4+F           20    -67086.0973    135254.1946         0.0000    1.0000
+       2  LG+I+G4+F         21    -67109.0769    135303.1537        48.9591    0.0000
+       3  LG+G4              1    -67592.0191    136198.0381       943.8435    0.0000
+       4  LG+I+G4            2    -67614.8370    136246.6741       992.4795    0.0000
+       5  LG+F              19    -69158.6814    139395.3627      4141.1682    0.0000
+       6  LG+I+F            20    -69182.3040    139446.6079      4192.4133    0.0000
+       7  LG                 0    -69684.5281    140379.0561      5124.8616    0.0000
+       8  LG+I               1    -69708.0375    140430.0749      5175.8803    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+G4+F
+lnL:                -67086.0973
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506
+Inv. sites prop:    -
+Gamma shape:        1.2883
+Score:              135254.1946
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          0.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.2883
+Alpha-P.Inv:        1.3148
+P.Inv-Alpha:        0.0216
+Frequencies:        0.0517 0.0555 0.0459 0.0469 0.0246 0.0603 0.0607 0.0573 0.0302 0.0436 0.0775 0.0456 0.0309 0.0322 0.0834 0.1012 0.0648 0.0078 0.0292 0.0506 
+
+Commands:
+  > phyml  -i data/model_gen/V2_sample_aa/alignments/TF106101.fa -d aa -m LG -f e -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m PROTGAMMALGF -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V2_sample_aa/alignments/TF106101.fa --model LG+G4+F
+  > paup -s data/model_gen/V2_sample_aa/alignments/TF106101.fa
+  > iqtree -s data/model_gen/V2_sample_aa/alignments/TF106101.fa -m LG+G4+F
+Done

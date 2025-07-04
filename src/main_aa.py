@@ -3,7 +3,7 @@
 import os
 import subprocess
 from Bio import Phylo
-import utils
+import utils.logs as utils
 import logging
 import sys
 
@@ -136,7 +136,7 @@ class modelConstructor:
         
         cmd = [
             "Rscript",
-            "src/model_gen_nt/extract_treetop.R",
+            "src/model_gen_aa/extract_treetop.R",
             self.tree_folder,
             self.params_file
         ]
@@ -153,7 +153,7 @@ class modelConstructor:
             raise
 
 def main():
-    mc = modelConstructor('V2_sample_aa', "data/model_gen/V2_sample_aa/alignments", params_file="data/model_gen/V2_sample_aa/protein_evolution_parameters.csv", log=False)
+    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
     mc.extract_top_params()  
