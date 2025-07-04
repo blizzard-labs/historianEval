@@ -3,7 +3,7 @@
 import os
 import subprocess
 from Bio import Phylo
-import utils.logs as utils
+import utils.general as utils
 import logging
 import sys
 
