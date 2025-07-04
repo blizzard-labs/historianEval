@@ -1,0 +1,306 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Partition DATA: Sequences ENSTRUP00000016302 and ENSTNIP00000019330 are identical
+WARNING: Partition DATA: Sequences ENSTRUP00000016302 and ENSONIP00000016592 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSLAFP00000004141 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSSHAP00000014845 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSECAP00000019551 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSBTAP00000000289 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSNLEP00000003935 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSMMUP00000008547 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSMODP00000007631 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSPVAP00000015705 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSAMEP00000000357 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSCPOP00000014893 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSSTOP00000018402 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSMPUP00000015049 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSP00000379287 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSTSYP00000005627 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSCJAP00000045798 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSCAFP00000000820 are identical
+WARNING: Partition DATA: Sequences ENSPPYP00000021077 and ENSTTRP00000015069 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSSTOP00000004563 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSMLUP00000001545 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSOANP00000004013 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSECAP00000007582 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSTSYP00000008333 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSETEP00000009787 are identical
+WARNING: Partition DATA: Sequences ENSPSIP00000012906 and ENSVPAP00000009571 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSBTAP00000005327 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSMPUP00000015887 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSOGAP00000016705 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSP00000306330 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSPVAP00000003218 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSMICP00000009735 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSMLUP00000014273 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSPTRP00000033045 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSGGOP00000024260 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSTGUP00000004683 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSMMUP00000005516 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSAMEP00000011385 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSCJAP00000047594 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSSSCP00000008214 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSPPYP00000019583 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSOPRP00000000939 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSLAFP00000010407 are identical
+WARNING: Partition DATA: Sequences ENSMUSP00000051223 and ENSRNOP00000001954 are identical
+WARNING: Partition DATA: Sequences FBpp0250629 and FBpp0278024 are identical
+WARNING: Partition DATA: Sequences FBpp0250629 and FBpp0155156 are identical
+WARNING: Partition DATA: Sequences FBpp0250629 and FBpp0115211 are identical
+WARNING: Partition DATA: Sequences FBpp0250629 and FBpp0181716 are identical
+WARNING: Partition DATA: Sequences FBpp0250629 and FBpp0169754 are identical
+WARNING: Partition DATA: Sequences FBpp0173976 and FBpp0152466 are identical
+WARNING: Partition DATA: Sequences FBpp0173976 and FBpp0236963 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSPTRP00000024600 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSPPYP00000013101 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSCJAP00000020900 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSMMUP00000013010 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSNLEP00000005796 are identical
+WARNING: Partition DATA: Sequences ENSP00000248975 and ENSGGOP00000005955 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSNLEP00000008089 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSMLUP00000005769 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSMICP00000000879 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSPVAP00000011940 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSBTAP00000022411 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSGGOP00000004488 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSTSYP00000005973 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSOGAP00000007988 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSTBEP00000002417 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSMMUP00000017350 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSPTRP00000052121 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSCJAP00000032559 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSP00000300161 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSTTRP00000007202 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSSTOP00000003336 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSVPAP00000004658 are identical
+WARNING: Partition DATA: Sequences ENSOCUP00000002609 and ENSCPOP00000020366 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSP00000264335 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSBTAP00000007442 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSTTRP00000015718 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSGGOP00000016431 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSLAFP00000005000 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSPTRP00000014538 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSPPYP00000008753 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000007100 and ENSMUSP00000070993 are identical
+WARNING: Partition DATA: Sequences ENSP00000340989 and ENSNLEP00000022474 are identical
+WARNING: Partition DATA: Sequences ENSP00000340989 and ENSGGOP00000011207 are identical
+WARNING: Partition DATA: Sequences ENSP00000340989 and ENSPTRP00000056936 are identical
+WARNING: Partition DATA: Sequences ENSECAP00000004525 and ENSETEP00000006076 are identical
+WARNING: Partition DATA: Sequences ENSECAP00000004525 and ENSFCAP00000000561 are identical
+WARNING: Partition DATA: Sequences ENSECAP00000004525 and ENSNLEP00000022573 are identical
+WARNING: Partition DATA: Sequences ENSECAP00000004525 and ENSTSYP00000013472 are identical
+WARNING: Partition DATA: Sequences ENSECAP00000004525 and ENSMEUP00000007385 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000030885 and ENSMUSP00000022894 are identical
+WARNING: Partition DATA: Sequences FBpp0202663 and FBpp0264348 are identical
+WARNING: Partition DATA: Sequences FBpp0202663 and FBpp0142686 are identical
+WARNING: Partition DATA: Sequences CPIJ008589-PA and AAEL006885-PA are identical
+WARNING: Partition DATA: Sequences ENSMLUP00000001239 and ENSMICP00000011690 are identical
+WARNING: Partition DATA: Sequences ENSMLUP00000001239 and ENSECAP00000012341 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSCPOP00000009701 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSCAFP00000041317 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSMPUP00000012660 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSRNOP00000024388 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSMUSP00000019109 are identical
+WARNING: Partition DATA: Sequences ENSPVAP00000016266 and ENSSSCP00000010705 are identical
+WARNING: Partition DATA: Sequences FBpp0185897 and FBpp0196769 are identical
+WARNING: Partition DATA: Sequences FBpp0185897 and FBpp0281673 are identical
+WARNING: Partition DATA: Sequences FBpp0185897 and FBpp0082987 are identical
+WARNING: Partition DATA: Sequences FBpp0185897 and FBpp0141327 are identical
+WARNING: Partition DATA: Sequences ENSMICP00000003270 and ENSOGAP00000005495 are identical
+WARNING: Partition DATA: Sequences CRE07514 and CBN05169 are identical
+WARNING: Partition DATA: Sequences ENSSTOP00000012714 and ENSCPOP00000009124 are identical
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Input tree is a rooted topology. It will be unrooted
+Creating new checkpoint file: data/model_gen/V0_mammilian_aa/temp_modeltest/TF102003_treefam.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta
+  Tree:       Fixed user
+    file:           data/model_gen/V0_mammilian_aa/trees/TF102003_treefam.tree
+  #taxa:            516
+  #sites:           791
+  #patterns:        704
+  Max. thread mem:  887 MB
+
+Output:
+  Log:           data/model_gen/V0_mammilian_aa/temp_modeltest/TF102003_treefam.log
+  Results:       data/model_gen/V0_mammilian_aa/temp_modeltest/TF102003_treefam.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -o data/model_gen/V0_mammilian_aa/temp_modeltest/TF102003_treefam -d aa -t user --utree data/model_gen/V0_mammilian_aa/trees/TF102003_treefam.tree -p 6 -m LG 
+
+
+Partition 1/1
+
+ ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
+
+Computation of likelihood scores completed. It took 0h:01:50
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1    -50205.3419    107284.1806         0.0000    1.0000
+       2  LG+I+G4            2    -50217.2319    107314.6340        30.4534    0.0000
+       3  LG+G4+F           20    -50419.6170    107839.5235       555.3429    0.0000
+       4  LG+I+G4+F         21    -50430.6299    107868.2226       584.0420    0.0000
+       5  LG                 0    -53866.9192    114600.6620      7316.4814    0.0000
+       6  LG+I               1    -53878.2096    114629.9161      7345.7355    0.0000
+       7  LG+F              19    -53890.3309    114774.2780      7490.0974    0.0000
+       8  LG+I+F            20    -53901.6158    114803.5212      7519.3406    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+G4
+lnL:                -50205.3419
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        1.0000
+Score:              107284.1806
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          0.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.0000
+Alpha-P.Inv:        1.0166
+P.Inv-Alpha:        0.0218
+Frequencies:        0.0958 0.0490 0.0471 0.0699 0.0113 0.0450 0.1128 0.0398 0.0110 0.0444 0.1005 0.0770 0.0298 0.0226 0.0202 0.0730 0.0436 0.0083 0.0461 0.0528 
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m LG+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1    -50205.3419    102470.6837         0.0000    1.0000
+       2  LG+I+G4            2    -50217.2319    102496.4638        25.7801    0.0000
+       3  LG+G4+F           20    -50419.6170    102937.2340       466.5503    0.0000
+       4  LG+I+G4+F         21    -50430.6299    102961.2597       490.5760    0.0000
+       5  LG                 0    -53866.9192    109791.8384      7321.1547    0.0000
+       6  LG+I               1    -53878.2096    109816.4192      7345.7355    0.0000
+       7  LG+F              19    -53890.3309    109876.6617      7405.9780    0.0000
+       8  LG+I+F            20    -53901.6158    109901.2317      7430.5480    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+G4
+lnL:                -50205.3419
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        1.0000
+Score:              102470.6837
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          0.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.0000
+Alpha-P.Inv:        1.0166
+P.Inv-Alpha:        0.0218
+Frequencies:        0.0958 0.0490 0.0471 0.0699 0.0113 0.0450 0.1128 0.0398 0.0110 0.0444 0.1005 0.0770 0.0298 0.0226 0.0202 0.0730 0.0436 0.0083 0.0461 0.0528 
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m LG+G4
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1    -50205.3419   2226330.6837         0.0000    1.0000
+       2  LG                 0    -53866.9192   2229531.8384      3201.1547    0.0000
+       3  LG+I+G4            2    -50217.2319   2230480.4638      4149.7801    0.0000
+       4  LG+I               1    -53878.2096   2233676.4192      7345.7355    0.0000
+       5  LG+G4+F           20    -50419.6170   2305837.2340     79506.5503    0.0000
+       6  LG+F              19    -53890.3309   2308580.6617     82249.9780    0.0000
+       7  LG+I+G4+F         21    -50430.6299   2310061.2597     83730.5760    0.0000
+       8  LG+I+F            20    -53901.6158   2312801.2317     86470.5480    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+G4
+lnL:                -50205.3419
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        1.0000
+Score:              2226330.6837
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              1.0000
+Gamma-Inv:          -
+Frequencies:        -
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              1.0000
+Alpha-P.Inv:        -
+P.Inv-Alpha:        -
+Frequencies:        -
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102003_treefam.fasta -m LG+G4
+Summary:
+
+Partition 1/1:
+                         Model         Score        Weight
+----------------------------------------------------------
+       BIC               LG+G4   107284.1806        1.0000
+       AIC               LG+G4   102470.6837        1.0000
+      AICc               LG+G4  2226330.6837        1.0000
+
+Execution results written to data/model_gen/V0_mammilian_aa/temp_modeltest/TF102003_treefam.out

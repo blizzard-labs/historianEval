@@ -1,0 +1,73 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Partition DATA: Sequences ENSGGOP00000012708 and ENSP00000367830 are identical
+WARNING: Partition DATA: Sequences CRE10038 and CRE10039 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSMMUP00000026292 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSGGOP00000007562 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSCJAP00000031436 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSECAP00000017503 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSPTRP00000050982 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSP00000355497 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSPPYP00000000057 are identical
+WARNING: Partition DATA: Sequences ENSBTAP00000023654 and ENSNLEP00000004803 are identical
+WARNING: Partition DATA: Sequences ENSP00000451828 and ENSGGOP00000017521 are identical
+WARNING: Partition DATA: Sequences ENSP00000451828 and ENSNLEP00000019838 are identical
+WARNING: Partition DATA: Sequences CBN16602 and CBN11897 are identical
+WARNING: Partition DATA: Sequences ENSMODP00000008221 and ENSPSIP00000005472 are identical
+WARNING: Partition DATA: Sequences ENSPTRP00000026868 and ENSP00000295797 are identical
+WARNING: Partition DATA: Sequences FBpp0205761 and FBpp0217476 are identical
+WARNING: Partition DATA: Sequences ENSCAFP00000023241 and ENSAMEP00000009796 are identical
+WARNING: Partition DATA: There are undetermined columns in the alignment (only gaps)
+WARNING: Input tree is a rooted topology. It will be unrooted
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/V0_mammilian_aa/temp_modeltest/TF102004_treefam.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V0_mammilian_aa/alignments/TF102004_treefam.fasta
+  Tree:       Fixed user
+    file:           data/model_gen/V0_mammilian_aa/trees/TF102004_treefam.tree
+  #taxa:            634
+  #sites:           4560
+  #patterns:        2999
+  Max. thread mem:  551 MB
+
+Output:
+  Log:           data/model_gen/V0_mammilian_aa/temp_modeltest/TF102004_treefam.log
+  Results:       data/model_gen/V0_mammilian_aa/temp_modeltest/TF102004_treefam.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V0_mammilian_aa/alignments/TF102004_treefam.fasta -o data/model_gen/V0_mammilian_aa/temp_modeltest/TF102004_treefam -d aa -t user --utree data/model_gen/V0_mammilian_aa/trees/TF102004_treefam.tree -p 6 -m LG 
+
+
+Partition 1/1
+

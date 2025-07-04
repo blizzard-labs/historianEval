@@ -1,0 +1,210 @@
+Physical cores: 8
+Logical cores:  8
+Memory:         16GB
+Extensions:     none [WARNING!]
+
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSMPUP00000013154 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSCJAP00000011814 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSVPAP00000007488 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSNLEP00000016428 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSPPYP00000014137 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSFCAP00000007273 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSP00000238081 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSOGAP00000000490 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSPTRP00000020019 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSBTAP00000032779 are identical
+WARNING: Partition DATA: Sequences ENSGGOP00000001546 and ENSECAP00000003385 are identical
+WARNING: Partition DATA: Sequences ENSTGUP00000013422 and ENSGALP00000026461 are identical
+WARNING: Partition DATA: Sequences ENSRNOP00000011501 and ENSMUSP00000100067 are identical
+WARNING: Partition DATA: Sequences ENSDORP00000000681 and ENSOPRP00000008223 are identical
+WARNING: Input tree is a rooted topology. It will be unrooted
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/V0_mammilian_aa/temp_modeltest/TF102002_treefam.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta
+  Tree:       Fixed user
+    file:           data/model_gen/V0_mammilian_aa/trees/TF102002_treefam.tree
+  #taxa:            58
+  #sites:           282
+  #patterns:        279
+  Max. thread mem:  38 MB
+
+Output:
+  Log:           data/model_gen/V0_mammilian_aa/temp_modeltest/TF102002_treefam.log
+  Results:       data/model_gen/V0_mammilian_aa/temp_modeltest/TF102002_treefam.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          6/8
+  RNG seed:         12345
+  subtree repeats:  disabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-osx -i data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -o data/model_gen/V0_mammilian_aa/temp_modeltest/TF102002_treefam -d aa -t user --utree data/model_gen/V0_mammilian_aa/trees/TF102002_treefam.tree -p 6 -m LG 
+
+
+Partition 1/1
+
+ ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
+
+Computation of likelihood scores completed. It took 0h:00:04
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1     -5123.5798     10890.3370         0.0000    0.9772
+       2  LG+I+G4            2     -5124.5164     10897.8522         7.5152    0.0228
+       3  LG+I               1     -5143.3551     10929.8876        39.5506    0.0000
+       4  LG                 0     -5147.7788     10933.0930        42.7560    0.0000
+       5  LG+G4+F           20     -5165.2109     11080.7954       190.4584    0.0000
+       6  LG+I+G4+F         21     -5166.0566     11088.1288       197.7919    0.0000
+       7  LG+I+F            20     -5183.6677     11117.7091       227.3721    0.0000
+       8  LG+F              19     -5188.3706     11121.4730       231.1360    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+G4
+lnL:                -5123.5798
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        3.3681
+Score:              10890.3370
+Weight:             0.9772
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.9772
+Gamma-Inv:          0.0228
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0232
+Alpha:              3.3681
+Alpha-P.Inv:        3.8281
+P.Inv-Alpha:        0.0218
+Frequencies:        0.0935 0.0421 0.0512 0.0719 0.0215 0.0399 0.1012 0.0375 0.0074 0.0481 0.1105 0.0797 0.0254 0.0276 0.0186 0.0643 0.0630 0.0085 0.0448 0.0430 
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m LG+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1     -5123.5798     10475.1596         0.0000    0.8740
+       2  LG+I+G4            2     -5124.5164     10479.0329         3.8733    0.1260
+       3  LG+I               1     -5143.3551     10514.7101        39.5506    0.0000
+       4  LG                 0     -5147.7788     10521.5575        46.3979    0.0000
+       5  LG+G4+F           20     -5165.2109     10596.4218       121.2622    0.0000
+       6  LG+I+G4+F         21     -5166.0566     10600.1133       124.9537    0.0000
+       7  LG+I+F            20     -5183.6677     10633.3355       158.1759    0.0000
+       8  LG+F              19     -5188.3706     10640.7413       165.5817    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+G4
+lnL:                -5123.5798
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        3.3681
+Score:              10475.1596
+Weight:             0.8740
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.8740
+Gamma-Inv:          0.1260
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0232
+Alpha:              3.3681
+Alpha-P.Inv:        3.8281
+P.Inv-Alpha:        0.0218
+Frequencies:        0.0935 0.0421 0.0512 0.0719 0.0215 0.0399 0.1012 0.0375 0.0074 0.0481 0.1105 0.0797 0.0254 0.0276 0.0186 0.0643 0.0630 0.0085 0.0448 0.0430 
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m LG+G4
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+G4              1     -5123.5798     10632.1596         0.0000    0.9688
+       2  LG+I+G4            2     -5124.5164     10639.0329         6.8733    0.0312
+       3  LG+I               1     -5143.3551     10671.7101        39.5506    0.0000
+       4  LG                 0     -5147.7788     10674.5575        42.3979    0.0000
+       5  LG+G4+F           20     -5165.2109     10836.4218       204.2622    0.0000
+       6  LG+I+G4+F         21     -5166.0566     10846.1133       213.9537    0.0000
+       7  LG+I+F            20     -5183.6677     10873.3355       241.1759    0.0000
+       8  LG+F              19     -5188.3706     10875.7413       243.5817    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+G4
+lnL:                -5123.5798
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    -
+Gamma shape:        3.3681
+Score:              10632.1596
+Weight:             0.9688
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.9688
+Gamma-Inv:          0.0312
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.0232
+Alpha:              3.3681
+Alpha-P.Inv:        3.8281
+P.Inv-Alpha:        0.0218
+Frequencies:        0.0935 0.0421 0.0512 0.0719 0.0215 0.0399 0.1012 0.0375 0.0074 0.0481 0.1105 0.0797 0.0254 0.0276 0.0186 0.0643 0.0630 0.0085 0.0448 0.0430 
+
+Commands:
+  > phyml  -i data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -d aa -m LG -f m -v 0 -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m PROTGAMMALG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta --model LG+G4
+  > paup -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta
+  > iqtree -s data/model_gen/V0_mammilian_aa/alignments/TF102002_treefam.fasta -m LG+G4
+Summary:
+
+Partition 1/1:
+                         Model         Score        Weight
+----------------------------------------------------------
+       BIC               LG+G4    10890.3370        0.9772
+       AIC               LG+G4    10475.1596        0.8740
+      AICc               LG+G4    10632.1596        0.9688
+
+Execution results written to data/model_gen/V0_mammilian_aa/temp_modeltest/TF102002_treefam.out
