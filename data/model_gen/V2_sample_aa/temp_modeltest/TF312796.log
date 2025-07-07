@@ -148,7 +148,7 @@ Partition 1/1
 
  ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
 
-Computation of likelihood scores completed. It took 0h:05:29
+Computation of likelihood scores completed. It took 0h:05:37
 
 BIC       model              K            lnL          score          delta    weight
 --------------------------------------------------------------------------------

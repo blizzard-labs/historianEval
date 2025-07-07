@@ -116,9 +116,14 @@ estimate_rates <- function(tree_file) {
     }
     
     # Store results for different models
-    model_results <- list()
-    best_model <- NULL
-    best_aic <- Inf
+    bd_model_results <- list()
+    coal_model_results <- list()
+    
+    # Track best models separately
+    best_bd_model <- NULL
+    best_bd_aic <- Inf
+    best_coal_model <- NULL
+    best_coal_aic <- Inf
     
     # Try all birth-death model combinations
     cat("  === FITTING BIRTH-DEATH MODELS ===\n")
@@ -134,12 +139,12 @@ estimate_rates <- function(tree_file) {
       })
       
       if (!is.null(model_result)) {
-        model_results[[paste0("BD_", model_name)]] <- model_result
+        bd_model_results[[paste0("BD_", model_name)]] <- model_result
         
-        # Track best model by AIC
-        if (!is.na(model_result$aic) && model_result$aic < best_aic) {
-          best_aic <- model_result$aic
-          best_model <- paste0("BD_", model_name)
+        # Track best BD model
+        if (!is.na(model_result$aic) && model_result$aic < best_bd_aic) {
+          best_bd_aic <- model_result$aic
+          best_bd_model <- paste0("BD_", model_name)
         }
       }
     }
@@ -158,18 +163,33 @@ estimate_rates <- function(tree_file) {
       })
       
       if (!is.null(model_result)) {
-        model_results[[paste0("COAL_", model_name)]] <- model_result
+        coal_model_results[[paste0("COAL_", model_name)]] <- model_result
         
-        # Track best model by AIC
-        if (!is.na(model_result$aic) && model_result$aic < best_aic) {
-          best_aic <- model_result$aic
-          best_model <- paste0("COAL_", model_name)
+        # Track best coalescent model
+        if (!is.na(model_result$aic) && model_result$aic < best_coal_aic) {
+          best_coal_aic <- model_result$aic
+          best_coal_model <- paste0("COAL_", model_name)
         }
       }
     }
     
+    # Combine all results for overall best model selection
+    all_model_results <- c(bd_model_results, coal_model_results)
+    
+    # Find globally best model
+    best_overall_model <- NULL
+    best_overall_aic <- Inf
+    
+    for (model_name in names(all_model_results)) {
+      model_result <- all_model_results[[model_name]]
+      if (!is.na(model_result$aic) && model_result$aic < best_overall_aic) {
+        best_overall_aic <- model_result$aic
+        best_overall_model <- model_name
+      }
+    }
+    
     # If all models failed, try simple birth-death
-    if (length(model_results) == 0) {
+    if (length(all_model_results) == 0) {
       cat("  All RPANDA models failed, trying simple birth-death...\n")
       
       simple_result <- tryCatch({
@@ -180,46 +200,82 @@ estimate_rates <- function(tree_file) {
       })
       
       if (!is.null(simple_result)) {
-        model_results[["simple_bd"]] <- simple_result
-        best_model <- "simple_bd"
+        all_model_results[["simple_bd"]] <- simple_result
+        bd_model_results[["simple_bd"]] <- simple_result
+        best_overall_model <- "simple_bd"
+        best_bd_model <- "simple_bd"
       }
     }
     
-    # Extract results from best model
-    if (!is.null(best_model) && best_model %in% names(model_results)) {
-      result <- model_results[[best_model]]
+    # Extract results from best overall model
+    if (!is.null(best_overall_model) && best_overall_model %in% names(all_model_results)) {
+      best_result <- all_model_results[[best_overall_model]]
+      
+      # Get best BD model results (for secondary parameters)
+      best_bd_result <- if (!is.null(best_bd_model) && best_bd_model %in% names(bd_model_results)) {
+        bd_model_results[[best_bd_model]]
+      } else {
+        NULL
+      }
+      
+      # Get best coalescent model results (for secondary parameters)
+      best_coal_result <- if (!is.null(best_coal_model) && best_coal_model %in% names(coal_model_results)) {
+        coal_model_results[[best_coal_model]]
+      } else {
+        NULL
+      }
       
       # Create comprehensive result with all model comparisons
-      all_models_summary <- create_model_comparison_summary(model_results)
+      all_models_summary <- create_model_comparison_summary(all_model_results)
       
       return(list(
         file = basename(tree_file),
-        speciation_rate = result$lambda,
-        extinction_rate = result$mu,
-        net_diversification = result$lambda - result$mu,
-        relative_extinction = if (result$lambda > 0) result$mu / result$lambda else NA,
-        speciation_ci_lower = result$lambda_ci_lower,
-        speciation_ci_upper = result$lambda_ci_upper,
-        extinction_ci_lower = result$mu_ci_lower,
-        extinction_ci_upper = result$mu_ci_upper,
-        loglik = result$loglik,
-        aic = result$aic,
-        aicc = result$aicc,
-        method = result$model_name,
-        model_type = result$model_type,
+        # Primary results (from best overall model)
+        speciation_rate = best_result$lambda,
+        extinction_rate = best_result$mu,
+        net_diversification = best_result$lambda - best_result$mu,
+        relative_extinction = if (best_result$lambda > 0) best_result$mu / best_result$lambda else NA,
+        speciation_ci_lower = best_result$lambda_ci_lower,
+        speciation_ci_upper = best_result$lambda_ci_upper,
+        extinction_ci_lower = best_result$mu_ci_lower,
+        extinction_ci_upper = best_result$mu_ci_upper,
+        loglik = best_result$loglik,
+        aic = best_result$aic,
+        aicc = best_result$aicc,
+        method = best_result$model_name,
+        model_type = best_result$model_type,
         n_tips = n_tips,
         tree_length = tree_length,
         crown_age = crown_age,
-        convergence = result$convergence,
+        convergence = best_result$convergence,
         error = NA,
-        # Add model comparison results
+        # Model comparison results
         all_models_aic = all_models_summary$aic_table,
         best_models_ranking = all_models_summary$ranking,
         delta_aic = all_models_summary$delta_aic,
-        # Add coalescent-specific parameters
-        effective_pop_size = result$effective_pop_size,
-        growth_rate = result$growth_rate,
-        coalescent_params = result$coalescent_params
+        # Primary model parameters
+        effective_pop_size = best_result$effective_pop_size,
+        growth_rate = best_result$growth_rate,
+        coalescent_params = best_result$coalescent_params,
+        # SECONDARY BD MODEL PARAMETERS (best BD model regardless of global best)
+        bd_speciation_rate = if (!is.null(best_bd_result)) best_bd_result$lambda else NA,
+        bd_extinction_rate = if (!is.null(best_bd_result)) best_bd_result$mu else NA,
+        bd_net_diversification = if (!is.null(best_bd_result)) best_bd_result$lambda - best_bd_result$mu else NA,
+        bd_relative_extinction = if (!is.null(best_bd_result) && best_bd_result$lambda > 0) best_bd_result$mu / best_bd_result$lambda else NA,
+        bd_loglik = if (!is.null(best_bd_result)) best_bd_result$loglik else NA,
+        bd_aic = if (!is.null(best_bd_result)) best_bd_result$aic else NA,
+        bd_method = if (!is.null(best_bd_result)) best_bd_result$model_name else NA,
+        bd_lamb_type = if (!is.null(best_bd_result)) best_bd_result$lamb_type else NA,
+        bd_mu_type = if (!is.null(best_bd_result)) best_bd_result$mu_type else NA,
+        # SECONDARY COALESCENT MODEL PARAMETERS (best coalescent model regardless of global best)
+        coal_speciation_rate = if (!is.null(best_coal_result)) best_coal_result$lambda else NA,
+        coal_extinction_rate = if (!is.null(best_coal_result)) best_coal_result$mu else NA,
+        coal_effective_pop_size = if (!is.null(best_coal_result)) best_coal_result$effective_pop_size else NA,
+        coal_growth_rate = if (!is.null(best_coal_result)) best_coal_result$growth_rate else NA,
+        coal_coalescent_params = if (!is.null(best_coal_result)) best_coal_result$coalescent_params else NA,
+        coal_loglik = if (!is.null(best_coal_result)) best_coal_result$loglik else NA,
+        coal_aic = if (!is.null(best_coal_result)) best_coal_result$aic else NA,
+        coal_method = if (!is.null(best_coal_result)) best_coal_result$model_name else NA
       ))
     } else {
       return(create_empty_result(tree_file, "All models failed", n_tips, tree_length))
@@ -229,100 +285,6 @@ estimate_rates <- function(tree_file) {
     warning(sprintf("Error processing tree %s: %s", tree_file, e$message))
     return(create_empty_result(tree_file, as.character(e$message)))
   })
-}
-
-# Helper function to fit birth-death model combinations
-fit_bd_model_combination <- function(tree, lamb_type, mu_type, crown_age, model_name) {
-  n <- Ntip(tree)
-
-  # Estimate initial lambda using Yule approximation
-  lambda_start <- log(n) / crown_age
-  mu_start <- 0.01  # small extinction rate
-
-  # Define rate functions based on type
-  # Lambda (speciation) functions
-  if (lamb_type == "constant") {
-    f.lamb <- function(t, y) { y[1] }
-    lamb_par <- lambda_start
-    cst.lamb <- TRUE
-    expo.lamb <- FALSE
-  } else if (lamb_type == "exponential") {
-    f.lamb <- function(t, y) { y[1] * exp(y[2] * t) }
-    lamb_par <- c(lambda_start, 0.01)  # λ0, α
-    cst.lamb <- FALSE
-    expo.lamb <- TRUE
-  } else if (lamb_type == "linear") {
-    f.lamb <- function(t, y) { y[1] + y[2] * t }
-    lamb_par <- c(lambda_start, 0.001)  # λ0, α
-    cst.lamb <- FALSE
-    expo.lamb <- FALSE
-  } else {
-    stop(sprintf("Unknown lambda type: %s", lamb_type))
-  }
-
-  # Mu (extinction) functions
-  if (mu_type == "constant") {
-    f.mu <- function(t, y) { y[1] }
-    mu_par <- mu_start
-    cst.mu <- TRUE
-    expo.mu <- FALSE
-  } else if (mu_type == "exponential") {
-    f.mu <- function(t, y) { y[1] * exp(y[2] * t) }
-    mu_par <- c(mu_start, 0.01)  # μ0, β
-    cst.mu <- FALSE
-    expo.mu <- TRUE
-  } else if (mu_type == "linear") {
-    f.mu <- function(t, y) { y[1] + y[2] * t }
-    mu_par <- c(mu_start, 0.001)  # μ0, β
-    cst.mu <- FALSE
-    expo.mu <- FALSE
-  } else {
-    stop(sprintf("Unknown mu type: %s", mu_type))
-  }
-
-  # Fit the model with proper function arguments
-  result <- fit_bd(phylo = tree, 
-                   tot_time = crown_age,
-                   f.lamb = f.lamb,
-                   f.mu = f.mu,
-                   lamb_par = lamb_par,
-                   mu_par = mu_par,
-                   cst.lamb = cst.lamb,
-                   cst.mu = cst.mu,
-                   expo.lamb = expo.lamb,
-                   expo.mu = expo.mu,
-                   fix.mu = FALSE,
-                   dt = 1e-3,
-                   cond = "crown")
-
-  # Calculate present-day rates
-  lambda_present <- calculate_present_rate(result$lamb_par, lamb_type, crown_age)
-  mu_present <- calculate_present_rate(result$mu_par, mu_type, crown_age)
-
-  # Handle possible fit errors
-  if (is.null(result) || is.null(result$mu_par) || is.null(lambda_present)) {
-    stop("RPANDA model fit returned incomplete result")
-  }
-
-  return(list(
-    lambda = lambda_present,
-    mu = mu_present,
-    lambda_ci_lower = NA,
-    lambda_ci_upper = NA,
-    mu_ci_lower = NA,
-    mu_ci_upper = NA,
-    loglik = result$LH,
-    aic = result$aicc,
-    aicc = result$aicc,
-    convergence = result$conv,
-    model_name = paste0("RPANDA_BD_", model_name),
-    model_type = "birth_death",
-    lamb_type = lamb_type,
-    mu_type = mu_type,
-    effective_pop_size = NA,
-    growth_rate = NA,
-    coalescent_params = NA
-  ))
 }
 
 # New function to fit coalescent models
@@ -692,7 +654,26 @@ create_empty_result <- function(tree_file, error_msg, n_tips = NA, tree_length =
     delta_aic = NA,
     effective_pop_size = NA,
     growth_rate = NA,
-    coalescent_params = NA
+    coalescent_params = NA,
+    # New secondary BD parameters
+    bd_speciation_rate = NA,
+    bd_extinction_rate = NA,
+    bd_net_diversification = NA,
+    bd_relative_extinction = NA,
+    bd_loglik = NA,
+    bd_aic = NA,
+    bd_method = NA,
+    bd_lamb_type = NA,
+    bd_mu_type = NA,
+    # New secondary coalescent parameters
+    coal_speciation_rate = NA,
+    coal_extinction_rate = NA,
+    coal_effective_pop_size = NA,
+    coal_growth_rate = NA,
+    coal_coalescent_params = NA,
+    coal_loglik = NA,
+    coal_aic = NA,
+    coal_method = NA
   ))
 }
 
@@ -809,7 +790,15 @@ rate_columns <- c("speciation_rate", "extinction_rate", "net_diversification",
                  "tree_aic", "tree_aicc", "diversification_method", "model_type",
                  "n_tips", "tree_length", "crown_age", "convergence", "tree_error",
                  "all_models_aic", "best_models_ranking", "delta_aic",
-                 "effective_pop_size", "growth_rate", "coalescent_params")
+                 "effective_pop_size", "growth_rate", "coalescent_params",
+                 # New secondary BD parameters
+                 "bd_speciation_rate", "bd_extinction_rate", "bd_net_diversification", 
+                 "bd_relative_extinction", "bd_loglik", "bd_aic", "bd_method",
+                 "bd_lamb_type", "bd_mu_type",
+                 # New secondary coalescent parameters
+                 "coal_speciation_rate", "coal_extinction_rate", "coal_effective_pop_size",
+                 "coal_growth_rate", "coal_coalescent_params", "coal_loglik", 
+                 "coal_aic", "coal_method")
 
 for (col in rate_columns) {
   csv_data[[col]] <- NA
@@ -820,6 +809,7 @@ for (i in 1:nrow(csv_data)) {
   if (!is.na(csv_data$tree_match[i])) {
     match_idx <- csv_data$tree_match[i]
     
+    # Primary parameters (from globally best model)
     csv_data$speciation_rate[i] <- rates_df$speciation_rate[match_idx]
     csv_data$extinction_rate[i] <- rates_df$extinction_rate[match_idx]
     csv_data$net_diversification[i] <- rates_df$net_diversification[match_idx]
@@ -844,6 +834,27 @@ for (i in 1:nrow(csv_data)) {
     csv_data$effective_pop_size[i] <- rates_df$effective_pop_size[match_idx]
     csv_data$growth_rate[i] <- rates_df$growth_rate[match_idx]
     csv_data$coalescent_params[i] <- rates_df$coalescent_params[match_idx]
+    
+    # Secondary BD parameters (from best BD model)
+    csv_data$bd_speciation_rate[i] <- rates_df$bd_speciation_rate[match_idx]
+    csv_data$bd_extinction_rate[i] <- rates_df$bd_extinction_rate[match_idx]
+    csv_data$bd_net_diversification[i] <- rates_df$bd_net_diversification[match_idx]
+    csv_data$bd_relative_extinction[i] <- rates_df$bd_relative_extinction[match_idx]
+    csv_data$bd_loglik[i] <- rates_df$bd_loglik[match_idx]
+    csv_data$bd_aic[i] <- rates_df$bd_aic[match_idx]
+    csv_data$bd_method[i] <- rates_df$bd_method[match_idx]
+    csv_data$bd_lamb_type[i] <- rates_df$bd_lamb_type[match_idx]
+    csv_data$bd_mu_type[i] <- rates_df$bd_mu_type[match_idx]
+    
+    # Secondary coalescent parameters (from best coalescent model)
+    csv_data$coal_speciation_rate[i] <- rates_df$coal_speciation_rate[match_idx]
+    csv_data$coal_extinction_rate[i] <- rates_df$coal_extinction_rate[match_idx]
+    csv_data$coal_effective_pop_size[i] <- rates_df$coal_effective_pop_size[match_idx]
+    csv_data$coal_growth_rate[i] <- rates_df$coal_growth_rate[match_idx]
+    csv_data$coal_coalescent_params[i] <- rates_df$coal_coalescent_params[match_idx]
+    csv_data$coal_loglik[i] <- rates_df$coal_loglik[match_idx]
+    csv_data$coal_aic[i] <- rates_df$coal_aic[match_idx]
+    csv_data$coal_method[i] <- rates_df$coal_method[match_idx]
   }
 }
 
@@ -957,6 +968,41 @@ if (matched_count > 0) {
       cat("(population size changes) provide better explanations than\n")
       cat("birth-death processes (speciation/extinction rates).\n")
     }
+  }
+}
+
+# Show secondary model parameters summary
+cat("\n=== SECONDARY MODEL PARAMETERS SUMMARY ===\n")
+
+# BD secondary parameters
+bd_secondary_count <- sum(!is.na(csv_data$bd_speciation_rate))
+if (bd_secondary_count > 0) {
+  cat(sprintf("Best BD model parameters available for %d trees:\n", bd_secondary_count))
+  bd_spec_rates <- csv_data$bd_speciation_rate[!is.na(csv_data$bd_speciation_rate)]
+  bd_ext_rates <- csv_data$bd_extinction_rate[!is.na(csv_data$bd_extinction_rate)]
+  bd_net_div <- csv_data$bd_net_diversification[!is.na(csv_data$bd_net_diversification)]
+  
+  cat(sprintf("  BD Speciation rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(bd_spec_rates), min(bd_spec_rates), max(bd_spec_rates)))
+  cat(sprintf("  BD Extinction rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(bd_ext_rates), min(bd_ext_rates), max(bd_ext_rates)))
+  cat(sprintf("  BD Net diversification - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(bd_net_div), min(bd_net_div), max(bd_net_div)))
+}
+
+# Coalescent secondary parameters
+coal_secondary_count <- sum(!is.na(csv_data$coal_effective_pop_size))
+if (coal_secondary_count > 0) {
+  cat(sprintf("Best coalescent model parameters available for %d trees:\n", coal_secondary_count))
+  coal_Ne <- csv_data$coal_effective_pop_size[!is.na(csv_data$coal_effective_pop_size)]
+  coal_growth <- csv_data$coal_growth_rate[!is.na(csv_data$coal_growth_rate)]
+  
+  cat(sprintf("  Effective population size - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(coal_Ne), min(coal_Ne), max(coal_Ne)))
+  
+  if (length(coal_growth) > 0) {
+    cat(sprintf("  Growth rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+                mean(coal_growth), min(coal_growth), max(coal_growth)))
   }
 }
 

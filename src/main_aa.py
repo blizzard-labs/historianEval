@@ -156,7 +156,7 @@ class modelConstructor:
             raise
 
 def main():
-    mc = modelConstructor('V0_mammilian_aa', "data/model_gen/V0_mammilian_aa/alignments", params_file="data/model_gen/V0_mammilian_aa/protein_evolution_parameters.csv", log=False)
+    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
     mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
