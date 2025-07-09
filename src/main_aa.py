@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import subprocess
 import logging
 import sys
@@ -10,7 +11,8 @@ import utils.general as utils
 import model_gen_aa.clean_table
 
 class modelConstructor:
-    def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
+    def __init__(self, system, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
+        self.system = system.strip.lower()
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
@@ -45,12 +47,14 @@ class modelConstructor:
 
     def extract_substitution_params(self):
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
+        m_path = "tools/modeltest-ng-osx" if self.system == "osx" else "tools/modeltest-ng-static"
+        
         cmd = [
             "python",
             "src/model_gen_aa/extract_params.py",
             self.alignment_folder,
             self.temp_folder,
-            "tools/modeltest-ng-osx"
+            m_path
         ]
         
         try:
@@ -189,7 +193,16 @@ class modelConstructor:
 
 
 def main():
-    mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
+    print('Begun the script')
+    if len(sys.argv) < 4:
+        print("Usage: python main_aa.py <system> <label> <alignment_folder> [log]")
+    
+    system = sys.arv[1]
+    label = sys.argv[2]
+    input_folder = sys.argv[3]
+    log = sys.argv[4] if len(sys.argv) > 4 else False
+    
+    mc = modelConstructor(system, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
     mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
