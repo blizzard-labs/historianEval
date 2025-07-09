@@ -11,8 +11,8 @@ import utils.general as utils
 import model_gen_aa.clean_table
 
 class modelConstructor:
-    def __init__(self, system, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
-        self.system = system.strip.lower()
+    def __init__(self, operate, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
+        self.operate = operate.strip.lower()
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder
@@ -47,7 +47,7 @@ class modelConstructor:
 
     def extract_substitution_params(self):
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
-        m_path = "tools/modeltest-ng-osx" if self.system == "osx" else "tools/modeltest-ng-static"
+        m_path = "tools/modeltest-ng-osx" if self.operate == "osx" else "tools/modeltest-ng-static"
         
         cmd = [
             "python",
@@ -197,12 +197,12 @@ def main():
     if len(sys.argv) < 4:
         print("Usage: python main_aa.py <system> <label> <alignment_folder> [log]")
     
-    system = sys.arv[1]
+    operate = sys.argv[1]
     label = sys.argv[2]
     input_folder = sys.argv[3]
     log = sys.argv[4] if len(sys.argv) > 4 else False
     
-    mc = modelConstructor(system, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
+    mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
     mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
