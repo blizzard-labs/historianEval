@@ -123,7 +123,7 @@ class ProteinParameterExtractor:
             ]
         
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=6000)
             if result.returncode == 0:
                 return self.parse_modeltest_output(output_prefix)
             else:
@@ -500,7 +500,7 @@ class ProteinParameterExtractor:
                 gap_runs.append((gap_start, gap_length))
         
         return gap_runs
-    
+
     def estimate_gamma_parameters(self, alignment):
         """Estimate gamma distribution parameters for rate heterogeneity"""
         sequences = [str(record.seq).upper() for record in alignment]

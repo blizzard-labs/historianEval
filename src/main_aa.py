@@ -2,10 +2,11 @@
 
 import os
 import subprocess
-from Bio import Phylo
-import utils.general as utils
 import logging
 import sys
+from Bio import Phylo
+import utils.general as utils
+import model_gen_aa.clean_table
 
 class modelConstructor:
     def __init__(self, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
@@ -16,6 +17,8 @@ class modelConstructor:
         self.output_folder = output_folder
         self.output_file = f"{self.output_folder}/{label}.json"
         self.params_file = params_file
+        self.params_wr_file = params_file.replace(".csv", "_with_rates.csv")
+        self.params_wrc_file = self.params_wr_file.replace(".csv", "_cleaned.csv")
         
         os.makedirs(self.temp_folder, exist_ok=True)
         if (self.tree_folder == "none"):
@@ -154,13 +157,39 @@ class modelConstructor:
         except subprocess.TimeoutExpired as e:
             print(f"Command timed out: {e}")
             raise
+    
+    def cleanup_params(self):
+        input_f = self.params_wr_file
+        output_f = self.params_wrc_file
+        
+        try:
+            cleaned_df = model_gen_aa.clean_table.clean_protein_evolution_data(input_f, output_f)
+            print("Cleaned Data Preview")
+            print("=" * 50)
+            print(cleaned_df.head())
+            
+            #Display summary statistics
+            model_gen_aa.clean_table.display_summary_stats(cleaned_df)
+            
+            # Show column names and data types
+            print("\nColumn Information:")
+            print("=" * 50)
+            print(cleaned_df.dtypes)
+                        
+        except FileNotFoundError:
+            print(f"Error: File '{input_f}' not found.")
+            print("Please make sure the file exists in the current directory.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
 
 def main():
     mc = modelConstructor('V0_sample_aa', "data/model_gen/V0_sample_aa/alignments", params_file="data/model_gen/V0_sample_aa/protein_evolution_parameters.csv", log=False)
     mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
-    mc.extract_top_params()  
+    mc.extract_top_params()      
+    mc.cleanup_params()
     
     print('COMPLEETTEEEETETETETE!!!!')
 
