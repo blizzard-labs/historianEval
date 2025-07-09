@@ -4,6 +4,7 @@ import os
 import subprocess
 import logging
 import sys
+from pathlib import Path
 from Bio import Phylo
 import utils.general as utils
 import model_gen_aa.clean_table
@@ -76,6 +77,10 @@ class modelConstructor:
         for file in os.listdir(self.tree_folder):
             if os.path.isfile(os.path.join(self.tree_folder, file)) and (file.endswith(".nhx") or file.endswith(".newick")):
                 utils.strip_metadata(os.path.join(self.tree_folder, file))
+            if os.path.isfile(os.path.join(self.tree_folder, file)) and file.endswith(".rootree"):
+                path_obj = Path(os.path.join(self.tree_folder, file))
+                new_file_path = path_obj.with_suffix(".tree")
+                path_obj.rename(new_file_path)
     
     def cleanup_modeltest_trees(self):
         modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
