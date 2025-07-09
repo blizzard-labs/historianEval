@@ -12,7 +12,7 @@ import model_gen_aa.clean_table
 
 class modelConstructor:
     def __init__(self, operate, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
-        self.operate = operate.strip.lower()
+        self.operate = operate.strip().lower()
         self.label = label
         self.alignment_folder = alignment_folder
         self.tree_folder = tree_folder

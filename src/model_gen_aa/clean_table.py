@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import re
+import math
 
 def clean_protein_evolution_data(input_file, output_file=None):
     """
@@ -44,8 +45,13 @@ def clean_protein_evolution_data(input_file, output_file=None):
     cleaned_data['best_coal_eff_pop_size'] = df['coal_effective_pop_size']
     
     # AIC scores for best models
-    cleaned_data['best_BD_AIC'] = df['bd_aic']
-    cleaned_data['best_COAL_AIC'] = df['coal_aic']
+    
+    bd_weights = []
+    for idx, row in df.iterrows():
+        bd_weight, coal_weight = compute_aic_weights(row['bd_aic'], row['coal_aic'])
+        bd_weights.append(bd_weight)
+    
+    cleaned_data['bd_weight'] = bd_weights
     
     # Define all possible model types
     bd_models = ['BCSTDCST', 'BEXPDCST', 'BLINDCST', 'BCSTDEXP', 'BEXPDEXP', 'BLINDEXP', 
@@ -74,7 +80,7 @@ def clean_protein_evolution_data(input_file, output_file=None):
         'gamma_shape', 'prop_invariant', 'insertion_rate', 'deletion_rate',
         'mean_insertion_length', 'mean_deletion_length', 'best_BD_speciation_rate',
         'best_BD_extinction_rate', 'best_coal_growth_rate', 'best_coal_eff_pop_size',
-        'best_BD_AIC', 'best_COAL_AIC', 'tree_length', 'crown_age'
+        'bd_weight', 'tree_length', 'crown_age'
     ]
     
     # Add model indicator columns (these should remain as integers)
@@ -136,11 +142,21 @@ def display_summary_stats(df):
     print(f"Average tree length: {df['tree_length'].mean():.2f}")
     print(f"Average crown age: {df['crown_age'].mean():.2f}")
 
+def compute_aic_weights(AIC_bd, AIC_coal):
+    delta_bd = AIC_bd - min(AIC_bd, AIC_coal)
+    delta_coal = AIC_coal - min(AIC_bd, AIC_coal)
+
+    w_bd = np.exp(-0.5 * delta_bd)
+    w_coal = np.exp(-0.5 * delta_coal)
+    total = w_bd + w_coal
+
+    return w_bd / total, w_coal / total
+
 # Example usage
 if __name__ == "__main__":
     # Replace with your actual file path
-    input_file = "protein_evolution_parameters_with_rates-3.csv"
-    output_file = "cleaned_protein_evolution_data.csv"
+    input_file = "data/model_gen/V1_sample_aa/protein_evolution_parameters_with_rates.csv"
+    output_file = "data/model_gen/V1_sample_aa/cleaned_protein_evolution_data.csv"
     
     try:
         # Clean the data

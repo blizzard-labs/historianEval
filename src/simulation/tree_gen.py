@@ -2,8 +2,11 @@ import dendropy
 from dendropy.simulate import treesim
 from Bio import Phylo
 import random
-from Historian_eval.config import default
 import subprocess
+
+class TreeGenerator:
+    def __init__(self, sampled_file):
+        self.parameters_file = sampled_file
 
 
 def generate_trees(clade):

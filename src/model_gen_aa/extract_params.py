@@ -655,7 +655,8 @@ class ProteinParameterExtractor:
             
             if os.path.exists(tree_folder):
                 for f in os.listdir(tree_folder): # checking for pre-existant tree file
-                    if f.replace(".tree", "").strip() in filepath:
+                    c = filepath
+                    if f.replace(".tree", "").strip() == c.split("/")[-1].replace("_AA.fasta", "").replace(".fa", ""):
                         tree_file = os.path.join(tree_folder, f)
                         print(f"Pre-existant tree found for {f}!")
             

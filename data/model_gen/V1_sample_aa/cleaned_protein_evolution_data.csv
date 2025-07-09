@@ -1,0 +1,4 @@
+Filename,n_sequences_tips,alignment_length,gamma_shape,prop_invariant,insertion_rate,deletion_rate,mean_insertion_length,mean_deletion_length,best_BD_speciation_rate,best_BD_extinction_rate,best_coal_growth_rate,best_coal_eff_pop_size,bd_weight,best_BCSTDCST,best_BEXPDCST,best_BLINDCST,best_BCSTDEXP,best_BEXPDEXP,best_BLINDEXP,best_BCSTDLIN,best_BEXPDLIN,best_BLINDLIN,best_COALCST,best_COALEXP,best_COALLIN,best_COALSTEP,best_COALLOG,tree_length,crown_age
+TF312796.fa,635,2692,0.8926,0.0,0.09245124,0.83206117,43.784,54.73,19.55060247,-14.75329491,0,11.474,1.0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,140.125,1.0
+TF106101.fa,192,1553,1.2883,0.0,0.06690009,0.60210077,7.683,9.604,253.9296858,244.89001731,0,9.039,1.0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,48.858,1.0
+TF105060.fa,42,2094,1.8551,0.0423,0.01502024,0.13518215,2.591,3.239,71.90781235,93.4503226,0,3.538,1.0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,6.257,1.0
