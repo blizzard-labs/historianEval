@@ -163,9 +163,6 @@ class modelConstructor:
         except subprocess.CalledProcessError as e:
             print(f"Error extracting topology parameters: {e}")
             raise
-        except subprocess.TimeoutExpired as e:
-            print(f"Command timed out: {e}")
-            raise
     
     def cleanup_params(self):
         input_f = self.params_wr_file
@@ -190,12 +187,32 @@ class modelConstructor:
             print("Please make sure the file exists in the current directory.")
         except Exception as e:
             print(f"An error occurred: {str(e)}")
-
+    
+    def estimate_treedist(self, threshold=0.6):
+        try:
+            cmd = [
+                "python",
+                "src/model_gen_aa/treedist.py",
+                self.tree_folder,
+                "-o", self.params_file,
+                "--save-consensus", os.path.join(self.temp_folder, "consense.tree"),
+                "--threshold", str(threshold),
+                "--topology"
+            ]
+            
+            subprocess.run(cmd, check=True)
+            print(f"Tree distances estimated for {self.label}.")
+            
+        except subprocess.CalledProcessError as e:
+            print(f"Error estimating tree distances: {e}")
+            raise
+            
 
 def main():
     print('Begun the script')
     if len(sys.argv) < 4:
         print("Usage: python main_aa.py <system> <label> <alignment_folder> [log]")
+        # 
     
     operate = sys.argv[1]
     label = sys.argv[2]
@@ -206,8 +223,10 @@ def main():
     mc.cleanup_trees()
     mc.extract_substitution_params()
     mc.cleanup_modeltest_trees()
-    mc.extract_top_params()      
-    mc.cleanup_params()
+    
+    mc.estimate_treedist()
+    #mc.extract_top_params()      
+    #mc.cleanup_params()
     
     print('COMPLEETTEEEETETETETE!!!!')
 

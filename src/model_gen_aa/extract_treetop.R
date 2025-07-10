@@ -503,9 +503,6 @@ fit_coal_constant <- function(coal_intervals, initial_Ne) {
 fit_coal_exponential <- function(coal_intervals, initial_Ne) {
   # Exponential population growth coalescent
   tryCatch({
-    # This is a simplified implementation
-    # In practice, you'd use more sophisticated optimization
-    
     # For now, return a basic exponential model
     Ne_current <- initial_Ne
     growth_rate <- 0.01  # Small positive growth
