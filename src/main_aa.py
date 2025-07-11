@@ -45,8 +45,10 @@ class modelConstructor:
             sys.stderr = utils.StreamToLogger(logging.getLogger(), logging.ERROR) 
         
 
-    def extract_substitution_params(self):
+    def extract_substitution_params(self, only_indels=False):
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
+        #Example: python protein_extractor.py ./protein_alignments/ ./results/ /usr/local/bin/modeltest-ng false
+        
         m_path = "tools/modeltest-ng-osx" if self.operate == "osx" else "tools/modeltest-ng-static"
         
         cmd = [
@@ -54,7 +56,8 @@ class modelConstructor:
             "src/model_gen_aa/extract_params.py",
             self.alignment_folder,
             self.temp_folder,
-            m_path
+            m_path, 
+            str(only_indels).lower()
         ]
         
         try:

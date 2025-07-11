@@ -349,12 +349,14 @@ class ProteinParameterExtractor:
             insertion_rate = parsimony_indels['insertions'] / (align_length * n_seqs) * 100  # Scale to reasonable range
             deletion_rate = parsimony_indels['deletions'] / (align_length * n_seqs) * 100
             
+            '''
             # Alternative: Use gap density as proxy for indel rate
             gap_density = total_gaps / (align_length * n_seqs)
             
             # More conservative approach: base rates on gap density
             insertion_rate = gap_density * 0.1  # Assume 10% of gaps are insertions
             deletion_rate = gap_density * 0.9   # Assume 90% of gaps are deletions
+            '''
             
         else:
             insertion_rate = 0.0
@@ -382,6 +384,7 @@ class ProteinParameterExtractor:
         indel_to_sub_ratio = total_indel_events / total_subs if total_subs > 0 else 0.0
         
         return {
+            'indel_method' : 'parsimony',
             'insertion_rate': max(0.0, min(insertion_rate, 1.0)),  # Cap at reasonable values
             'deletion_rate': max(0.0, min(deletion_rate, 1.0)),
             'insertion_events': parsimony_indels['insertions'],
@@ -541,7 +544,7 @@ class ProteinParameterExtractor:
             'prop_invariant': prop_invariant
         }
     
-    def process_alignment(self, filepath, tree_file=""):
+    def process_alignment(self, filepath, tree_file="", only_indels=False):
         """Process a single protein alignment file"""
         print(f"Processing: {os.path.basename(filepath)}")
         
@@ -550,50 +553,51 @@ class ProteinParameterExtractor:
             print(f"Skipping {filepath}: Invalid alignment or too few sequences")
             return None
         
-        if (len(tree_file) > 0):
-            tree = self.read_tree(tree_file)
-            
-            if tree is None:
-                print(f"Skipping reading tree {tree_file}: Invalid tree")
-                modeltest_params = self.run_modeltest_ng(filepath)
+        if not only_indels:
+            if (len(tree_file) > 0):
+                tree = self.read_tree(tree_file)
+                
+                if tree is None:
+                    print(f"Skipping reading tree {tree_file}: Invalid tree")
+                    modeltest_params = self.run_modeltest_ng(filepath)
+                else:
+                    modeltest_params = self.run_modeltest_ng(filepath, tree_file=tree_file)
             else:
-                modeltest_params = self.run_modeltest_ng(filepath, tree_file=tree_file)
-        else:
-            # Try ModelTest-NG first, fallback to basic estimation
-            modeltest_params = self.run_modeltest_ng(filepath)
-        
-        
-        if modeltest_params and len(modeltest_params) > 4:
-            print(f"  - Using ModelTest-NG parameters")
+                # Try ModelTest-NG first, fallback to basic estimation
+                modeltest_params = self.run_modeltest_ng(filepath)
             
-            # Extract amino acid frequencies
-            aa_freqs = {}
-            for aa in self.amino_acids:
-                aa_freqs[aa] = modeltest_params.get(f'freq_{aa}', 1/20)
             
-            gamma_shape = modeltest_params.get('gamma_shape', 1.0)
-            prop_invariant = modeltest_params.get('prop_invariant', 0.0)
-            best_model = modeltest_params.get('best_model', 'Unknown')
-            log_likelihood = modeltest_params.get('log_likelihood', 0.0)
-            aic_score = modeltest_params.get('aic_score', 0.0)
-            bic_score = modeltest_params.get('bic_score', 0.0)
-            
-        else:
-            print(f"  - Using fallback parameter estimation")
-            # Fallback to basic estimation
-            protein_params = self.estimate_protein_parameters(alignment)
-            if protein_params is None:
-                print(f"Skipping {filepath}: Could not estimate protein parameters")
-                return None
-            
-            aa_freqs = protein_params['aa_frequencies']
-            gamma_params = self.estimate_gamma_parameters(alignment)
-            gamma_shape = gamma_params['gamma_shape']
-            prop_invariant = gamma_params['prop_invariant']
-            best_model = 'Basic_Estimation'
-            log_likelihood = 0.0
-            aic_score = 0.0
-            bic_score = 0.0
+            if modeltest_params and len(modeltest_params) > 4:
+                print(f"  - Using ModelTest-NG parameters")
+                
+                # Extract amino acid frequencies
+                aa_freqs = {}
+                for aa in self.amino_acids:
+                    aa_freqs[aa] = modeltest_params.get(f'freq_{aa}', 1/20)
+                
+                gamma_shape = modeltest_params.get('gamma_shape', 1.0)
+                prop_invariant = modeltest_params.get('prop_invariant', 0.0)
+                best_model = modeltest_params.get('best_model', 'Unknown')
+                log_likelihood = modeltest_params.get('log_likelihood', 0.0)
+                aic_score = modeltest_params.get('aic_score', 0.0)
+                bic_score = modeltest_params.get('bic_score', 0.0)
+                
+            else:
+                print(f"  - Using fallback parameter estimation")
+                # Fallback to basic estimation
+                protein_params = self.estimate_protein_parameters(alignment)
+                if protein_params is None:
+                    print(f"Skipping {filepath}: Could not estimate protein parameters")
+                    return None
+                
+                aa_freqs = protein_params['aa_frequencies']
+                gamma_params = self.estimate_gamma_parameters(alignment)
+                gamma_shape = gamma_params['gamma_shape']
+                prop_invariant = gamma_params['prop_invariant']
+                best_model = 'Basic_Estimation'
+                log_likelihood = 0.0
+                aic_score = 0.0
+                bic_score = 0.0
         
         # Always calculate indel parameters from alignment
         indel_params = self.analyze_indels(alignment)
@@ -603,23 +607,31 @@ class ProteinParameterExtractor:
             'filename': os.path.basename(filepath),
             'n_sequences': len(alignment),
             'alignment_length': alignment.get_alignment_length(),
-            'best_model': best_model,
-            'log_likelihood': log_likelihood,
-            'aic_score': aic_score,
-            'bic_score': bic_score,
-            'method': 'ModelTest-NG' if modeltest_params and len(modeltest_params) > 4 else 'Basic',
         }
         
-        # Add amino acid frequencies
-        for aa in self.amino_acids:
-            result[f'freq_{aa}'] = aa_freqs.get(aa, 1/20)
-        
-        # Add gamma and invariant parameters
-        result.update({
-            'gamma_shape': gamma_shape,
-            'prop_invariant': prop_invariant,
+        if not only_indels:
+            #Add modeltest results
+            result.update({
+                'best_model': best_model,
+                'log_likelihood': log_likelihood,
+                'aic_score': aic_score,
+                'bic_score': bic_score,
+                'method': 'ModelTest-NG' if modeltest_params and len(modeltest_params) > 4 else 'Basic',
+            })
             
-            # Improved indel parameters
+            # Add amino acid frequencies
+            for aa in self.amino_acids:
+                result[f'freq_{aa}'] = aa_freqs.get(aa, 1/20)
+            
+            # Add gamma and invariant parameters
+            result.update({
+                'gamma_shape': gamma_shape,
+                'prop_invariant': prop_invariant,
+            })
+        
+        # Add indel parameters
+        result.update({
+            'indel_method': indel_params['indel_method'],
             'insertion_rate': indel_params['insertion_rate'],
             'deletion_rate': indel_params['deletion_rate'],
             'insertion_events': indel_params['insertion_events'],
@@ -636,7 +648,7 @@ class ProteinParameterExtractor:
         """Clean up temporary files"""
         pass  # Keep temp files for debugging
         
-    def process_folder(self):
+    def process_folder(self, only_indels=False):
         """Process all FASTA files in the input folder"""
         fasta_files = glob.glob(os.path.join(self.input_folder, "*.fa")) + \
                      glob.glob(os.path.join(self.input_folder, "*.fasta")) + \
@@ -661,9 +673,9 @@ class ProteinParameterExtractor:
                         print(f"Pre-existant tree found for {f}!")
             
             if (len(tree_file) > 0):
-                result = self.process_alignment(filepath, tree_file)
+                result = self.process_alignment(filepath, tree_file, only_indels=only_indels)
             else:
-                result = self.process_alignment(filepath)
+                result = self.process_alignment(filepath, only_indels=only_indels)
             if result:
                 self.results.append(result)
         
@@ -780,15 +792,16 @@ class ProteinParameterExtractor:
 def main():
     print('Started protein evolution parameter extraction script')
     if len(sys.argv) < 2:
-        print("Usage: python protein_extractor.py <input_folder> [output_folder] [modeltest_path]")
+        print("Usage: python protein_extractor.py <input_folder> [output_folder] [modeltest_path] [only_indels]")
         print("Example: python protein_extractor.py ./protein_alignments/")
         print("Example: python protein_extractor.py ./protein_alignments/ ./results/")
-        print("Example: python protein_extractor.py ./protein_alignments/ ./results/ /usr/local/bin/modeltest-ng")
+        print("Example: python protein_extractor.py ./protein_alignments/ ./results/ /usr/local/bin/modeltest-ng false")
         sys.exit(1)
     
     input_folder = sys.argv[1]
     output_folder = sys.argv[2] if len(sys.argv) > 2 else "protein_results"
     modeltest_path = sys.argv[3] if len(sys.argv) > 3 else "modeltest-ng"
+    only_indels = (sys.argv[4].lower() == 'true') if len(sys.argv) > 4 else False
     
     if not os.path.exists(input_folder):
         print(f"Error: Input folder '{input_folder}' does not exist")
@@ -798,7 +811,7 @@ def main():
     extractor = ProteinParameterExtractor(input_folder, output_folder=output_folder, modeltest_path=modeltest_path)
     
     # Process all alignments
-    extractor.process_folder()
+    extractor.process_folder(only_indels=only_indels)
     
     # Save results and generate plots
     df = extractor.save_results()
