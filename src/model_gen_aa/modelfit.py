@@ -6,6 +6,10 @@ This script fits joint distributions to phylogenetic parameters extracted from T
 for use in realistic sequence simulation with indel-seq-gen.
 """
 
+
+import os
+import sys
+import pickle
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,7 +65,6 @@ class PhylogeneticParameterFitter:
                                 'rf_length_distance']
         }
         '''
-        #TODO: update dictionary structure to list
         
         return {
             'key_parameters' : ['n_sequences', 'gamma_shape', 'prop_invariant',
@@ -80,7 +83,7 @@ class PhylogeneticParameterFitter:
         # Handle missing values
         self.numeric_data = self.numeric_data.dropna()
         
-        # Log-transform rate parameters (they're often log-normal) #TODO: check if this is appropriate
+        # Log-transform rate parameters (they're often log-normal)
         rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length']
         
         for param in rate_params:
@@ -159,7 +162,7 @@ class PhylogeneticParameterFitter:
             else:
                 print(f"  No suitable distribution found for {param}")
     
-    def fit_joint_distribution_copula(self, param_group='amino_acid_frequencies'):
+    def fit_joint_distribution_copula(self, param_group='key_parameters'):
         """Fit joint distribution using copulas"""
         if not COPULAS_AVAILABLE:
             print("Copulas not available, using multivariate normal instead")
@@ -188,7 +191,7 @@ class PhylogeneticParameterFitter:
         print(f"Joint model fitted successfully for {param_group}")
         return self.joint_model
     
-    def fit_joint_distribution_mvn(self, param_group='amino_acid_frequencies'):
+    def fit_joint_distribution_mvn(self, param_group='key_parameters'):
         """Fit multivariate normal distribution as fallback"""
         params = self.parameter_groups[param_group]
         available_params = [p for p in params if p in self.numeric_data.columns]
@@ -225,7 +228,7 @@ class PhylogeneticParameterFitter:
         print(f"Multivariate normal fitted successfully for {param_group}")
         return self.joint_model
     
-    def sample_parameters(self, n_samples=100, param_group='amino_acid_frequencies'):
+    def sample_parameters(self, n_samples=100, param_group='key_parameters'):
         """Sample new parameter sets from fitted distributions"""
         if self.joint_model is None:
             print("No joint model fitted. Please fit a joint distribution first.")
@@ -248,7 +251,7 @@ class PhylogeneticParameterFitter:
         
         return samples
     
-    def validate_fit(self, param_group='amino_acid_frequencies'):
+    def validate_fit(self, output_folder, param_group='key_parameters'):
         """Validate the fitted joint distribution"""
         if self.joint_model is None:
             print("No joint model to validate")
@@ -280,9 +283,10 @@ class PhylogeneticParameterFitter:
                 axes[i].legend()
         
         plt.tight_layout()
+        plt.savefig(os.path.join(output_folder, 'param_fits.png'), dpi=300)
         plt.show()
     
-    def export_for_simulation(self, param_group='amino_acid_frequencies', n_samples=100):
+    def export_for_simulation(self, param_group='key_parameters', n_samples=100):
         """Export parameters in format suitable for indel-seq-gen"""
         samples = self.sample_parameters(n_samples, param_group)
         
@@ -310,7 +314,7 @@ class PhylogeneticParameterFitter:
         
         return export_data
     
-    def plot_parameter_correlations(self):
+    def plot_parameter_correlations(self, output_folder):
         """Plot correlation matrix of parameters"""
         # Focus on most relevant parameters
         key_params = []
@@ -327,52 +331,86 @@ class PhylogeneticParameterFitter:
                    square=True, fmt='.2f')
         plt.title('Parameter Correlation Matrix')
         plt.tight_layout()
-        plt.show()
+        plt.savefig(os.path.join(output_folder, 'parameter_correlations.png'), dpi = 300)
+        plt.close()
 
-def main(parameter_file, parameter_group):
-    """Main function to demonstrate the workflow"""
-    # Initialize the fitter
-    fitter = PhylogeneticParameterFitter(parameter_file)
+def main():
+    print("Starting parameter fitting workflow...")
     
-    # Preprocess data
-    print("Preprocessing data...")
-    fitter.preprocess_data()
+    if len(sys.argv) < 2:
+        print("Usage: python src/model_gen_aa/modelfit.py <output_folder> [parameter_file] [model_path] [n_samples]")
+        sys.exit(1)
     
-    # Plot correlations
-    print("Plotting parameter correlations...")
-    fitter.plot_parameter_correlations()
+    output_folder = sys.argv[1]
+    parameter_file = sys.argv[2] if len(sys.argv) > 2 else 'none'
+    model_path = sys.argv[3] if len(sys.argv) > 3 else 'none'
+    n_samples = int(sys.argv[4]) if len(sys.argv) > 4 else 10
     
-    # Fit marginal distributions
-    print("Fitting marginal distributions...")
-    fitter.fit_marginal_distributions()
+    if (parameter_file == model_path) or (parameter_file != 'none' and model_path != 'none'):
+        print("Error: Please specify either a parameter file or a model path, not both or none.")
+        sys.exit(1)
     
-    # Fit joint distribution for amino acid frequencies
-    print("Fitting joint distribution for amino acid frequencies...")
-    fitter.fit_joint_distribution_copula(parameter_group)
+    if not os.path.exists(output_folder):
+        print(f"Creating output folder: {output_folder}")
+        os.makedirs(output_folder)
     
-    # Validate fit
-    print("Validating fit...")
-    fitter.validate_fit(parameter_group)
+    parameter_group = 'key_parameters'
     
-    # Export parameters for simulation
-    print("Exporting parameters for simulation...")
-    simulation_params = fitter.export_for_simulation(parameter_group, n_samples=50)
-    
-    if simulation_params is not None:
-        print(f"Generated {len(simulation_params)} parameter sets for simulation")
-        print("First few parameter sets:")
-        print(simulation_params.head())
+    if parameter_file != 'none':
+        if not os.path.exists(parameter_file):
+            print(f"Error: Parameter file '{parameter_file}' does not exist.")
+            sys.exit(1)
+            
+        #Initialize the fitter with the parameter file
+        fitter = PhylogeneticParameterFitter(parameter_file)
         
-        # Save to CSV
-        simulation_params.to_csv('simulated_phylo_parameters.csv', index=False)
-        print("Parameters saved to 'simulated_phylo_parameters.csv'")
+        # Preprocess data
+        print("Preprocessing data...")
+        fitter.preprocess_data()
+        
+        # Plot correlations
+        print("Plotting parameter correlations...")
+        fitter.plot_parameter_correlations(output_folder)
+        
+        # Fit marginal distributions
+        print("Fitting marginal distributions...")
+        fitter.fit_marginal_distributions()
+        
+        # Fit joint distribution for amino acid frequencies
+        print("Fitting joint distribution for amino acid frequencies...")
+        fitter.fit_joint_distribution_copula(parameter_group)
+        
+        # Validate fit
+        print("Validating fit...")
+        fitter.validate_fit(output_folder, parameter_group)
+        
+        with open(os.path.join(output_folder, 'model.pkl'), 'wb') as f:
+            pickle.dump(fitter, f, pickle.HIGHEST_PROTOCOL)
+        print(f"Joint distributions saved to {output_folder}/model.pkl")
+        
+
+    elif model_path != 'none':
+        with open(model_path, 'rb') as f:
+            fitter = pickle.load(f)
     
-    return fitter
+        # Export parameters for simulation
+        print("Exporting parameters for simulation...")
+        simulation_params = fitter.export_for_simulation(parameter_group, n_samples)
+    
+        if simulation_params is not None:
+            print(f"Generated {len(simulation_params)} parameter sets for simulation")
+            print("First few parameter sets:")
+            print(simulation_params.head())
+            
+            # Save to CSV
+            simulation_params.to_csv(os.path.join(output_folder, 'simulated_phylo_parameters.csv'), index=False)
+            print(f"Parameters saved to '{os.path.join(output_folder, 'simulated_phylo_parameters.csv')}'")
+    
 
 if __name__ == "__main__":
-    # Run the main workflow
-    fitter = main('data/model_gen/mamX10k/protein_evolution_parameters.csv', 'key_parameters')
+    main()
     
+    '''
     # Example of how to use the results
     print("\n" + "="*50)
     print("USAGE EXAMPLE:")
@@ -383,3 +421,4 @@ if __name__ == "__main__":
     print("\n# Export for indel-seq-gen:")
     print("indel_params = fitter.export_for_simulation('indel_parameters', n_samples=10)")
     print("print(indel_params)")
+    '''
