@@ -598,6 +598,8 @@ class ProteinParameterExtractor:
                 log_likelihood = 0.0
                 aic_score = 0.0
                 bic_score = 0.0
+        else:
+            print(f'- Skipping ModelTest-NG, only calculating indel parameters')
         
         # Always calculate indel parameters from alignment
         indel_params = self.analyze_indels(alignment)
