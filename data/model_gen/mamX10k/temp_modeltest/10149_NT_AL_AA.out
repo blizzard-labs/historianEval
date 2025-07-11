@@ -1,0 +1,170 @@
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta
+  Tree:       Fixed user
+    file:           data/model_gen/mamX10k/trees/10149_NT_AL.tree
+  #taxa:            181
+  #sites:           1049
+  #patterns:        883
+  Max. thread mem:  388 MB
+
+Output:
+  Log:           data/model_gen/mamX10k/temp_modeltest/10149_NT_AL_AA.log
+  Results:       data/model_gen/mamX10k/temp_modeltest/10149_NT_AL_AA.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          7/8
+  RNG seed:         12345
+  subtree repeats:  enabled
+--------------------------------------------------------------------------------
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2    -36504.0699     75519.1086         0.0000    1.0000
+       2  LG+G4              1    -36542.3307     75588.6747        69.5661    0.0000
+       3  LG+I+G4+F         21    -36558.6967     75760.5187       241.4100    0.0000
+       4  LG+G4+F           20    -36593.0529     75822.2753       303.1667    0.0000
+       5  LG+I               1    -37792.0476     78088.1086      2568.9999    0.0000
+       6  LG+I+F            20    -37871.9255     78380.0205      2860.9119    0.0000
+       7  LG                 0    -38935.1608     80367.3793      4848.2706    0.0000
+       8  LG+F              19    -39003.6909     80636.5959      5117.4872    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+I+G4
+lnL:                -36504.0699
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.1901
+Gamma shape:        0.9025
+Score:              75519.1086
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              0.5944
+Alpha-P.Inv:        0.9025
+P.Inv-Alpha:        0.1901
+Frequencies:        0.0574 0.0339 0.0602 0.0341 0.0297 0.0400 0.0378 0.0503 0.0165 0.0589 0.1152 0.0435 0.0189 0.0539 0.0511 0.1150 0.0755 0.0103 0.0200 0.0777 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta --model LG+I+G4
+  > paup -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m LG+I+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2    -36504.0699     73730.1397         0.0000    1.0000
+       2  LG+G4              1    -36542.3307     73804.6614        74.5217    0.0000
+       3  LG+I+G4+F         21    -36558.6967     73877.3935       147.2538    0.0000
+       4  LG+G4+F           20    -36593.0529     73944.1057       213.9660    0.0000
+       5  LG+I               1    -37792.0476     76304.0952      2573.9555    0.0000
+       6  LG+I+F            20    -37871.9255     76501.8509      2771.7112    0.0000
+       7  LG                 0    -38935.1608     78588.3215      4858.1818    0.0000
+       8  LG+F              19    -39003.6909     78763.3819      5033.2422    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+I+G4
+lnL:                -36504.0699
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.1901
+Gamma shape:        0.9025
+Score:              73730.1397
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              0.5944
+Alpha-P.Inv:        0.9025
+P.Inv-Alpha:        0.1901
+Frequencies:        0.0574 0.0339 0.0602 0.0341 0.0297 0.0400 0.0378 0.0503 0.0165 0.0589 0.1152 0.0435 0.0189 0.0539 0.0511 0.1150 0.0755 0.0103 0.0200 0.0777 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta --model LG+I+G4
+  > paup -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m LG+I+G4
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2    -36504.0699     74110.1397         0.0000    1.0000
+       2  LG+G4              1    -36542.3307     74181.6614        71.5217    0.0000
+       3  LG+I+G4+F         21    -36558.6967     74310.3935       200.2538    0.0000
+       4  LG+G4+F           20    -36593.0529     74374.1057       263.9660    0.0000
+       5  LG+I               1    -37792.0476     76681.0952      2570.9555    0.0000
+       6  LG+I+F            20    -37871.9255     76931.8509      2821.7112    0.0000
+       7  LG                 0    -38935.1608     78963.3215      4853.1818    0.0000
+       8  LG+F              19    -39003.6909     79190.3819      5080.2422    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+I+G4
+lnL:                -36504.0699
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.1901
+Gamma shape:        0.9025
+Score:              74110.1397
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              -
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              -
+Alpha:              0.5944
+Alpha-P.Inv:        0.9025
+P.Inv-Alpha:        0.1901
+Frequencies:        0.0574 0.0339 0.0602 0.0341 0.0297 0.0400 0.0378 0.0503 0.0165 0.0589 0.1152 0.0435 0.0189 0.0539 0.0511 0.1150 0.0755 0.0103 0.0200 0.0777 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta --model LG+I+G4
+  > paup -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/10149_NT_AL_AA.fasta -m LG+I+G4
+Done

@@ -142,16 +142,52 @@ def get_topological_splits(tree):
     
     return splits
 
+
+
+
+def get_proportional_signature(node, tree):
+    """
+    Create signature based on proportional relationships.
+    
+    Args:
+        node: Tree node to create signature for
+        tree: Complete tree object
+        
+    Returns:
+        tuple: (proportion, sister_signature, depth_level)
+    """
+    total_leaves = len([leaf for leaf in tree.get_leaves()])
+    subtree_size = len([leaf for leaf in node.get_leaves()])
+    
+    # Get proportional size (what fraction of the tree this clade represents)
+    proportion = subtree_size / total_leaves
+    
+    # Get sister clade proportions (what this clade is grouped with)
+    parent = node.up
+    if parent:
+        sister_proportions = []
+        for sibling in parent.children:
+            if sibling != node:
+                sister_size = len([leaf for leaf in sibling.get_leaves()])
+                sister_proportions.append(sister_size / total_leaves)
+        sister_signature = tuple(sorted(sister_proportions))
+    else:
+        sister_signature = ()
+    
+    # Add depth information for better discrimination
+    depth_level = len(node.get_ancestors())
+    
+    # Round to avoid floating point matching issues
+    proportion = round(proportion, 3)
+    sister_signature = tuple(round(p, 3) for p in sister_signature)
+    
+    return (proportion, sister_signature, depth_level)
+
+
 def generate_topological_consensus_tree(trees, threshold=0.5):
     """
     Generate a majority consensus tree based on topology/shape rather than specific taxa.
-    
-    Args:
-        trees (dict): Dictionary of Tree objects
-        threshold (float): Minimum frequency for a split to be included
-    
-    Returns:
-        Tree: Topological consensus tree
+    UPDATED VERSION using proportional signatures.
     """
     tree_list = list(trees.values())
     
@@ -171,78 +207,176 @@ def generate_topological_consensus_tree(trees, threshold=0.5):
         all_tree_sizes.append(num_leaves)
         print(f"Tree {tree_name}: {num_leaves} leaves")
     
-    # Find the most common tree size to use as reference
-    from collections import Counter
-    size_counts = Counter(all_tree_sizes)
-    reference_size = size_counts.most_common(1)[0][0]
-    print(f"Using reference tree size: {reference_size} leaves")
+    # Group trees by size ranges instead of requiring exact matches
+    from collections import defaultdict
+    size_groups = defaultdict(list)
     
-    # Filter trees to those with the reference size
-    reference_trees = [(name, tree, mapping) for name, tree, mapping in normalized_trees 
-                      if len([leaf for leaf in tree.get_leaves()]) == reference_size]
+    for name, tree, mapping in normalized_trees:
+        tree_size = len([leaf for leaf in tree.get_leaves()])
+        # Group trees into size categories (allows some flexibility)
+        size_category = (tree_size // 10) * 10  # Group by tens
+        size_groups[size_category].append((name, tree, mapping, tree_size))
     
-    print(f"Using {len(reference_trees)} trees with {reference_size} leaves for consensus")
+    # Use the largest group
+    largest_group = max(size_groups.values(), key=len)
+    print(f"Using {len(largest_group)} trees from size group for consensus")
     
-    # Count topological split patterns
+    # Count topological split patterns using proportional signatures
     split_counts = defaultdict(int)
     split_branch_lengths = defaultdict(list)
+    split_examples = defaultdict(list)  # Store examples for debugging
     
-    for tree_name, normalized_tree, mapping in reference_trees:
-        # Get splits based on tree structure
+    for tree_name, normalized_tree, mapping, tree_size in largest_group:
+        # Get proportional signatures for all internal nodes
         for node in normalized_tree.traverse():
             if not node.is_leaf() and not node.is_root():
-                subtree_size = len([leaf for leaf in node.get_leaves()])
-                if subtree_size > 1 and subtree_size < reference_size:
-                    # Create split signature based on subtree size
-                    split_signature = subtree_size
-                    split_counts[split_signature] += 1
+                # Get proportional signature
+                signature = get_proportional_signature(node, normalized_tree)
+                
+                # Only consider meaningful splits (not too small or too large)
+                proportion = signature[0]
+                if 0.1 <= proportion <= 0.9:  # Ignore very small or very large clades
+                    split_counts[signature] += 1
                     
+                    # Store branch length
                     branch_length = node.dist if hasattr(node, 'dist') else 0.0
-                    split_branch_lengths[split_signature].append(branch_length)
+                    split_branch_lengths[signature].append(branch_length)
+                    
+                    # Store example for debugging
+                    split_examples[signature].append((tree_name, proportion, len(node.get_leaves())))
     
     # Filter splits by threshold
-    num_trees = len(reference_trees)
+    num_trees = len(largest_group)
     consensus_splits = []
     
-    for split_signature, count in split_counts.items():
+    print(f"\nTopological splits found:")
+    for signature, count in sorted(split_counts.items(), key=lambda x: x[1], reverse=True):
         frequency = count / num_trees
         if frequency >= threshold:
-            avg_branch_length = np.mean(split_branch_lengths[split_signature]) if split_branch_lengths[split_signature] else 0.0
-            consensus_splits.append((split_signature, frequency, avg_branch_length))
-            print(f"Split size {split_signature}: frequency {frequency:.3f}, avg branch length: {avg_branch_length:.6f}")
+            avg_branch_length = np.mean(split_branch_lengths[signature]) if split_branch_lengths[signature] else 0.0
+            consensus_splits.append((signature, frequency, avg_branch_length))
+            
+            # Debug information
+            proportion, sister_sig, depth = signature
+            examples = split_examples[signature][:3]  # Show first 3 examples
+            print(f"  Split proportion {proportion:.3f}, sisters {sister_sig}, depth {depth}")
+            print(f"    Frequency: {frequency:.3f}, avg branch length: {avg_branch_length:.6f}")
+            print(f"    Examples: {examples}")
     
-    print(f"Found {len(consensus_splits)} consensus topological splits")
+    print(f"\nFound {len(consensus_splits)} consensus topological splits")
     
-    # Build consensus tree using the most common topology
-    if reference_trees:
-        # Use the first reference tree as template and modify it
-        consensus_tree = reference_trees[0][1].copy()
+    if not consensus_splits:
+        print("No consensus splits found, using first tree as template")
+        return largest_group[0][1].copy()
+    
+    # Build consensus tree using proportional signatures
+    consensus_tree = build_consensus_tree_from_proportional_splits(
+        largest_group, consensus_splits, trees
+    )
+    
+    return consensus_tree
+
+
+def build_consensus_tree_from_proportional_splits(largest_group, consensus_splits, original_trees):
+    """
+    Build a consensus tree from proportional splits.
+    
+    Args:
+        largest_group: List of (tree_name, normalized_tree, mapping, tree_size) tuples
+        consensus_splits: List of (signature, frequency, branch_length) tuples
+        original_trees: Dictionary of original trees
         
-        # Apply consensus branch lengths
-        for node in consensus_tree.traverse():
-            if not node.is_leaf() and not node.is_root():
-                subtree_size = len([leaf for leaf in node.get_leaves()])
-                # Find matching consensus split
-                for split_sig, freq, avg_length in consensus_splits:
-                    if split_sig == subtree_size:
-                        node.dist = avg_length
+    Returns:
+        Tree: Consensus tree
+    """
+    # Find the tree with the most consensus splits as template
+    best_template = None
+    best_match_count = 0
+    
+    for tree_name, normalized_tree, mapping, tree_size in largest_group:
+        match_count = 0
+        for signature, frequency, branch_length in consensus_splits:
+            # Check if this tree contains a split matching this signature
+            for node in normalized_tree.traverse():
+                if not node.is_leaf() and not node.is_root():
+                    node_signature = get_proportional_signature(node, normalized_tree)
+                    if signatures_match(node_signature, signature):
+                        match_count += 1
                         break
         
-        # Use the leaf names from the largest tree in the original set
-        largest_tree = max(trees.values(), key=lambda t: len([leaf for leaf in t.get_leaves()]))
-        original_leaves = [leaf.name for leaf in largest_tree.get_leaves()]
+        if match_count > best_match_count:
+            best_match_count = match_count
+            best_template = (tree_name, normalized_tree, mapping, tree_size)
+    
+    if best_template is None:
+        best_template = largest_group[0]
+    
+    print(f"Using {best_template[0]} as template (matches {best_match_count} consensus splits)")
+    
+    # Create consensus tree based on template
+    consensus_tree = best_template[1].copy()
+    
+    # Update branch lengths with consensus values
+    for node in consensus_tree.traverse():
+        if not node.is_leaf() and not node.is_root():
+            node_signature = get_proportional_signature(node, consensus_tree)
+            
+            # Find matching consensus split
+            for signature, frequency, avg_branch_length in consensus_splits:
+                if signatures_match(node_signature, signature):
+                    node.dist = avg_branch_length
+                    break
+    
+    # Map back to meaningful taxon names from original trees
+    # Use the taxon names from the largest original tree
+    largest_original_tree = max(original_trees.values(), 
+                               key=lambda t: len([leaf for leaf in t.get_leaves()]))
+    original_leaf_names = [leaf.name for leaf in largest_original_tree.get_leaves()]
+    
+    # Assign names to consensus tree leaves
+    consensus_leaves = [leaf for leaf in consensus_tree.get_leaves()]
+    for i, leaf in enumerate(consensus_leaves):
+        if i < len(original_leaf_names):
+            leaf.name = original_leaf_names[i]
+        else:
+            leaf.name = f"Taxa_{i+1}"
+    
+    return consensus_tree
+
+
+def signatures_match(sig1, sig2, tolerance=0.05):
+    """
+    Check if two proportional signatures match within tolerance.
+    
+    Args:
+        sig1, sig2: Signatures to compare (proportion, sister_signature, depth)
+        tolerance: Tolerance for proportion matching
         
-        # Map generic names back to a subset of original names
-        consensus_leaves = [leaf for leaf in consensus_tree.get_leaves()]
-        for i, leaf in enumerate(consensus_leaves):
-            if i < len(original_leaves):
-                leaf.name = original_leaves[i]
-            else:
-                leaf.name = f"Taxa_{i+1}"
-        
-        return consensus_tree
-    else:
-        raise ValueError("No trees with consistent size found for consensus")
+    Returns:
+        bool: True if signatures match
+    """
+    prop1, sister1, depth1 = sig1
+    prop2, sister2, depth2 = sig2
+    
+    # Check proportion match
+    if abs(prop1 - prop2) > tolerance:
+        return False
+    
+    # Check depth match (can be flexible)
+    if abs(depth1 - depth2) > 1:
+        return False
+    
+    # Check sister signature match (more flexible)
+    if len(sister1) != len(sister2):
+        return False
+    
+    if len(sister1) > 0:
+        # Check if sister proportions are similar
+        for s1, s2 in zip(sister1, sister2):
+            if abs(s1 - s2) > tolerance:
+                return False
+    
+    return True
 
 def generate_majority_consensus_tree(trees, threshold=0.5, use_topology=False):
     """
@@ -456,10 +590,10 @@ def save_results_to_csv(rf_distances, output_file):
         df_filenames = [k.split(".")[0] for k in df['filename'].values]
         print(df_filenames)
         for tree_filename, distance in rf_distances.items():
-            print(tree_filename.split(".")[0])
-            if tree_filename.split(".")[0] in df_filenames:
+            f = tree_filename.split(".")[0] + "_AA"
+            if f in df_filenames:
                 print(distance)
-                values[df_filenames.index(tree_filename.split(".")[0])] = distance
+                values[df_filenames.index(f)] = distance
         
         print('aslkdhflkasdf')
         print(values)

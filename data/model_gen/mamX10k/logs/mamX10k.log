@@ -1,0 +1,2230 @@
+Started protein evolution parameter extraction script
+Found ModelTest-NG: _      _ _            _      _   _  _____ 
+                            | |    | | |          | |    | \ | |/ ____|
+         _ __ ___   ___   __| | ___| | |_ ___  ___| |_   |  \| | |  __ 
+        | '_ ` _ \ / _ \ / _` |/ _ \ | __/ _ \/ __| __|  | . ` | | |_ |
+        | | | | | | (_) | (_| |  __/ | ||  __/\__ \ |_   | |\  | |__| |
+        |_| |_| |_|\___/ \__,_|\___|_|\__\___||___/\__|  |_| \_|\_____|
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7 released on 17.03.2021 by The Exelixis Lab.
+Written by Diego Darriba.
+Contributors: Tomas Flouri, Alexey Kozlov, Benoit Morel, David Posada, 
+              Alexandros Stamatakis.
+Latest version: https://github.com/ddarriba/modeltest
+--------------------------------------------------------------------------------
+
+ModelTest-NG v0.1.7 released on 17.03.2021 by The Exelixis Lab.
+Written by Diego Darriba.
+Contributors: Tomas Flouri, Alexey Kozlov, Benoit Morel, David Posada, 
+              Alexandros Stamatakis.
+Latest version: https://github.com/ddarriba/modeltest
+Found 546 FASTA files
+Pre-existant tree found for 57529_NT_AL.tree!
+Processing: 57529_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 265_NT_AL.tree!
+Processing: 265_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158798_NT_AL.tree!
+Processing: 158798_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340527_NT_AL.tree!
+Processing: 340527_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11238_NT_AL.tree!
+Processing: 11238_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3052_NT_AL.tree!
+Processing: 3052_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6247_NT_AL.tree!
+Processing: 6247_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8243_NT_AL.tree!
+Processing: 8243_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8225_NT_AL.tree!
+Processing: 8225_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51634_NT_AL.tree!
+Processing: 51634_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8471_NT_AL.tree!
+Processing: 8471_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57595_NT_AL.tree!
+Processing: 57595_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4128_NT_AL.tree!
+Processing: 4128_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 24137_NT_AL.tree!
+Processing: 24137_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5063_NT_AL.tree!
+Processing: 5063_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 778_NT_AL.tree!
+Processing: 778_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55879_NT_AL.tree!
+Processing: 55879_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 100130613_NT_AL.tree!
+Processing: 100130613_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 215_NT_AL.tree!
+Processing: 215_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8573_NT_AL.tree!
+Processing: 8573_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139760_NT_AL.tree!
+Processing: 139760_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 695_NT_AL.tree!
+Processing: 695_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158763_NT_AL.tree!
+Processing: 158763_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4515_NT_AL.tree!
+Processing: 4515_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5251_NT_AL.tree!
+Processing: 5251_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4354_NT_AL.tree!
+Processing: 4354_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27018_NT_AL.tree!
+Processing: 27018_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5613_NT_AL.tree!
+Processing: 5613_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10013_NT_AL.tree!
+Processing: 10013_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7317_NT_AL.tree!
+Processing: 7317_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27286_NT_AL.tree!
+Processing: 27286_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7552_NT_AL.tree!
+Processing: 7552_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340595_NT_AL.tree!
+Processing: 340595_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64840_NT_AL.tree!
+Processing: 64840_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 140886_NT_AL.tree!
+Processing: 140886_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 63035_NT_AL.tree!
+Processing: 63035_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1741_NT_AL.tree!
+Processing: 1741_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4943_NT_AL.tree!
+Processing: 4943_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 795_NT_AL.tree!
+Processing: 795_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10916_NT_AL.tree!
+Processing: 10916_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4534_NT_AL.tree!
+Processing: 4534_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347404_NT_AL.tree!
+Processing: 347404_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4810_NT_AL.tree!
+Processing: 4810_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4129_NT_AL.tree!
+Processing: 4129_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139378_NT_AL.tree!
+Processing: 139378_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158747_NT_AL.tree!
+Processing: 158747_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 93380_NT_AL.tree!
+Processing: 93380_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1774_NT_AL.tree!
+Processing: 1774_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9754_NT_AL.tree!
+Processing: 9754_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64743_NT_AL.tree!
+Processing: 64743_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5358_NT_AL.tree!
+Processing: 5358_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56271_NT_AL.tree!
+Processing: 56271_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 22866_NT_AL.tree!
+Processing: 22866_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 492_NT_AL.tree!
+Processing: 492_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84061_NT_AL.tree!
+Processing: 84061_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 369_NT_AL.tree!
+Processing: 369_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3598_NT_AL.tree!
+Processing: 3598_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 92129_NT_AL.tree!
+Processing: 92129_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6611_NT_AL.tree!
+Processing: 6611_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1641_NT_AL.tree!
+Processing: 1641_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 94122_NT_AL.tree!
+Processing: 94122_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56474_NT_AL.tree!
+Processing: 56474_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1260_NT_AL.tree!
+Processing: 1260_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7504_NT_AL.tree!
+Processing: 7504_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57631_NT_AL.tree!
+Processing: 57631_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4007_NT_AL.tree!
+Processing: 4007_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9104_NT_AL.tree!
+Processing: 9104_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 401612_NT_AL.tree!
+Processing: 401612_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4674_NT_AL.tree!
+Processing: 4674_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1046_NT_AL.tree!
+Processing: 1046_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54830_NT_AL.tree!
+Processing: 54830_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139562_NT_AL.tree!
+Processing: 139562_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84679_NT_AL.tree!
+Processing: 84679_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7076_NT_AL.tree!
+Processing: 7076_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 256643_NT_AL.tree!
+Processing: 256643_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 83692_NT_AL.tree!
+Processing: 83692_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79710_NT_AL.tree!
+Processing: 79710_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2824_NT_AL.tree!
+Processing: 2824_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8517_NT_AL.tree!
+Processing: 8517_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 212_NT_AL.tree!
+Processing: 212_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54521_NT_AL.tree!
+Processing: 54521_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8409_NT_AL.tree!
+Processing: 8409_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90060_NT_AL.tree!
+Processing: 90060_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1478_NT_AL.tree!
+Processing: 1478_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6906_NT_AL.tree!
+Processing: 6906_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8242_NT_AL.tree!
+Processing: 8242_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2539_NT_AL.tree!
+Processing: 2539_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7403_NT_AL.tree!
+Processing: 7403_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 26280_NT_AL.tree!
+Processing: 26280_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27301_NT_AL.tree!
+Processing: 27301_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2564_NT_AL.tree!
+Processing: 2564_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55559_NT_AL.tree!
+Processing: 55559_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55922_NT_AL.tree!
+Processing: 55922_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3581_NT_AL.tree!
+Processing: 3581_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5716_NT_AL.tree!
+Processing: 5716_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23630_NT_AL.tree!
+Processing: 23630_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340554_NT_AL.tree!
+Processing: 340554_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10479_NT_AL.tree!
+Processing: 10479_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7737_NT_AL.tree!
+Processing: 7737_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57826_NT_AL.tree!
+Processing: 57826_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7355_NT_AL.tree!
+Processing: 7355_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51360_NT_AL.tree!
+Processing: 51360_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9185_NT_AL.tree!
+Processing: 9185_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8273_NT_AL.tree!
+Processing: 8273_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6853_NT_AL.tree!
+Processing: 6853_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8905_NT_AL.tree!
+Processing: 8905_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4935_NT_AL.tree!
+Processing: 4935_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2664_NT_AL.tree!
+Processing: 2664_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347411_NT_AL.tree!
+Processing: 347411_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5365_NT_AL.tree!
+Processing: 5365_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6990_NT_AL.tree!
+Processing: 6990_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55787_NT_AL.tree!
+Processing: 55787_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340547_NT_AL.tree!
+Processing: 340547_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3266_NT_AL.tree!
+Processing: 3266_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3476_NT_AL.tree!
+Processing: 3476_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340526_NT_AL.tree!
+Processing: 340526_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3920_NT_AL.tree!
+Processing: 3920_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84187_NT_AL.tree!
+Processing: 84187_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9203_NT_AL.tree!
+Processing: 9203_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64061_NT_AL.tree!
+Processing: 64061_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 53344_NT_AL.tree!
+Processing: 53344_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 83844_NT_AL.tree!
+Processing: 83844_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 142689_NT_AL.tree!
+Processing: 142689_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 257240_NT_AL.tree!
+Processing: 257240_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9949_NT_AL.tree!
+Processing: 9949_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8270_NT_AL.tree!
+Processing: 8270_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 22_NT_AL.tree!
+Processing: 22_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11254_NT_AL.tree!
+Processing: 11254_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 80258_NT_AL.tree!
+Processing: 80258_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51132_NT_AL.tree!
+Processing: 51132_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340562_NT_AL.tree!
+Processing: 340562_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7454_NT_AL.tree!
+Processing: 7454_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139411_NT_AL.tree!
+Processing: 139411_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 80231_NT_AL.tree!
+Processing: 80231_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8226_NT_AL.tree!
+Processing: 8226_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54821_NT_AL.tree!
+Processing: 54821_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5456_NT_AL.tree!
+Processing: 5456_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79649_NT_AL.tree!
+Processing: 79649_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51566_NT_AL.tree!
+Processing: 51566_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9823_NT_AL.tree!
+Processing: 9823_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158833_NT_AL.tree!
+Processing: 158833_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139716_NT_AL.tree!
+Processing: 139716_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 404281_NT_AL.tree!
+Processing: 404281_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 407_NT_AL.tree!
+Processing: 407_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2705_NT_AL.tree!
+Processing: 2705_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 100329135_NT_AL.tree!
+Processing: 100329135_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1736_NT_AL.tree!
+Processing: 1736_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2710_NT_AL.tree!
+Processing: 2710_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51260_NT_AL.tree!
+Processing: 51260_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9016_NT_AL.tree!
+Processing: 9016_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64219_NT_AL.tree!
+Processing: 64219_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 29978_NT_AL.tree!
+Processing: 29978_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5277_NT_AL.tree!
+Processing: 5277_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8277_NT_AL.tree!
+Processing: 8277_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79135_NT_AL.tree!
+Processing: 79135_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4303_NT_AL.tree!
+Processing: 4303_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3358_NT_AL.tree!
+Processing: 3358_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55869_NT_AL.tree!
+Processing: 55869_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10084_NT_AL.tree!
+Processing: 10084_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10943_NT_AL.tree!
+Processing: 10943_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8544_NT_AL.tree!
+Processing: 8544_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2623_NT_AL.tree!
+Processing: 2623_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6535_NT_AL.tree!
+Processing: 6535_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 170302_NT_AL.tree!
+Processing: 170302_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6134_NT_AL.tree!
+Processing: 6134_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139628_NT_AL.tree!
+Processing: 139628_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139231_NT_AL.tree!
+Processing: 139231_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1896_NT_AL.tree!
+Processing: 1896_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54457_NT_AL.tree!
+Processing: 54457_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10134_NT_AL.tree!
+Processing: 10134_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51442_NT_AL.tree!
+Processing: 51442_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203447_NT_AL.tree!
+Processing: 203447_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 399668_NT_AL.tree!
+Processing: 399668_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10735_NT_AL.tree!
+Processing: 10735_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7569_NT_AL.tree!
+Processing: 7569_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1121_NT_AL.tree!
+Processing: 1121_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8450_NT_AL.tree!
+Processing: 8450_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347516_NT_AL.tree!
+Processing: 347516_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2846_NT_AL.tree!
+Processing: 2846_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 140456_NT_AL.tree!
+Processing: 140456_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55916_NT_AL.tree!
+Processing: 55916_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56849_NT_AL.tree!
+Processing: 56849_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 644353_NT_AL.tree!
+Processing: 644353_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 680_NT_AL.tree!
+Processing: 680_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51311_NT_AL.tree!
+Processing: 51311_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 254065_NT_AL.tree!
+Processing: 254065_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51186_NT_AL.tree!
+Processing: 51186_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23133_NT_AL.tree!
+Processing: 23133_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55344_NT_AL.tree!
+Processing: 55344_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 63932_NT_AL.tree!
+Processing: 63932_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2010_NT_AL.tree!
+Processing: 2010_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 26576_NT_AL.tree!
+Processing: 26576_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 190_NT_AL.tree!
+Processing: 190_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51765_NT_AL.tree!
+Processing: 51765_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 85012_NT_AL.tree!
+Processing: 85012_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55285_NT_AL.tree!
+Processing: 55285_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5255_NT_AL.tree!
+Processing: 5255_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 58526_NT_AL.tree!
+Processing: 58526_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51309_NT_AL.tree!
+Processing: 51309_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90736_NT_AL.tree!
+Processing: 90736_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55796_NT_AL.tree!
+Processing: 55796_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84443_NT_AL.tree!
+Processing: 84443_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1821_NT_AL.tree!
+Processing: 1821_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2334_NT_AL.tree!
+Processing: 2334_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57393_NT_AL.tree!
+Processing: 57393_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10761_NT_AL.tree!
+Processing: 10761_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139341_NT_AL.tree!
+Processing: 139341_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3421_NT_AL.tree!
+Processing: 3421_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6658_NT_AL.tree!
+Processing: 6658_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8481_NT_AL.tree!
+Processing: 8481_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347475_NT_AL.tree!
+Processing: 347475_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84460_NT_AL.tree!
+Processing: 84460_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55026_NT_AL.tree!
+Processing: 55026_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55906_NT_AL.tree!
+Processing: 55906_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6855_NT_AL.tree!
+Processing: 6855_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4478_NT_AL.tree!
+Processing: 4478_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3547_NT_AL.tree!
+Processing: 3547_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10149_NT_AL.tree!
+Processing: 10149_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 85417_NT_AL.tree!
+Processing: 85417_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203427_NT_AL.tree!
+Processing: 203427_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5230_NT_AL.tree!
+Processing: 5230_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9131_NT_AL.tree!
+Processing: 9131_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 94056_NT_AL.tree!
+Processing: 94056_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3188_NT_AL.tree!
+Processing: 3188_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6191_NT_AL.tree!
+Processing: 6191_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 256714_NT_AL.tree!
+Processing: 256714_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158521_NT_AL.tree!
+Processing: 158521_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 100132963_NT_AL.tree!
+Processing: 100132963_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10009_NT_AL.tree!
+Processing: 10009_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10251_NT_AL.tree!
+Processing: 10251_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139818_NT_AL.tree!
+Processing: 139818_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 367_NT_AL.tree!
+Processing: 367_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7739_NT_AL.tree!
+Processing: 7739_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79836_NT_AL.tree!
+Processing: 79836_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 395_NT_AL.tree!
+Processing: 395_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1069_NT_AL.tree!
+Processing: 1069_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6102_NT_AL.tree!
+Processing: 6102_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8233_NT_AL.tree!
+Processing: 8233_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2719_NT_AL.tree!
+Processing: 2719_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56850_NT_AL.tree!
+Processing: 56850_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5631_NT_AL.tree!
+Processing: 5631_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55558_NT_AL.tree!
+Processing: 55558_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54413_NT_AL.tree!
+Processing: 54413_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7543_NT_AL.tree!
+Processing: 7543_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64860_NT_AL.tree!
+Processing: 64860_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9282_NT_AL.tree!
+Processing: 9282_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27334_NT_AL.tree!
+Processing: 27334_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8239_NT_AL.tree!
+Processing: 8239_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84636_NT_AL.tree!
+Processing: 84636_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7114_NT_AL.tree!
+Processing: 7114_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11326_NT_AL.tree!
+Processing: 11326_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9758_NT_AL.tree!
+Processing: 9758_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 80712_NT_AL.tree!
+Processing: 80712_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7512_NT_AL.tree!
+Processing: 7512_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7105_NT_AL.tree!
+Processing: 7105_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 633_NT_AL.tree!
+Processing: 633_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3149_NT_AL.tree!
+Processing: 3149_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1831_NT_AL.tree!
+Processing: 1831_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10495_NT_AL.tree!
+Processing: 10495_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9338_NT_AL.tree!
+Processing: 9338_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7547_NT_AL.tree!
+Processing: 7547_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55217_NT_AL.tree!
+Processing: 55217_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90121_NT_AL.tree!
+Processing: 90121_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10682_NT_AL.tree!
+Processing: 10682_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27035_NT_AL.tree!
+Processing: 27035_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9130_NT_AL.tree!
+Processing: 9130_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3251_NT_AL.tree!
+Processing: 3251_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 26548_NT_AL.tree!
+Processing: 26548_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 80823_NT_AL.tree!
+Processing: 80823_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5127_NT_AL.tree!
+Processing: 5127_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158787_NT_AL.tree!
+Processing: 158787_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11152_NT_AL.tree!
+Processing: 11152_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 50814_NT_AL.tree!
+Processing: 50814_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 65109_NT_AL.tree!
+Processing: 65109_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8823_NT_AL.tree!
+Processing: 8823_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 554_NT_AL.tree!
+Processing: 554_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11040_NT_AL.tree!
+Processing: 11040_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84631_NT_AL.tree!
+Processing: 84631_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139189_NT_AL.tree!
+Processing: 139189_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203523_NT_AL.tree!
+Processing: 203523_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5355_NT_AL.tree!
+Processing: 5355_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 389856_NT_AL.tree!
+Processing: 389856_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 140462_NT_AL.tree!
+Processing: 140462_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54880_NT_AL.tree!
+Processing: 54880_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10742_NT_AL.tree!
+Processing: 10742_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139728_NT_AL.tree!
+Processing: 139728_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 28952_NT_AL.tree!
+Processing: 28952_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1536_NT_AL.tree!
+Processing: 1536_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84889_NT_AL.tree!
+Processing: 84889_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 389852_NT_AL.tree!
+Processing: 389852_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8406_NT_AL.tree!
+Processing: 8406_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55086_NT_AL.tree!
+Processing: 55086_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1730_NT_AL.tree!
+Processing: 1730_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3897_NT_AL.tree!
+Processing: 3897_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2187_NT_AL.tree!
+Processing: 2187_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6839_NT_AL.tree!
+Processing: 6839_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139322_NT_AL.tree!
+Processing: 139322_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158880_NT_AL.tree!
+Processing: 158880_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 392509_NT_AL.tree!
+Processing: 392509_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7102_NT_AL.tree!
+Processing: 7102_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4841_NT_AL.tree!
+Processing: 4841_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8473_NT_AL.tree!
+Processing: 8473_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139604_NT_AL.tree!
+Processing: 139604_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 65267_NT_AL.tree!
+Processing: 65267_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5256_NT_AL.tree!
+Processing: 5256_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 170082_NT_AL.tree!
+Processing: 170082_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1184_NT_AL.tree!
+Processing: 1184_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 29071_NT_AL.tree!
+Processing: 29071_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158586_NT_AL.tree!
+Processing: 158586_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2892_NT_AL.tree!
+Processing: 2892_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7319_NT_AL.tree!
+Processing: 7319_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2857_NT_AL.tree!
+Processing: 2857_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 50943_NT_AL.tree!
+Processing: 50943_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 292_NT_AL.tree!
+Processing: 292_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 94121_NT_AL.tree!
+Processing: 94121_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79868_NT_AL.tree!
+Processing: 79868_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23229_NT_AL.tree!
+Processing: 23229_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27344_NT_AL.tree!
+Processing: 27344_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6792_NT_AL.tree!
+Processing: 6792_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1349_NT_AL.tree!
+Processing: 1349_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4693_NT_AL.tree!
+Processing: 4693_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10325_NT_AL.tree!
+Processing: 10325_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 170261_NT_AL.tree!
+Processing: 170261_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 331_NT_AL.tree!
+Processing: 331_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203547_NT_AL.tree!
+Processing: 203547_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 286410_NT_AL.tree!
+Processing: 286410_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56180_NT_AL.tree!
+Processing: 56180_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8862_NT_AL.tree!
+Processing: 8862_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4435_NT_AL.tree!
+Processing: 4435_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 660_NT_AL.tree!
+Processing: 660_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139212_NT_AL.tree!
+Processing: 139212_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5638_NT_AL.tree!
+Processing: 5638_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 538_NT_AL.tree!
+Processing: 538_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54954_NT_AL.tree!
+Processing: 54954_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54328_NT_AL.tree!
+Processing: 54328_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1852_NT_AL.tree!
+Processing: 1852_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2717_NT_AL.tree!
+Processing: 2717_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27316_NT_AL.tree!
+Processing: 27316_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203522_NT_AL.tree!
+Processing: 203522_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 393_NT_AL.tree!
+Processing: 393_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27197_NT_AL.tree!
+Processing: 27197_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5634_NT_AL.tree!
+Processing: 5634_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27330_NT_AL.tree!
+Processing: 27330_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11230_NT_AL.tree!
+Processing: 11230_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 389895_NT_AL.tree!
+Processing: 389895_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 257397_NT_AL.tree!
+Processing: 257397_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54885_NT_AL.tree!
+Processing: 54885_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10800_NT_AL.tree!
+Processing: 10800_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27336_NT_AL.tree!
+Processing: 27336_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10245_NT_AL.tree!
+Processing: 10245_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3054_NT_AL.tree!
+Processing: 3054_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5354_NT_AL.tree!
+Processing: 5354_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 159090_NT_AL.tree!
+Processing: 159090_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8241_NT_AL.tree!
+Processing: 8241_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1678_NT_AL.tree!
+Processing: 1678_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5030_NT_AL.tree!
+Processing: 5030_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6399_NT_AL.tree!
+Processing: 6399_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23439_NT_AL.tree!
+Processing: 23439_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2182_NT_AL.tree!
+Processing: 2182_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 81887_NT_AL.tree!
+Processing: 81887_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 83604_NT_AL.tree!
+Processing: 83604_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11043_NT_AL.tree!
+Processing: 11043_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4952_NT_AL.tree!
+Processing: 4952_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340533_NT_AL.tree!
+Processing: 340533_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347487_NT_AL.tree!
+Processing: 347487_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340543_NT_AL.tree!
+Processing: 340543_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4204_NT_AL.tree!
+Processing: 4204_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6451_NT_AL.tree!
+Processing: 6451_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3561_NT_AL.tree!
+Processing: 3561_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2986_NT_AL.tree!
+Processing: 2986_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23676_NT_AL.tree!
+Processing: 23676_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55609_NT_AL.tree!
+Processing: 55609_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 827_NT_AL.tree!
+Processing: 827_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8260_NT_AL.tree!
+Processing: 8260_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3597_NT_AL.tree!
+Processing: 3597_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56062_NT_AL.tree!
+Processing: 56062_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1288_NT_AL.tree!
+Processing: 1288_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2000_NT_AL.tree!
+Processing: 2000_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4694_NT_AL.tree!
+Processing: 4694_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2002_NT_AL.tree!
+Processing: 2002_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9737_NT_AL.tree!
+Processing: 9737_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 29934_NT_AL.tree!
+Processing: 29934_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 154796_NT_AL.tree!
+Processing: 154796_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5973_NT_AL.tree!
+Processing: 5973_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9248_NT_AL.tree!
+Processing: 9248_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 60506_NT_AL.tree!
+Processing: 60506_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6748_NT_AL.tree!
+Processing: 6748_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23096_NT_AL.tree!
+Processing: 23096_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 59272_NT_AL.tree!
+Processing: 59272_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139324_NT_AL.tree!
+Processing: 139324_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10178_NT_AL.tree!
+Processing: 10178_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9363_NT_AL.tree!
+Processing: 9363_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 114928_NT_AL.tree!
+Processing: 114928_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 27112_NT_AL.tree!
+Processing: 27112_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9500_NT_AL.tree!
+Processing: 9500_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 92745_NT_AL.tree!
+Processing: 92745_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2239_NT_AL.tree!
+Processing: 2239_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139596_NT_AL.tree!
+Processing: 139596_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7216_NT_AL.tree!
+Processing: 7216_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90843_NT_AL.tree!
+Processing: 90843_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 80311_NT_AL.tree!
+Processing: 80311_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 959_NT_AL.tree!
+Processing: 959_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2316_NT_AL.tree!
+Processing: 2316_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2158_NT_AL.tree!
+Processing: 2158_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 83550_NT_AL.tree!
+Processing: 83550_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4281_NT_AL.tree!
+Processing: 4281_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10813_NT_AL.tree!
+Processing: 10813_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2245_NT_AL.tree!
+Processing: 2245_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1654_NT_AL.tree!
+Processing: 1654_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 89801_NT_AL.tree!
+Processing: 89801_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10549_NT_AL.tree!
+Processing: 10549_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 60343_NT_AL.tree!
+Processing: 60343_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79589_NT_AL.tree!
+Processing: 79589_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 159013_NT_AL.tree!
+Processing: 159013_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55593_NT_AL.tree!
+Processing: 55593_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10046_NT_AL.tree!
+Processing: 10046_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 91851_NT_AL.tree!
+Processing: 91851_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6197_NT_AL.tree!
+Processing: 6197_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7224_NT_AL.tree!
+Processing: 7224_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7030_NT_AL.tree!
+Processing: 7030_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23157_NT_AL.tree!
+Processing: 23157_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11141_NT_AL.tree!
+Processing: 11141_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2157_NT_AL.tree!
+Processing: 2157_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 203430_NT_AL.tree!
+Processing: 203430_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9968_NT_AL.tree!
+Processing: 9968_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158866_NT_AL.tree!
+Processing: 158866_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5303_NT_AL.tree!
+Processing: 5303_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5165_NT_AL.tree!
+Processing: 5165_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6103_NT_AL.tree!
+Processing: 6103_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9843_NT_AL.tree!
+Processing: 9843_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54857_NT_AL.tree!
+Processing: 54857_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 59353_NT_AL.tree!
+Processing: 59353_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8776_NT_AL.tree!
+Processing: 8776_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 24140_NT_AL.tree!
+Processing: 24140_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 537_NT_AL.tree!
+Processing: 537_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 65991_NT_AL.tree!
+Processing: 65991_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51616_NT_AL.tree!
+Processing: 51616_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2652_NT_AL.tree!
+Processing: 2652_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4675_NT_AL.tree!
+Processing: 4675_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51248_NT_AL.tree!
+Processing: 51248_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6901_NT_AL.tree!
+Processing: 6901_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10159_NT_AL.tree!
+Processing: 10159_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54440_NT_AL.tree!
+Processing: 54440_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54552_NT_AL.tree!
+Processing: 54552_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 11279_NT_AL.tree!
+Processing: 11279_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158830_NT_AL.tree!
+Processing: 158830_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139065_NT_AL.tree!
+Processing: 139065_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2277_NT_AL.tree!
+Processing: 2277_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9210_NT_AL.tree!
+Processing: 9210_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1183_NT_AL.tree!
+Processing: 1183_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8237_NT_AL.tree!
+Processing: 8237_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79184_NT_AL.tree!
+Processing: 79184_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90293_NT_AL.tree!
+Processing: 90293_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56548_NT_AL.tree!
+Processing: 56548_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5935_NT_AL.tree!
+Processing: 5935_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9643_NT_AL.tree!
+Processing: 9643_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 100272147_NT_AL.tree!
+Processing: 100272147_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57526_NT_AL.tree!
+Processing: 57526_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5199_NT_AL.tree!
+Processing: 5199_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79742_NT_AL.tree!
+Processing: 79742_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5422_NT_AL.tree!
+Processing: 5422_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 54539_NT_AL.tree!
+Processing: 54539_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 100288814_NT_AL.tree!
+Processing: 100288814_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 169966_NT_AL.tree!
+Processing: 169966_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2556_NT_AL.tree!
+Processing: 2556_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56159_NT_AL.tree!
+Processing: 56159_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 25763_NT_AL.tree!
+Processing: 25763_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 286451_NT_AL.tree!
+Processing: 286451_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10389_NT_AL.tree!
+Processing: 10389_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5160_NT_AL.tree!
+Processing: 5160_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 402415_NT_AL.tree!
+Processing: 402415_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 389874_NT_AL.tree!
+Processing: 389874_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2258_NT_AL.tree!
+Processing: 2258_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90161_NT_AL.tree!
+Processing: 90161_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 392465_NT_AL.tree!
+Processing: 392465_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79057_NT_AL.tree!
+Processing: 79057_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51209_NT_AL.tree!
+Processing: 51209_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 401613_NT_AL.tree!
+Processing: 401613_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3750_NT_AL.tree!
+Processing: 3750_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84295_NT_AL.tree!
+Processing: 84295_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2833_NT_AL.tree!
+Processing: 2833_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2742_NT_AL.tree!
+Processing: 2742_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3423_NT_AL.tree!
+Processing: 3423_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57477_NT_AL.tree!
+Processing: 57477_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2491_NT_AL.tree!
+Processing: 2491_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9459_NT_AL.tree!
+Processing: 9459_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8266_NT_AL.tree!
+Processing: 8266_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51114_NT_AL.tree!
+Processing: 51114_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6322_NT_AL.tree!
+Processing: 6322_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23597_NT_AL.tree!
+Processing: 23597_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139285_NT_AL.tree!
+Processing: 139285_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139599_NT_AL.tree!
+Processing: 139599_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 55190_NT_AL.tree!
+Processing: 55190_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1964_NT_AL.tree!
+Processing: 1964_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 84548_NT_AL.tree!
+Processing: 84548_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 63904_NT_AL.tree!
+Processing: 63904_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2925_NT_AL.tree!
+Processing: 2925_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5207_NT_AL.tree!
+Processing: 5207_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2273_NT_AL.tree!
+Processing: 2273_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9367_NT_AL.tree!
+Processing: 9367_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 546_NT_AL.tree!
+Processing: 546_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79983_NT_AL.tree!
+Processing: 79983_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1968_NT_AL.tree!
+Processing: 1968_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 340596_NT_AL.tree!
+Processing: 340596_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5475_NT_AL.tree!
+Processing: 5475_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 158835_NT_AL.tree!
+Processing: 158835_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 5009_NT_AL.tree!
+Processing: 5009_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 139221_NT_AL.tree!
+Processing: 139221_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9468_NT_AL.tree!
+Processing: 9468_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 90167_NT_AL.tree!
+Processing: 90167_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 2332_NT_AL.tree!
+Processing: 2332_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 254158_NT_AL.tree!
+Processing: 254158_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6567_NT_AL.tree!
+Processing: 6567_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 92002_NT_AL.tree!
+Processing: 92002_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3028_NT_AL.tree!
+Processing: 3028_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79576_NT_AL.tree!
+Processing: 79576_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9075_NT_AL.tree!
+Processing: 9075_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 28985_NT_AL.tree!
+Processing: 28985_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6594_NT_AL.tree!
+Processing: 6594_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 64102_NT_AL.tree!
+Processing: 64102_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4983_NT_AL.tree!
+Processing: 4983_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 56156_NT_AL.tree!
+Processing: 56156_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 116442_NT_AL.tree!
+Processing: 116442_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 115201_NT_AL.tree!
+Processing: 115201_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 10857_NT_AL.tree!
+Processing: 10857_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 9767_NT_AL.tree!
+Processing: 9767_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4068_NT_AL.tree!
+Processing: 4068_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1527_NT_AL.tree!
+Processing: 1527_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6303_NT_AL.tree!
+Processing: 6303_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 186_NT_AL.tree!
+Processing: 186_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 79979_NT_AL.tree!
+Processing: 79979_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 57187_NT_AL.tree!
+Processing: 57187_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 6872_NT_AL.tree!
+Processing: 6872_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 30011_NT_AL.tree!
+Processing: 30011_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 7411_NT_AL.tree!
+Processing: 7411_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 389840_NT_AL.tree!
+Processing: 389840_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 347454_NT_AL.tree!
+Processing: 347454_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 51284_NT_AL.tree!
+Processing: 51284_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 3654_NT_AL.tree!
+Processing: 3654_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 23641_NT_AL.tree!
+Processing: 23641_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1538_NT_AL.tree!
+Processing: 1538_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 4168_NT_AL.tree!
+Processing: 4168_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 8852_NT_AL.tree!
+Processing: 8852_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 357_NT_AL.tree!
+Processing: 357_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 1947_NT_AL.tree!
+Processing: 1947_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Pre-existant tree found for 25975_NT_AL.tree!
+Processing: 25975_NT_AL_AA.fasta
+  - Using ModelTest-NG parameters
+  - Analyzing indel patterns...
+Successfully processed 546 alignments
+Results saved to: data/model_gen/mamX10k/protein_evolution_parameters.csv
+Summary statistics saved to: data/model_gen/mamX10k/parameter_summary.csv
+Protein evolution analysis complete!
+Installing RPANDA package...
+Installing package into ‘/usr/local/lib/R/site-library’
+(as ‘lib’ is unspecified)
+Warning in install.packages("RPANDA") :
+  'lib = "/usr/local/lib/R/site-library"' is not writable
+Error in install.packages("RPANDA") : unable to install packages
+Execution halted
+Begun the script
+Substitution parameters extracted for mamX10k.
+Trees cleaned and moved to data/model_gen/mamX10k/trees.
+Error extracting topology parameters: Command '['Rscript', 'src/model_gen_aa/extract_treetop.R', 'data/model_gen/mamX10k/trees', 'data/model_gen/mamX10k/protein_evolution_parameters.csv']' returned non-zero exit status 1.
+Traceback (most recent call last):
+  File "/home/krishna/Scripts/historianEval/src/main_aa.py", line 216, in <module>
+    main()
+  File "/home/krishna/Scripts/historianEval/src/main_aa.py", line 209, in main
+    mc.extract_top_params()      
+  File "/home/krishna/Scripts/historianEval/src/main_aa.py", line 160, in extract_top_params
+    subprocess.run(cmd, check=True)
+  File "/home/krishna/anaconda3/envs/phylo/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['Rscript', 'src/model_gen_aa/extract_treetop.R', 'data/model_gen/mamX10k/trees', 'data/model_gen/mamX10k/protein_evolution_parameters.csv']' returned non-zero exit status 1.

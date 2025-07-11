@@ -1,0 +1,244 @@
+Physical cores: 8
+Logical cores:  16
+Memory:         15.5GB
+Extensions:     AVX
+
+WARNING: Partition DATA: Sequences Equus_asinus and Equus_caballus are identical
+WARNING: Partition DATA: Sequences Equus_asinus and Zalophus_californianus are identical
+WARNING: Partition DATA: Sequences Acinonyx_jubatus and Felis_catus are identical
+WARNING: Partition DATA: Sequences Acinonyx_jubatus and Leopardus_geoffroyi are identical
+WARNING: Partition DATA: Sequences Acinonyx_jubatus and Lynx_canadensis are identical
+WARNING: Partition DATA: Sequences Acinonyx_jubatus and Puma_concolor are identical
+WARNING: Partition DATA: Sequences Acinonyx_jubatus and Puma_yagouaroundi are identical
+WARNING: Partition DATA: Sequences Globicephala_melas and Lagenorhynchus_obliquidens are identical
+WARNING: Partition DATA: Sequences Globicephala_melas and Tursiops_truncatus are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Gorilla_gorilla_gorilla are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Homo_sapiens are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Hylobates_moloch are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Nomascus_leucogenys are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Pan_paniscus are identical
+WARNING: Partition DATA: Sequences Callithrix_jacchus and Pan_troglodytes are identical
+WARNING: Partition DATA: Sequences Delphinapterus_leucas and Monodon_monoceros are identical
+WARNING: Partition DATA: Sequences Delphinapterus_leucas and Phocoena_sinus are identical
+WARNING: Partition DATA: Sequences Delphinapterus_leucas and Physeter_catodon are identical
+WARNING: Partition DATA: Sequences Delphinapterus_leucas and Orcinus_orca are identical
+WARNING: Partition DATA: Sequences Enhydra_lutris_kenyoni and Lontra_canadensis are identical
+WARNING: Partition DATA: Sequences Enhydra_lutris_kenyoni and Meles_meles are identical
+WARNING: Partition DATA: Sequences Enhydra_lutris_kenyoni and Mustela_erminea are identical
+WARNING: Partition DATA: Sequences Enhydra_lutris_kenyoni and Neogale_vison are identical
+WARNING: Partition DATA: Sequences Phyllostomus_discolor and Phyllostomus_hastatus are identical
+WARNING: Partition DATA: Sequences Camelus_bactrianus and Camelus_ferus are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Mandrillus_leucophaeus are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Cercocebus_atys are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Chlorocebus_sabaeus are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Macaca_fascicularis are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Macaca_mulatta are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Macaca_nemestrina are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Macaca_thibetana_thibetana are identical
+WARNING: Partition DATA: Sequences Colobus_angolensis_palliatus and Papio_anubis are identical
+WARNING: Partition DATA: Sequences Mus_caroli and Mus_musculus are identical
+WARNING: Partition DATA: Sequences Bos_taurus and Cervus_canadensis are identical
+WARNING: Partition DATA: Sequences Bos_taurus and Cervus_elaphus are identical
+WARNING: Partition DATA: Sequences Capra_hircus and Oryx_dammah are identical
+WARNING: Partition DATA: Sequences Ursus_maritimus and Ursus_arctos are identical
+WARNING: Partition DATA: Sequences Balaenoptera_musculus and Lipotes_vexillifer are identical
+WARNING: Partition DATA: Sequences Eumetopias_jubatus and Mirounga_angustirostris are identical
+WARNING: Partition DATA: Sequences Eumetopias_jubatus and Odobenus_rosmarus_divergens are identical
+WARNING: Partition DATA: Sequences Marmota_flaviventris and Marmota_monax are identical
+WARNING: Partition DATA: Sequences Saimiri_boliviensis_boliviensis and Pongo_abelii are identical
+WARNING: Partition DATA: Sequences Saimiri_boliviensis_boliviensis and Rhinopithecus_roxellana are identical
+WARNING: Partition DATA: Sequences Arvicanthis_niloticus and Grammomys_surdaster are identical
+WARNING: Partition DATA: Sequences Ochotona_curzoniae and Ochotona_princeps are identical
+WARNING: Partition DATA: Sequences Budorcas_taxicolor and Odocoileus_virginianus_texanus are identical
+WARNING: Partition DATA: Sequences Panthera_uncia and Panthera_tigris are identical
+WARNING: Input tree is a rooted topology. It will be unrooted
+WARNING: MSA has not enough sites to infer reliable results
+Creating new checkpoint file: data/model_gen/mamX10k/temp_modeltest/1741_NT_AL_AA.ckp
+--------------------------------------------------------------------------------
+ModelTest-NG v0.1.7
+
+Input data:
+  MSA:        data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta
+  Tree:       Fixed user
+    file:           data/model_gen/mamX10k/trees/1741_NT_AL.tree
+  #taxa:            183
+  #sites:           852
+  #patterns:        445
+  Max. thread mem:  198 MB
+
+Output:
+  Log:           data/model_gen/mamX10k/temp_modeltest/1741_NT_AL_AA.log
+  Results:       data/model_gen/mamX10k/temp_modeltest/1741_NT_AL_AA.out
+
+Selection options:
+  # protein matrices: 1
+  # protein models:   8
+  include model parameters:
+    Uniform:         true
+    p-inv (+I):      true
+    gamma (+G):      true
+    both (+I+G):     true
+    free rates (+R): false
+    fixed freqs:     true
+    estimated freqs: false
+    #categories:     4
+  gamma rates mode:   mean
+  asc bias:           none
+  epsilon (opt):      0.01
+  epsilon (par):      0.05
+  keep branches:      false
+
+Additional options:
+  verbosity:        very low
+  threads:          7/8
+  RNG seed:         12345
+  subtree repeats:  enabled
+--------------------------------------------------------------------------------
+modeltest-ng was called as follows: 
+>> tools/modeltest-ng-static -i data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -o data/model_gen/mamX10k/temp_modeltest/1741_NT_AL_AA -d aa -t user --utree data/model_gen/mamX10k/trees/1741_NT_AL.tree -p 7 -m LG 
+
+
+Partition 1/1
+
+ ----ID---  ----MODEL---- ---Time--- -Elapsed--- -------LnL------- -Alpha- -P-inv-
+
+Computation of likelihood scores completed. It took 0h:00:03
+
+BIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2     -5544.3451     13551.5593         0.0000    1.0000
+       2  LG+G4              1     -5572.4082     13600.9379        49.3786    0.0000
+       3  LG+I+G4+F         21     -5505.9536     13602.9804        51.4211    0.0000
+       4  LG+I               1     -5595.2769     13646.6752        95.1159    0.0000
+       5  LG+G4+F           20     -5533.8738     13652.0733       100.5140    0.0000
+       6  LG+I+F            20     -5556.3261     13696.9779       145.4185    0.0000
+       7  LG                 0     -5789.3752     14028.1242       476.5649    0.0000
+       8  LG+F              19     -5751.7410     14081.0600       529.5006    0.0000
+--------------------------------------------------------------------------------
+Best model according to BIC
+---------------------------
+Model:              LG+I+G4
+lnL:                -5544.3451
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.6019
+Gamma shape:        0.6456
+Score:              13551.5593
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.7139
+Alpha:              0.1905
+Alpha-P.Inv:        0.6456
+P.Inv-Alpha:        0.6019
+Frequencies:        0.0652 0.0651 0.0428 0.0537 0.0115 0.0426 0.0700 0.0878 0.0275 0.0652 0.0663 0.0591 0.0201 0.0284 0.0634 0.0823 0.0406 0.0081 0.0353 0.0649 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta --model LG+I+G4
+  > paup -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m LG+I+G4
+
+AIC       model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4+F         21     -5505.9536     11779.9072         0.0000    1.0000
+       2  LG+I+G4            2     -5544.3451     11818.6903        38.7831    0.0000
+       3  LG+G4+F           20     -5533.8738     11833.7477        53.8405    0.0000
+       4  LG+G4              1     -5572.4082     11872.8164        92.9093    0.0000
+       5  LG+I+F            20     -5556.3261     11878.6522        98.7451    0.0000
+       6  LG+I               1     -5595.2769     11918.5537       138.6466    0.0000
+       7  LG+F              19     -5751.7410     12267.4819       487.5748    0.0000
+       8  LG                 0     -5789.3752     12304.7503       524.8431    0.0000
+--------------------------------------------------------------------------------
+Best model according to AIC
+---------------------------
+Model:              LG+I+G4+F
+lnL:                -5505.9536
+Frequencies:        0.0652 0.0651 0.0428 0.0537 0.0115 0.0426 0.0700 0.0878 0.0275 0.0652 0.0663 0.0591 0.0201 0.0284 0.0634 0.0823 0.0406 0.0081 0.0353 0.0649
+Inv. sites prop:    0.6040
+Gamma shape:        0.6763
+Score:              11779.9072
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        1.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.7184
+Alpha:              0.1893
+Alpha-P.Inv:        0.6763
+P.Inv-Alpha:        0.6040
+Frequencies:        0.0652 0.0651 0.0428 0.0537 0.0115 0.0426 0.0700 0.0878 0.0275 0.0652 0.0663 0.0591 0.0201 0.0284 0.0634 0.0823 0.0406 0.0081 0.0353 0.0649 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -d aa -m LG -f e -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m PROTGAMMAILGF -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta --model LG+I+G4+F
+  > paup -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m LG+I+G4+F
+
+AICc      model              K            lnL          score          delta    weight
+--------------------------------------------------------------------------------
+       1  LG+I+G4            2     -5544.3451     12367.6903         0.0000    1.0000
+       2  LG+I+G4+F         21     -5505.9536     12412.9072        45.2169    0.0000
+       3  LG+G4              1     -5572.4082     12417.8164        50.1262    0.0000
+       4  LG+G4+F           20     -5533.8738     12461.7477        94.0574    0.0000
+       5  LG+I               1     -5595.2769     12463.5537        95.8635    0.0000
+       6  LG+I+F            20     -5556.3261     12506.6522       138.9620    0.0000
+       7  LG                 0     -5789.3752     12845.7503       478.0601    0.0000
+       8  LG+F              19     -5751.7410     12890.4819       522.7917    0.0000
+--------------------------------------------------------------------------------
+Best model according to AICc
+---------------------------
+Model:              LG+I+G4
+lnL:                -5544.3451
+Frequencies:        0.0791 0.0559 0.0420 0.0531 0.0129 0.0408 0.0716 0.0573 0.0224 0.0622 0.0991 0.0646 0.0230 0.0423 0.0440 0.0612 0.0533 0.0121 0.0342 0.0691
+Inv. sites prop:    0.6019
+Gamma shape:        0.6456
+Score:              12367.6903
+Weight:             1.0000
+---------------------------
+Parameter importances
+---------------------------
+P.Inv:              0.0000
+Gamma:              0.0000
+Gamma-Inv:          1.0000
+Frequencies:        0.0000
+---------------------------
+Model averaged estimates
+---------------------------
+P.Inv:              0.7139
+Alpha:              0.1905
+Alpha-P.Inv:        0.6456
+P.Inv-Alpha:        0.6019
+Frequencies:        0.0652 0.0651 0.0428 0.0537 0.0115 0.0426 0.0700 0.0878 0.0275 0.0652 0.0663 0.0591 0.0201 0.0284 0.0634 0.0823 0.0406 0.0081 0.0353 0.0649 
+
+Commands:
+  > phyml  -i data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -d aa -m LG -f m -v e -a e -c 4 -o tlr
+  > raxmlHPC-SSE3 -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m PROTGAMMAILG -n EXEC_NAME -p PARSIMONY_SEED
+  > raxml-ng --msa data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta --model LG+I+G4
+  > paup -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta
+  > iqtree -s data/model_gen/mamX10k/alignments/1741_NT_AL_AA.fasta -m LG+I+G4
+Summary:
+
+Partition 1/1:
+                         Model         Score        Weight
+----------------------------------------------------------
+       BIC             LG+I+G4    13551.5593        1.0000
+       AIC           LG+I+G4+F    11779.9072        1.0000
+      AICc             LG+I+G4    12367.6903        1.0000
+
+Execution results written to data/model_gen/mamX10k/temp_modeltest/1741_NT_AL_AA.out

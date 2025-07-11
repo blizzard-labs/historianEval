@@ -21,7 +21,7 @@ class modelConstructor:
         self.output_file = f"{self.output_folder}/{label}.json"
         self.params_file = params_file
         self.params_wr_file = params_file.replace(".csv", "_with_rates.csv")
-        self.params_wrc_file = self.params_wr_file.replace(".csv", "_cleaned.csv")
+        self.params_wc_file = self.params_file.replace(".csv", "_cleaned.csv")
         
         os.makedirs(self.temp_folder, exist_ok=True)
         if (self.tree_folder == "none"):
@@ -164,9 +164,8 @@ class modelConstructor:
             print(f"Error extracting topology parameters: {e}")
             raise
     
-    def cleanup_params(self):
-        input_f = self.params_wr_file
-        output_f = self.params_wrc_file
+    def cleanup_params(self, input_f):
+        output_f = self.params_wc_file
         
         try:
             cleaned_df = model_gen_aa.clean_table.clean_protein_evolution_data(input_f, output_f)
@@ -195,7 +194,7 @@ class modelConstructor:
                 "src/model_gen_aa/treedist.py",
                 self.tree_folder,
                 "-o", self.params_file,
-                "--save-consensus", os.path.join(self.temp_folder, "consense.tree"),
+                "--save-consensus", self.alignment_folder.replace("/alignments", "/consensus.tree"),
                 "--threshold", str(threshold),
                 "--topology"
             ]
@@ -220,13 +219,13 @@ def main():
     log = sys.argv[4] if len(sys.argv) > 4 else False
     
     mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
-    mc.cleanup_trees()
-    mc.extract_substitution_params()
-    mc.cleanup_modeltest_trees()
+    #mc.cleanup_trees()
+    #mc.extract_substitution_params()
+    #mc.cleanup_modeltest_trees()
     
-    mc.estimate_treedist()
+    #mc.estimate_treedist()
     #mc.extract_top_params()      
-    #mc.cleanup_params()
+    mc.cleanup_params(mc.params_file)
     
     print('COMPLEETTEEEETETETETE!!!!')
 
