@@ -6,18 +6,12 @@ This script fits joint distributions to phylogenetic parameters extracted from T
 for use in realistic sequence simulation with indel-seq-gen.
 """
 
-import sys
-import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from scipy.stats import kstest, anderson
-import json
-import pickle
-import base64
-from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -39,57 +33,43 @@ class PhylogeneticParameterFitter:
     Class for fitting distributions to phylogenetic parameters
     """
     
-    def __init__(self, csv_file=None):
+    def __init__(self, csv_file):
         """Initialize with CSV file containing TreeFam parameters"""
-        if csv_file is not None:
-            self.data = pd.read_csv(csv_file)
-        else:
-            self.data = None
+        self.data = pd.read_csv(csv_file)
         self.fitted_distributions = {}
-        self.joint_models = {}  # Store multiple joint models
+        self.joint_model = None
         self.parameter_groups = self._define_parameter_groups()
         
-    def _serialize_numpy_arrays(self, obj):
-        """Convert numpy arrays to base64 strings for JSON serialization"""
-        if isinstance(obj, np.ndarray):
-            return {
-                '__numpy_array__': True,
-                'data': base64.b64encode(obj.tobytes()).decode('utf-8'),
-                'shape': obj.shape,
-                'dtype': str(obj.dtype)
-            }
-        elif isinstance(obj, dict):
-            return {key: self._serialize_numpy_arrays(value) for key, value in obj.items()}
-        elif isinstance(obj, list):
-            return [self._serialize_numpy_arrays(item) for item in obj]
-        else:
-            return obj
-    
-    def _deserialize_numpy_arrays(self, obj):
-        """Convert base64 strings back to numpy arrays"""
-        if isinstance(obj, dict):
-            if '__numpy_array__' in obj:
-                data = base64.b64decode(obj['data'].encode('utf-8'))
-                return np.frombuffer(data, dtype=obj['dtype']).reshape(obj['shape'])
-            else:
-                return {key: self._deserialize_numpy_arrays(value) for key, value in obj.items()}
-        elif isinstance(obj, list):
-            return [self._deserialize_numpy_arrays(item) for item in obj]
-        else:
-            return obj
-        """Define logical groups of parameters for joint modeling"""
     def _define_parameter_groups(self):
         """Define logical groups of parameters for joint modeling"""
-        if self.data is None:
-            return {}
+        
+        #n_sequences, alignment_length, gamma_shape, prop_invariant, insertion_rate, deletion_rate, insertion_events, deletion_events
+        #mean_insertion_length, mean_deletion_length, total_gaps, indel_to_substitution_ration, rf_length_distance
+        
+        # n_sequences, gamma_shape, prop_invariant, insertion_rate, deletion_rate, mean_insertion_length, mean_deletion_length, rf_length_distance
+        '''
         return {
             'amino_acid_frequencies': [col for col in self.data.columns if col.startswith('freq_')],
             'substitution_model': ['gamma_shape', 'prop_invariant'],
             'indel_parameters': ['indel_rate', 'mean_indel_length'],
             'tree_parameters': ['tree_length', 'crown_age', 'n_tips'],
             'diversification': ['speciation_rate', 'extinction_rate', 'net_diversification'],
-            'sequence_properties': ['n_sequences', 'alignment_length', 'total_gaps']
+            'sequence_properties': ['n_sequences', 'alignment_length', 'total_gaps'],
+            'key_parameters' : ['n_sequences', 'gamma_shape', 'prop_invariant',
+                                'insertion_rate', 'deletion_rate',
+                                'mean_insertion_length', 'mean_deletion_length',
+                                'rf_length_distance']
         }
+        '''
+        #TODO: update dictionary structure to list
+        
+        return {
+            'key_parameters' : ['n_sequences', 'gamma_shape', 'prop_invariant',
+                                'insertion_rate', 'deletion_rate',
+                                'mean_insertion_length', 'mean_deletion_length',
+                                'rf_length_distance']
+        }
+
     
     def preprocess_data(self):
         """Clean and preprocess the data"""
@@ -100,9 +80,8 @@ class PhylogeneticParameterFitter:
         # Handle missing values
         self.numeric_data = self.numeric_data.dropna()
         
-        # Log-transform rate parameters (they're often log-normal)
-        rate_params = ['gamma_shape', 'indel_rate', 'speciation_rate', 'extinction_rate', 
-                      'net_diversification', 'tree_length']
+        # Log-transform rate parameters (they're often log-normal) #TODO: check if this is appropriate
+        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length']
         
         for param in rate_params:
             if param in self.numeric_data.columns:
@@ -203,14 +182,11 @@ class PhylogeneticParameterFitter:
         print(f"Fitting joint distribution for {param_group} with {len(available_params)} parameters...")
         
         # Fit copula
-        joint_model = GaussianMultivariate()
-        joint_model.fit(joint_data)
-        
-        # Store the model
-        self.joint_models[param_group] = joint_model
+        self.joint_model = GaussianMultivariate()
+        self.joint_model.fit(joint_data)
         
         print(f"Joint model fitted successfully for {param_group}")
-        return joint_model
+        return self.joint_model
     
     def fit_joint_distribution_mvn(self, param_group='amino_acid_frequencies'):
         """Fit multivariate normal distribution as fallback"""
@@ -238,7 +214,7 @@ class PhylogeneticParameterFitter:
         mean = np.mean(scaled_data, axis=0)
         cov = np.cov(scaled_data.T)
         
-        joint_model = {
+        self.joint_model = {
             'type': 'multivariate_normal',
             'mean': mean,
             'cov': cov,
@@ -246,145 +222,36 @@ class PhylogeneticParameterFitter:
             'param_names': available_params
         }
         
-        # Store the model
-        self.joint_models[param_group] = joint_model
-        
         print(f"Multivariate normal fitted successfully for {param_group}")
-        return joint_model
-    
-    def save_models(self, filename='phylo_models.json'):
-        """Save fitted distributions and joint models to JSON file"""
-        save_data = {
-            'fitted_distributions': {},
-            'joint_models': {},
-            'parameter_groups': self.parameter_groups
-        }
-        
-        # Save marginal distributions
-        for param, dist_info in self.fitted_distributions.items():
-            save_data['fitted_distributions'][param] = {
-                'distribution_name': dist_info['distribution'].name,
-                'params': list(dist_info['params']),
-                'aic': dist_info['aic']
-            }
-        
-        # Save joint models
-        for group_name, model in self.joint_models.items():
-            if COPULAS_AVAILABLE and hasattr(model, 'to_dict'):
-                # For copula models
-                try:
-                    save_data['joint_models'][group_name] = {
-                        'type': 'copula',
-                        'model_dict': model.to_dict()
-                    }
-                except:
-                    # If copula serialization fails, use pickle fallback
-                    model_bytes = pickle.dumps(model)
-                    save_data['joint_models'][group_name] = {
-                        'type': 'copula_pickle',
-                        'model_data': base64.b64encode(model_bytes).decode('utf-8')
-                    }
-            else:
-                # For multivariate normal models
-                model_serialized = self._serialize_numpy_arrays(model)
-                save_data['joint_models'][group_name] = {
-                    'type': 'multivariate_normal',
-                    'model_data': model_serialized
-                }
-        
-        # Save to JSON
-        with open(filename, 'w') as f:
-            json.dump(save_data, f, indent=2)
-        
-        print(f"Models saved to {filename}")
-        return filename
-    
-    def load_models(self, filename='phylo_models.json'):
-        """Load fitted distributions and joint models from JSON file"""
-        try:
-            with open(filename, 'r') as f:
-                save_data = json.load(f)
-        except FileNotFoundError:
-            print(f"File {filename} not found")
-            return False
-        
-        # Load parameter groups
-        self.parameter_groups = save_data.get('parameter_groups', {})
-        
-        # Load marginal distributions
-        self.fitted_distributions = {}
-        for param, dist_info in save_data.get('fitted_distributions', {}).items():
-            dist_name = dist_info['distribution_name']
-            # Get distribution object from scipy.stats
-            dist_obj = getattr(stats, dist_name)
-            self.fitted_distributions[param] = {
-                'distribution': dist_obj,
-                'params': tuple(dist_info['params']),
-                'aic': dist_info['aic']
-            }
-        
-        # Load joint models
-        self.joint_models = {}
-        for group_name, model_info in save_data.get('joint_models', {}).items():
-            model_type = model_info['type']
-            
-            if model_type == 'copula' and COPULAS_AVAILABLE:
-                try:
-                    model = GaussianMultivariate()
-                    model = model.from_dict(model_info['model_dict'])
-                    self.joint_models[group_name] = model
-                except:
-                    print(f"Failed to load copula model for {group_name}")
-                    
-            elif model_type == 'copula_pickle' and COPULAS_AVAILABLE:
-                try:
-                    model_bytes = base64.b64decode(model_info['model_data'].encode('utf-8'))
-                    model = pickle.loads(model_bytes)
-                    self.joint_models[group_name] = model
-                except:
-                    print(f"Failed to load pickled copula model for {group_name}")
-                    
-            elif model_type == 'multivariate_normal':
-                model_data = self._deserialize_numpy_arrays(model_info['model_data'])
-                self.joint_models[group_name] = model_data
-        
-        print(f"Models loaded from {filename}")
-        print(f"Loaded {len(self.fitted_distributions)} marginal distributions")
-        print(f"Loaded {len(self.joint_models)} joint models")
-        return True
+        return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='amino_acid_frequencies'):
         """Sample new parameter sets from fitted distributions"""
-        if param_group not in self.joint_models:
-            print(f"No joint model fitted for {param_group}. Available groups: {list(self.joint_models.keys())}")
+        if self.joint_model is None:
+            print("No joint model fitted. Please fit a joint distribution first.")
             return None
         
-        joint_model = self.joint_models[param_group]
-        
-        if COPULAS_AVAILABLE and hasattr(joint_model, 'sample'):
+        if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
             # Sample from copula
-            samples = joint_model.sample(n_samples)
+            samples = self.joint_model.sample(n_samples)
         else:
             # Sample from multivariate normal
-            if isinstance(joint_model, dict) and joint_model.get('type') == 'multivariate_normal':
+            if self.joint_model['type'] == 'multivariate_normal':
                 samples_scaled = np.random.multivariate_normal(
-                    joint_model['mean'], 
-                    joint_model['cov'], 
+                    self.joint_model['mean'], 
+                    self.joint_model['cov'], 
                     n_samples
                 )
                 # Inverse transform
-                samples = joint_model['scaler'].inverse_transform(samples_scaled)
-                samples = pd.DataFrame(samples, columns=joint_model['param_names'])
-            else:
-                print(f"Unknown joint model type for {param_group}")
-                return None
+                samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
+                samples = pd.DataFrame(samples, columns=self.joint_model['param_names'])
         
         return samples
     
     def validate_fit(self, param_group='amino_acid_frequencies'):
         """Validate the fitted joint distribution"""
-        if param_group not in self.joint_models:
-            print(f"No joint model fitted for {param_group}")
+        if self.joint_model is None:
+            print("No joint model to validate")
             return
         
         # Generate samples
@@ -443,32 +310,7 @@ class PhylogeneticParameterFitter:
         
         return export_data
     
-    def list_available_models(self):
-        """List all available fitted models"""
-        print("Available marginal distributions:")
-        for param in self.fitted_distributions:
-            dist_info = self.fitted_distributions[param]
-            print(f"  {param}: {dist_info['distribution'].name} (AIC: {dist_info['aic']:.2f})")
-        
-        print("\nAvailable joint models:")
-        for group in self.joint_models:
-            model = self.joint_models[group]
-            if isinstance(model, dict) and model.get('type') == 'multivariate_normal':
-                print(f"  {group}: Multivariate Normal ({len(model['param_names'])} parameters)")
-            else:
-                print(f"  {group}: Copula model")
-
-def load_and_sample(model_file='phylo_models.json', param_group='amino_acid_frequencies', n_samples=100):
-    """
-    Convenience function to load models and sample parameters
-    Usage: samples = load_and_sample('my_models.json', 'amino_acid_frequencies', 50)
-    """
-    fitter = PhylogeneticParameterFitter()
-    if fitter.load_models(model_file):
-        return fitter.sample_parameters(n_samples, param_group)
-    else:
-        print("Failed to load models")
-        return None
+    def plot_parameter_correlations(self):
         """Plot correlation matrix of parameters"""
         # Focus on most relevant parameters
         key_params = []
@@ -487,13 +329,10 @@ def load_and_sample(model_file='phylo_models.json', param_group='amino_acid_freq
         plt.tight_layout()
         plt.show()
 
-#
-
-'''
-def main():
+def main(parameter_file, parameter_group):
     """Main function to demonstrate the workflow"""
     # Initialize the fitter
-    fitter = PhylogeneticParameterFitter('protein_evolution_parameters_with_rates-1.csv')
+    fitter = PhylogeneticParameterFitter(parameter_file)
     
     # Preprocess data
     print("Preprocessing data...")
@@ -509,30 +348,15 @@ def main():
     
     # Fit joint distribution for amino acid frequencies
     print("Fitting joint distribution for amino acid frequencies...")
-    fitter.fit_joint_distribution_copula('amino_acid_frequencies')
-    
-    # Fit additional parameter groups
-    print("Fitting joint distribution for substitution model parameters...")
-    fitter.fit_joint_distribution_mvn('substitution_model')
-    
-    print("Fitting joint distribution for indel parameters...")
-    fitter.fit_joint_distribution_mvn('indel_parameters')
-    
-    # Save all models
-    print("Saving models...")
-    fitter.save_models('phylo_models.json')
-    
-    # List available models
-    print("Available fitted models:")
-    fitter.list_available_models()
+    fitter.fit_joint_distribution_copula(parameter_group)
     
     # Validate fit
     print("Validating fit...")
-    fitter.validate_fit('amino_acid_frequencies')
+    fitter.validate_fit(parameter_group)
     
     # Export parameters for simulation
     print("Exporting parameters for simulation...")
-    simulation_params = fitter.export_for_simulation('amino_acid_frequencies', n_samples=50)
+    simulation_params = fitter.export_for_simulation(parameter_group, n_samples=50)
     
     if simulation_params is not None:
         print(f"Generated {len(simulation_params)} parameter sets for simulation")
@@ -544,85 +368,18 @@ def main():
         print("Parameters saved to 'simulated_phylo_parameters.csv'")
     
     return fitter
-'''
-
-
-def main():
-    print('Started model fitting/sampling script')
-    if len(sys.argv) < 2:
-        print("Usage: python modelfit.py <mode> <input_file> [output_file]")
-        print("Example: python modelfit.py fit parameter_file.csv model.json")
-        print("Example: python modelfit.py sample model.json output.csv")
-        sys.exit(1)
-    
-    mode = sys.argv[1].strip().lower()
-    input_file = sys.argv[2]
-    
-    if (mode == "fit"):
-        output_file = sys.argv[3] if len(sys.argv) > 3 else "model.json"
-    else:
-        output_file = sys.argv[3] if len(sys.argv) > 3 else "output.csv"
-    
-    if not os.path.isfile(input_file):
-        print(f"Error: Input file '{input_file}' does not exist")
-        sys.exit(1)
-    
-    if (mode == 'fit'):
-        fitter = PhylogeneticParameterFitter(input_file)
-        
-        print('Preprocessing data ...')
-        fitter.preprocess_data()
-        
-        # Plot correlations
-        print("Plotting parameter correlations...")
-        fitter.plot_parameter_correlations()
-        
-        # Fit marginal distributions
-        print("Fitting marginal distributions...")
-        fitter.fit_marginal_distributions()
-        
-        # Fit joint distribution for amino acid frequencies
-        print("Fitting joint distribution for amino acid frequencies...")
-        fitter.fit_joint_distribution_copula('amino_acid_frequencies')
-        
-        # Fit additional parameter groups
-        print("Fitting joint distribution for substitution model parameters...")
-        fitter.fit_joint_distribution_mvn('substitution_model')
-        
-        print("Fitting joint distribution for indel parameters...")
-        fitter.fit_joint_distribution_mvn('indel_parameters')        
-        
-        print("Fitting joint distribution for tree parameters...")
-        fitter.fit_joint_distribution_mvn('')
-        
-        # Validate fit
-        print("Validating fit...")
-        fitter.validate_fit('amino_acid_frequencies')
-                
-    elif (mode == 'sample'):
-        pass
-
 
 if __name__ == "__main__":
     # Run the main workflow
-    fitter = main()
+    fitter = main('data/model_gen/mamX10k/protein_evolution_parameters.csv', 'key_parameters')
     
     # Example of how to use the results
     print("\n" + "="*50)
     print("USAGE EXAMPLE:")
     print("="*50)
     print("# Generate new parameter sets:")
-    print("new_params = fitter.sample_parameters(n_samples=10, param_group='amino_acid_frequencies')")
+    print("new_params = fitter.sample_parameters(n_samples=10)")
     print("print(new_params)")
     print("\n# Export for indel-seq-gen:")
     print("indel_params = fitter.export_for_simulation('indel_parameters', n_samples=10)")
     print("print(indel_params)")
-    print("\n# Load models later:")
-    print("from phylo_param_fitting import load_and_sample")
-    print("samples = load_and_sample('phylo_models.json', 'amino_acid_frequencies', 50)")
-    print("print(samples)")
-    print("\n# Or create new fitter and load:")
-    print("new_fitter = PhylogeneticParameterFitter()")
-    print("new_fitter.load_models('phylo_models.json')")
-    print("samples = new_fitter.sample_parameters(100, 'substitution_model')")
-    print("print(samples)")

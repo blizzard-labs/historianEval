@@ -381,7 +381,7 @@ class ProteinParameterExtractor:
         # Calculate indel to substitution ratio
         sub_counts, total_subs = self.count_aa_substitutions(alignment)
         total_indel_events = parsimony_indels['insertions'] + parsimony_indels['deletions']
-        indel_to_sub_ratio = total_indel_events / total_subs if total_subs > 0 else 0.0
+        indel_to_sub_ratio = total_indel_events / total_subs if total_subs > 0 else 0.0 #! Conservative estimate
         
         return {
             'indel_method' : 'parsimony',
