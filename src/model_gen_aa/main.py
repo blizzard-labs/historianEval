@@ -208,13 +208,48 @@ class modelConstructor:
         except subprocess.CalledProcessError as e:
             print(f"Error estimating tree distances: {e}")
             raise
+    
+    def generate_model(self):
+        #python src/model_gen/modelfit.py <output_folder> [parameter_file]
+        try:
+            cmd = [
+                "python",
+                "src/model_gen_aa/modelfit.py",
+                self.tree_folder.replace("/trees", ""),
+                self.params_file
+            ]
             
+            subprocess.run(cmd, check=True)
+            print('Model generation completed successfully.')
+        
+        except subprocess.CalledProcessError as e:
+            print(f'Error generating model: {e}')
+            raise
+    
+    def sample_model(self, n_samples=10):
+        #python src/model_gen/modelfit.py <output_folder> [model_path] [n_samples]
+        try:
+            cmd = [
+                "python",
+                "src/model_gen_aa/modelfit.py",
+                self.tree_folder.replace("/trees", ""),
+                'none',
+                self.tree_folder.replace("/trees", "/model.pkl"),
+                str(n_samples)
+            ]
+            
+            subprocess.run(cmd, check=True)
+            print('Model sampled successfully')
+        except subprocess.CalledProcessError as e:
+            print(f'Error sampling model: {e}')
+            raise
+    
 
 def main():
     print('Begun the script')
     if len(sys.argv) < 4:
         print("Usage: python main_aa.py <system> <label> <alignment_folder> [log]")
-        # 
+        sys.exit(1)
     
     operate = sys.argv[1]
     label = sys.argv[2]
@@ -225,10 +260,11 @@ def main():
     #mc.cleanup_trees()
     #mc.extract_substitution_params()
     #mc.cleanup_modeltest_trees()
-    
     #mc.estimate_treedist()
-    #mc.extract_top_params()      
-    mc.cleanup_params(mc.params_file)
+    #mc.extract_top_params()     
+    #mc.generate_model()
+    mc.sample_model(n_samples=30)
+    #mc.cleanup_params(mc.params_file)
     
     print('COMPLEETTEEEETETETETE!!!!')
 
