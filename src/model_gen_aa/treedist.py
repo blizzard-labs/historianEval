@@ -228,6 +228,7 @@ def generate_topological_consensus_tree(trees, threshold=0.5):
                         node.dist = avg_length
                         break
         
+        '''
         # Use the leaf names from the largest tree in the original set
         largest_tree = max(trees.values(), key=lambda t: len([leaf for leaf in t.get_leaves()]))
         original_leaves = [leaf.name for leaf in largest_tree.get_leaves()]
@@ -239,6 +240,7 @@ def generate_topological_consensus_tree(trees, threshold=0.5):
                 leaf.name = original_leaves[i]
             else:
                 leaf.name = f"Taxa_{i+1}"
+        ''' #! Commented out to not map back to original names
         
         return consensus_tree
     else:
@@ -430,7 +432,8 @@ def calculate_rf_distances(trees, consensus_tree):
     
     for name, tree in trees.items():
         try:
-            rf_result = tree.robinson_foulds(consensus_tree, unrooted_trees=True)
+            t = normalize_tree_topology(tree)[0] #! Normalizing the tree topology
+            rf_result = t.robinson_foulds(normalize_tree_topology(consensus_tree)[0], unrooted_trees=True)
             rf_distance = rf_result[0]  # Weighted RF distance (includes branch lengths)
             rf_distances[name] = rf_distance
             print(f"{name}: RF-length distance = {rf_distance:.6f}")

@@ -96,35 +96,40 @@ class SPRTreeGenerator:
         # Select a random subtree to prune
         prune_node = random.choice(internal_nodes)
         
-        # Get all possible regrafting positions (excluding the current position and its descendants)
-        possible_regraft_edges = []
-        for edge in tree_copy.preorder_edge_iter():
-            if (edge.head_node != prune_node and 
-                edge.head_node not in prune_node.preorder_iter() and
-                edge.head_node != prune_node.parent_node):
-                possible_regraft_edges.append(edge)
+        # Get all possible regrafting positions (nodes, not edges)
+        possible_regraft_nodes = []
+        for node in tree_copy.preorder_node_iter():
+            if (node != prune_node and 
+                node not in prune_node.preorder_iter() and
+                node != prune_node.parent_node and
+                node.parent_node is not None):  # Exclude root
+                possible_regraft_nodes.append(node)
         
-        if not possible_regraft_edges:
+        if not possible_regraft_nodes:
             return tree_copy  # No valid regrafting positions
         
         # Select random regrafting position
-        regraft_edge = random.choice(possible_regraft_edges)
+        regraft_node = random.choice(possible_regraft_nodes)
         
         # Perform SPR operation
         try:
-            # Remove the subtree
-            prune_node.parent_node.remove_child(prune_node)
+            # Store the parent of the node we're regrafting to
+            regraft_parent = regraft_node.parent_node
+            
+            # Remove the subtree to be moved
+            prune_parent = prune_node.parent_node
+            prune_parent.remove_child(prune_node)
             
             # Create new internal node for regrafting
             new_internal = dendropy.Node()
             
-            # Insert new internal node on the regrafting edge
-            regraft_edge.head_node.parent_node.remove_child(regraft_edge.head_node)
-            regraft_edge.head_node.parent_node.add_child(new_internal)
-            new_internal.add_child(regraft_edge.head_node)
+            # Insert new internal node between regraft_node and its parent
+            regraft_parent.remove_child(regraft_node)
+            regraft_parent.add_child(new_internal)
+            new_internal.add_child(regraft_node)
             new_internal.add_child(prune_node)
             
-            # Update the tree
+            # Clean up any unifurcations created
             tree_copy.suppress_unifurcations()
             
         except Exception as e:
@@ -133,7 +138,7 @@ class SPRTreeGenerator:
         
         return tree_copy
     
-    def generate_variant_tree(self, target_rf_distance: int, max_iterations: int = 1000) -> Tuple[dendropy.Tree, int]:
+    def generate_variant_tree(self, target_rf_distance: int, max_iterations: int = 1200) -> Tuple[dendropy.Tree, int]:
         """
         Generate a variant tree with approximately the target RF distance.
         
@@ -170,7 +175,7 @@ class SPRTreeGenerator:
         
         return current_tree, current_rf
     
-    def generate_multiple_variants(self, thresholds: List[int], replicates: int = 10, 
+    def generate_multiple_variants(self, thresholds: List[float], replicates: int = 10, 
                                  output_folder: str = "spr_variants") -> None:
         """
         Generate multiple variant trees for each threshold RF distance.
@@ -202,13 +207,13 @@ class SPRTreeGenerator:
             f.write("Results:\n")
             f.write("-"*20 + "\n")
         
-        count=0
+        counter = 0
         for threshold in thresholds:
-            count+=1
+            counter += 1
             print(f"Processing threshold RF distance: {threshold}")
             
             # Create subfolder for this threshold
-            threshold_folder = output_path / f"sequence_{count}"
+            threshold_folder = output_path / f"seq_{counter}"
             threshold_folder.mkdir(exist_ok=True)
             
             successful_variants = 0
@@ -247,8 +252,8 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python tree_gen.py consensus.tree output_folder 2,4,6,8 --replicates 5
-  python tree_gen.py tree.tree variants 1,3,5 --replicates 10 --seed 42
+  python spr_tree_generator.py consensus.nwk output_folder 2,4,6,8 --replicates 5
+  python spr_tree_generator.py tree.nwk variants 1,3,5 --replicates 10 --seed 42
         """
     )
     
@@ -259,14 +264,14 @@ Examples:
                        help="Number of variant trees per threshold (default: 10)")
     parser.add_argument("--seed", "-s", type=int, default=None,
                        help="Random seed for reproducibility")
-    parser.add_argument("--max-iterations", "-m", type=int, default=1000,
+    parser.add_argument("--max-iterations", "-m", type=int, default=1200,
                        help="Maximum SPR operations per variant (default: 1000)")
     
     args = parser.parse_args()
     
     # Parse thresholds
     try:
-        thresholds = [int(x.strip()) for x in args.thresholds.split(",")]
+        thresholds = [float(x.strip()) for x in args.thresholds.split(",")]
     except ValueError:
         print("Error: Thresholds must be comma-separated integers")
         sys.exit(1)

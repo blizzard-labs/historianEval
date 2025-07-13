@@ -248,7 +248,7 @@ class modelConstructor:
 def main():
     print('Begun the script')
     if len(sys.argv) < 4:
-        print("Usage: python main_aa.py <system> <label> <alignment_folder> [log]")
+        print("Usage: python main.py <system> <label> <alignment_folder> [log]")
         sys.exit(1)
     
     operate = sys.argv[1]

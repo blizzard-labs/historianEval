@@ -12,8 +12,9 @@ class evolSimulator:
         
         # Load and cleanup csv
         self.params = pd.read_csv(self.parameters_file)
-        self.params.insert(loc=0, column='sequence_name', value=['seq_' + str(k) for k in (self.params.index + 1)])
-        self.params.to_csv(self.parameters_file, index=False)
+        if 'sequence_name' not in self.params.columns:
+            self.params.insert(loc=0, column='sequence_name', value=['seq_' + str(k) for k in (self.params.index + 1)])
+            self.params.to_csv(self.parameters_file, index=False)
         
         self.size = len(self.params.index)
         
@@ -49,6 +50,7 @@ class evolSimulator:
                 self.output_folder,
                 ",".join(str(rf) for rf in self.params['rf_length_distance'].tolist()),
                 "--replicates", str(5),
+                "--max-iterations", str(1200),
             ]
             
             subprocess.run(cmd, check=True)
@@ -71,11 +73,16 @@ class evolSimulator:
     
 def main():
     print('Begun script...')
-    model_folder = 'data/model_gen/mamX10k'
+    if len(sys.argv) < 3:
+        print('Usage: python src/simulation/main.py <parameters_file> <consensus_tree> [tag] ')
     
-    es = evolSimulator(os.path.join(model_folder, 'simulated_phylo_parameters.csv'), 
-                       os.path.join(model_folder, 'consensus.tree'))
+    parameters = sys.argv[1]
+    consensus = sys.argv[2]
+    label = sys.argv[3] if len(sys.argv) > 3 else 'none'
+    
+    es = evolSimulator(parameters, consensus, label)
 
     es.generate_treetop()
+
 if __name__ == '__main__':
     main()
