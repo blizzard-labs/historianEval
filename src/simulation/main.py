@@ -58,7 +58,7 @@ class evolSimulator:
         except subprocess.CalledProcessError as e:
             print(f'Error generating topologies: {e}')
            
-    def generate_random_sequence(frequencies_filename, length, output_file):
+    def generate_random_sequence(self, frequencies_filename, length, output_file):
         frequencies = {}
         
         try:
@@ -96,62 +96,106 @@ class evolSimulator:
         
         return seq
 
+    def geometric_pmf(self, k, p):
+        """Calculate the probability mass function of a geometric distribution."""
+        return (1 - p) ** (k - 1) * p
     
-    def runIndelSeqGen(self, seq_num):
-        #Clean up output folders and extensions
-        for folder in os.listdir(self.output_folder):
-            if os.path.isdir(os.path.join(self.output_folder, folder)):
-                for tree_file in os.listdir(os.path.join(self.output_folder, folder)):
-                    if tree_file.endswith('.nwk'): 
-                        n_name = os.path.join(self.output_folder, folder, tree_file.replace('.nwk', '.tree'))
-                        os.rename(os.path.join(self.output_folder, folder, tree_file), 
-                                n_name)
-                        
-                        #Modifying structure of the tree file to be compatible with indel-seq-gen
-                        with open(n_name, 'r') as f:
-                            content = f.read()
-                           
-                        m_content = content.split(')')
-                        del m_content[-1]
-                        mcontent = ')'.join(m_content) + ';'
-                        
-                        mcontent = re.sub(r'\)\d+:', r'):', content)
-                        
-                        with open(n_name, 'w') as f:
-                            f.write(mcontent)
-                            f.write('')
-                        
+    def generate_idl_strings(self, insertion_rate, mean_insertion_length,
+                            deletion_rate, mean_deletion_length,
+                            max_length=20, precision=3):
+        p_ins = 1.0 / mean_insertion_length if mean_insertion_length > 0 else 0
+        p_del = 1.0 / mean_deletion_length if mean_deletion_length > 0 else 0
         
+        insertion_probs = []
+        deletion_probs = []
+        
+        for length in range(1, max_length + 1):
+            ins_prob = self.geometric_pmf(length, p_ins)
+            del_prob = self.geometric_pmf(length, p_del)
+            
+            #Scaling by overall rates
+            ins_prob *= insertion_rate
+            del_prob *= deletion_rate
+            
+            insertion_probs.append(round(ins_prob, precision))
+            deletion_probs.append(round(del_prob, precision))
+
+        return ','.join(insertion_probs), ','.join(deletion_probs)
+
+    
+    def prep_guide_tree(self, tree_file, seq_num):
         target_folder = os.path.join(self.output_folder, 'seq_' + str(seq_num))
+        n_name = tree_file.replace('.nwk', '.tree')
+        
+        os.rename(os.path.join(target_folder, tree_file),
+                  os.path.join(target_folder, n_name))
+        
+        #Modifying structure of the tree file to be compatible with indel-seq-gen
+        with open(os.path.join(target_folder, n_name), 'r') as f:
+            content = f.read()
+        
+        mcontent = re.sub(r'\)\d+:', r'):', content)
+        #TODO: Add sequence length, indel dist to the tree file
+        
+        seq_length = self.params['sequence_length'].iloc[seq_num - 1]
         
         insert_rate = self.params['insertion_rate'].iloc[seq_num - 1]
         delete_rate = self.params['deletion_rate'].iloc[seq_num - 1]
-        
         mean_insert_length = self.params['mean_insertion_length'].iloc[seq_num - 1]
         mean_delete_length = self.params['mean_deletion_length'].iloc[seq_num - 1]
         
-        self.generate_random_sequence(int(self.params['n_sequences'].iloc[seq_num - 1]),
-                                      os.path.join(target_folder, 'rootseq.fasta'))
+        max_gap = 20 #! Maximum gap length is set to 20, must be changed in the future
+        ins_idl, del_idl = self.generate_idl_strings(insert_rate, mean_insert_length, 
+                                                    delete_rate, mean_delete_length,
+                                                    max_length=max_gap) 
         
-        for file in os.listdir(target_folder): 
-            try:
-                tree_path = os.path.join(target_folder, file)
+        #Write the IDL strings to files
+        ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl'))
+        del_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_del_idl'))
+        
+        with open(ins_idl_f, 'w') as f:
+            f.write(ins_idl + '\n')
+        with open(del_idl_f, 'w') as f:
+            f.write(del_idl + '\n')
+        
+        with open(os.path.join(target_folder, n_name), 'w') as f:
+            f.write('[' + str(seq_length) + ']')
+            f.write('{' + str(max_gap) + ',' + str(insert_rate) + '/' + str(delete_rate) + 
+                    ',' + str(ins_idl_f) + '/' + str(del_idl_f) + '}')
+            f.write(mcontent + '\n')
+        
+        return os.path.join(target_folder, n_name), n_name
+
+    
+    def runIndelSeqGen(self):
+        #Clean up output folders and extensions
+        for idx, folder in enumerate(os.listdir(self.output_folder)):
+            if os.path.isdir(os.path.join(self.output_folder, folder)):
+                tree_file = os.listdir(folder)[0]
+                tree_path = os.path.join(self.output_folder, folder, tree_file)
+                
+                tree_path, tree_file = self.prep_guide_tree(tree_file, idx + 1)
+                ''' #? Useless code, but useful for future reference
+                self.generate_random_sequence('data/custom_gtr/GTR_equilibriums.tsv',
+                                            int(self.params['n_sequences'].iloc[seq_num - 1]),
+                                            os.path.join(target_folder, 'rootseq.root'))
+                '''
                 
                 cmd = [
                     "./tools/indel-seq-gen",
                     "--matrix", "JTT",
-                    "--outfile", os.path.join(target_folder, file.replace('.tree', '')),
-                    "--alpha", str(self.params['gamma_shape'].iloc[seq_num - 1]),
-                    "--invar", str(self.params['prop_invariant'].iloc[seq_num - 1]),
-                    "--outfile_format", "f",
-                    
+                    "--outfile", tree_path.replace('.tree', ''), #Prefix to all output files
+                    "--alpha", str(self.params['gamma_shape'].iloc[idx]),
+                    "--invar", str(self.params['prop_invariant'].iloc[idx]),
+                    "--outfile_format", "f"
                 ]
                 
-                with open(tree_path, 'rb') as tree_f:
-                    subprocess.run(cmd, stdin=tree_f, check=True)
-                print(f'Indel-seq-gen ran successfully on {file}')
-            except subprocess.CalledProcessError as e:
-                print(f'Error running indel-seq-gen on {file}: {e}')
+                with open(tree_path, 'rb') as guide_f:
+                    try:
+                        subprocess.run(cmd, stdin=guide_f, check=True)
+                        print(f'Indel-seq-gen ran successfully on {tree_path}')
+                    except subprocess.CalledProcessError as e:
+                        print(f'Error running indel-seq-gen on {tree_path}: {e}')
         
     
     def runSoftware(self):
@@ -177,9 +221,7 @@ def main():
     es = evolSimulator(parameters, consensus, label)
 
     #es.generate_treetop()
-    es.runIndelSeqGen(1)  # Example for sequence number 1, can be looped for all sequences
-    
-    
+    es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
 
 if __name__ == '__main__':
     main()
