@@ -5,8 +5,8 @@ TODO List-------
 * source code broken for deletions and insertion distributions (indel-seq-gen)
 * Historian and baliphy to use same substitution/indel model
 * Fixed number of iterations vs. until convergence
-* Limit sequence length
 * Colless index in model (+ in tree_gen_nni and seq characterization)
+* Historian/Baliphy parallelization
 
 Metrics -----
 * SP, TC (alignments)
@@ -22,3 +22,25 @@ Experiment 2: 5 sequences / category (3 total):
 * Constants: Convergence metric boundary, same substitution/indel models
 * DV: SP, TC, RF, RFL, Wall-clock, parameter Accuracy
 
+Output Statistics Tables (seq_1/results)----
+
+SEQUENCE INFORMATION
+seq_1 | model | colles_index | num_taxa | indel_Rate | num_iter (optional)
+seq_2 |
+.
+.
+.
+
+HISTORIAN OUTPUT
+seq_1 | wall_clock_time | spfn | spfp | tc | rf_dist | rfl_dist | indel_mse | gamma_mse | invar_mse | ESS | MCT
+seq_2
+.
+.
+.
+
+BALI-PHY OUTPUT
+seq_1 | wall_clock_time | spfn | spfp | tc | rf_dist | rfl_dist | indel_mse | gamma_mse | invar_mse | ESS | MCT
+seq_2
+.
+.
+.

@@ -137,7 +137,8 @@ class evolSimulator:
         mcontent = re.sub(r'\)\d+:', r'):', content)
         #TODO: Add sequence length, indel dist to the tree file
         
-        seq_length = self.params['alignment_length'].iloc[seq_num - 1]
+        #seq_length = self.params['alignment_length'].iloc[seq_num - 1]
+        seq_length = random.randint(100, 250) #! Random sequence length for now... (stack overflows for large sequences)
         
         insert_rate = self.params['insertion_rate'].iloc[seq_num - 1]
         delete_rate = self.params['deletion_rate'].iloc[seq_num - 1]
@@ -270,7 +271,7 @@ def main():
 
     #es.generate_treetop()
     #es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
-    es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_1'))  # Example for sequence number 1, can be looped for all sequences
+    es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_2'))  # Example for sequence number 1, can be looped for all sequences
 
 if __name__ == '__main__':
     main()

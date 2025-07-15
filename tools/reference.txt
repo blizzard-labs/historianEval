@@ -3,3 +3,5 @@ Indel-Seq-Gen Test: ./indel-seq-gen --matrix HKY --outfile DNA_out < simple_nuc.
 ./raxml-ng --search1 --msa testDNA.fa --model GTR+G
 
 ./bin/historian reconstruct -seqs data/gp120.fa -output fasta -mcmc -v3
+
+java -jar FastSP.jar -r reference_alignment_file -e estimated_alignment_file
