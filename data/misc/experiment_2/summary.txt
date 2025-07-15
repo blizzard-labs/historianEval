@@ -1,0 +1,39 @@
+NNI Tree Variant Generation Summary
+========================================
+
+Consensus tree: data/model_gen/mamX10k/consensus.tree
+Thresholds: [249.3763044202477, 345.95298353272534, 372.44310681923093, 355.24552913672494, 307.22074681374994, 346.9487194539676, 338.5460459652822, 397.3418983911894, 345.26998694276335, 277.0400469946853, 358.73376323094936, 351.9387073954756, 354.6668075876749, 337.98977840309493, 352.60267632029667, 345.5196195373293, 326.0981874054812, 54.01502281489392, 340.0726512191026, 341.2805360920507, 351.3382904674649, 357.2637658368996, 342.478630557702, 358.71547161675323, 320.26254941319735, 348.8456632351774, 362.43473577854144, 360.8728090108054, 346.306617246852, 364.7791519328431]
+Replicates per threshold: 1
+
+Results:
+--------------------
+RF threshold 249.3763044202477: 1/1 successful variants
+RF threshold 345.95298353272534: 1/1 successful variants
+RF threshold 372.44310681923093: 1/1 successful variants
+RF threshold 355.24552913672494: 1/1 successful variants
+RF threshold 307.22074681374994: 1/1 successful variants
+RF threshold 346.9487194539676: 1/1 successful variants
+RF threshold 338.5460459652822: 1/1 successful variants
+RF threshold 397.3418983911894: 1/1 successful variants
+RF threshold 345.26998694276335: 1/1 successful variants
+RF threshold 277.0400469946853: 1/1 successful variants
+RF threshold 358.73376323094936: 1/1 successful variants
+RF threshold 351.9387073954756: 1/1 successful variants
+RF threshold 354.6668075876749: 1/1 successful variants
+RF threshold 337.98977840309493: 1/1 successful variants
+RF threshold 352.60267632029667: 1/1 successful variants
+RF threshold 345.5196195373293: 1/1 successful variants
+RF threshold 326.0981874054812: 1/1 successful variants
+RF threshold 54.01502281489392: 1/1 successful variants
+RF threshold 340.0726512191026: 1/1 successful variants
+RF threshold 341.2805360920507: 1/1 successful variants
+RF threshold 351.3382904674649: 1/1 successful variants
+RF threshold 357.2637658368996: 1/1 successful variants
+RF threshold 342.478630557702: 1/1 successful variants
+RF threshold 358.71547161675323: 1/1 successful variants
+RF threshold 320.26254941319735: 1/1 successful variants
+RF threshold 348.8456632351774: 1/1 successful variants
+RF threshold 362.43473577854144: 1/1 successful variants
+RF threshold 360.8728090108054: 1/1 successful variants
+RF threshold 346.306617246852: 1/1 successful variants
+RF threshold 364.7791519328431: 1/1 successful variants

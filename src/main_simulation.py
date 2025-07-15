@@ -102,7 +102,7 @@ class evolSimulator:
     
     def generate_idl_strings(self, insertion_rate, mean_insertion_length,
                             deletion_rate, mean_deletion_length,
-                            max_length=20, precision=3):
+                            max_length=20, precision=9):
         p_ins = 1.0 / mean_insertion_length if mean_insertion_length > 0 else 0
         p_del = 1.0 / mean_deletion_length if mean_deletion_length > 0 else 0
         
@@ -117,8 +117,8 @@ class evolSimulator:
             ins_prob *= insertion_rate
             del_prob *= deletion_rate
             
-            insertion_probs.append(round(ins_prob, precision))
-            deletion_probs.append(round(del_prob, precision))
+            insertion_probs.append(str(round(ins_prob, precision)))
+            deletion_probs.append(str(round(del_prob, precision)))
 
         return ','.join(insertion_probs), ','.join(deletion_probs)
 
@@ -150,8 +150,8 @@ class evolSimulator:
                                                     max_length=max_gap) 
         
         #Write the IDL strings to files
-        ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl'))
-        del_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_del_idl'))
+        ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl')) + '.txt'
+        del_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_del_idl')) + '.txt'
         
         with open(ins_idl_f, 'w') as f:
             f.write(ins_idl + '\n')
@@ -161,7 +161,7 @@ class evolSimulator:
         with open(os.path.join(target_folder, n_name), 'w') as f:
             f.write('[' + str(seq_length) + ']')
             f.write('{' + str(max_gap) + ',' + str(insert_rate) + '/' + str(delete_rate) + 
-                    ',' + str(ins_idl_f) + '/' + str(del_idl_f) + '}')
+                    ',' + str(n_name.replace('.tree', '_ins_idl.txt')) + '}') #+ '/' +str(n_name.replace('.tree', '_del_idl.txt')) + '}')
             f.write(mcontent + '\n')
         
         return os.path.join(target_folder, n_name), n_name
@@ -169,9 +169,10 @@ class evolSimulator:
     
     def runIndelSeqGen(self):
         #Clean up output folders and extensions
-        for idx, folder in enumerate(os.listdir(self.output_folder)):
+        for idx, f in enumerate(os.listdir(self.output_folder)):
+            folder = 'seq_' + str(idx + 1)
             if os.path.isdir(os.path.join(self.output_folder, folder)):
-                tree_file = os.listdir(folder)[0]
+                tree_file = os.listdir(os.path.join(self.output_folder, folder))[0]
                 tree_path = os.path.join(self.output_folder, folder, tree_file)
                 
                 tree_path, tree_file = self.prep_guide_tree(tree_file, idx + 1)
@@ -181,26 +182,73 @@ class evolSimulator:
                                             os.path.join(target_folder, 'rootseq.root'))
                 '''
                 
+                invariant_rate = self.params['prop_invariant'].iloc[idx] if self.params['prop_invariant'].iloc[idx] > 0 else 0.0
+                
                 cmd = [
-                    "./tools/indel-seq-gen",
+                    "../../../../tools/indel-seq-gen",
                     "--matrix", "JTT",
-                    "--outfile", tree_path.replace('.tree', ''), #Prefix to all output files
+                    "--outfile", 'sim', #Prefix to all output files
                     "--alpha", str(self.params['gamma_shape'].iloc[idx]),
-                    "--invar", str(self.params['prop_invariant'].iloc[idx]),
+                    "--invar", str(invariant_rate),
                     "--outfile_format", "f"
                 ]
                 
                 with open(tree_path, 'rb') as guide_f:
                     try:
-                        subprocess.run(cmd, stdin=guide_f, check=True)
+                        subprocess.run(cmd, cwd= tree_path.replace(tree_file, ''),stdin=guide_f, check=True)
                         print(f'Indel-seq-gen ran successfully on {tree_path}')
                     except subprocess.CalledProcessError as e:
                         print(f'Error running indel-seq-gen on {tree_path}: {e}')
         
     
-    def runSoftware(self):
-        #Run historian/baliphy on raw sequences (save wall clock time)
-        pass
+    def runSoftwareSequence(self, sequence_folder, iterations=100):
+        if os.path.exists(os.path.join(sequence_folder, 'sim.seq')):
+            os.rename(os.path.join(sequence_folder, 'sim.seq'),
+                    os.path.join(sequence_folder, 'raw_seq.fasta'))
+        
+        os.makedirs(os.path.join(sequence_folder, 'historian'), exist_ok=True)
+        os.makedirs(os.path.join(sequence_folder, 'baliphy'), exist_ok=True)
+        
+        #track wall-clock time, mcmc mixing
+        historian_cmd = [
+            "./tools/historian",
+            "reconstruct",
+            "-seqs", os.path.join(sequence_folder, 'raw_seq.fasta'),
+            "-v3",
+            "-output", "fasta",
+            "-mcmc",
+            #"-samples", str(iterations)
+        ] #Redirect stdout and stderr to a log file
+        
+        baliphy_cmd = [
+            "bali-phy",
+            os.path.join(sequence_folder, 'raw_seq.fasta'),
+            "-A", "Amino-Acids",
+            "-n", "results",
+            "-i", str(iterations),
+            #"--name", os.path.join(sequence_folder, 'baliphy'),
+        ]
+        
+        try:
+            print('Running historian...')
+            log_path = os.path.join(sequence_folder, 'historian', 'historian.log')
+            with open(log_path, 'w') as log_f:
+                subprocess.run(historian_cmd, check=True)
+                #subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True)
+            print(f'Historian ran successfully on {sequence_folder}')
+        except subprocess.CalledProcessError as e:
+            print(f'Error running historian on {sequence_folder}: {e}')
+            
+        try:
+            print('Running baliphy...')
+            baliphy_log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
+            with open(baliphy_log_path, 'w') as baliphy_log_f:
+                subprocess.run(baliphy_cmd, check=True)
+                #subprocess.run(baliphy_cmd, stdout=baliphy_log_f, stderr=baliphy_log_f, check=True)
+            print(f'Baliphy ran successfully on {sequence_folder}')
+        except subprocess.CalledProcessError as e:
+            print(f'Error running baliphy on {sequence_folder}: {e}')
+        
     
     def evaluateResults(self):
         #MCMC mixing, rfl distance, align metrics, evolutionary parameters, spfn
@@ -221,7 +269,8 @@ def main():
     es = evolSimulator(parameters, consensus, label)
 
     #es.generate_treetop()
-    es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
+    #es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
+    es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_1'))  # Example for sequence number 1, can be looped for all sequences
 
 if __name__ == '__main__':
     main()

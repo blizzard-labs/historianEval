@@ -2,3 +2,23 @@ TODO List-------
 * Reduce number of nodes in generated topologies before comparing RF distance (tree_gen_nni.py)
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
 * Add estimated max gap dist (extract_params.py and modelfit.py)
+* source code broken for deletions and insertion distributions (indel-seq-gen)
+* Historian and baliphy to use same substitution/indel model
+* Fixed number of iterations vs. until convergence
+* Limit sequence length
+* Colless index in model (+ in tree_gen_nni and seq characterization)
+
+Metrics -----
+* SP, TC (alignments)
+* RF, RFL (trees)
+* Convergence (ESS, MCT)
+* Parameter Accuracy
+
+Experiment 1: 15 sequences / category (3 total): mamX_10k, mam21_10k, etc. etc.
+* Constants: Fixed number of iterations, same substitution/indel models
+* DV: SP, TC, RF, RFL, Convergence, Wall-clock, parameter Accuracy
+
+Experiment 2: 5 sequences / category (3 total): 
+* Constants: Convergence metric boundary, same substitution/indel models
+* DV: SP, TC, RF, RFL, Wall-clock, parameter Accuracy
+
