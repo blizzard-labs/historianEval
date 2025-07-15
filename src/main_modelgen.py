@@ -9,6 +9,7 @@ from pathlib import Path
 from Bio import Phylo
 import utils.general as utils
 import model_gen_aa.clean_table
+import pandas as pd
 
 class modelConstructor:
     def __init__(self, operate, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
@@ -243,7 +244,6 @@ class modelConstructor:
         except subprocess.CalledProcessError as e:
             print(f'Error sampling model: {e}')
             raise
-    
 
 def main():
     print('Begun the script')

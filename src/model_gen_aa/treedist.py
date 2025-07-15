@@ -465,7 +465,6 @@ def save_results_to_csv(rf_distances, output_file):
                 print(distance)
                 values[df_filenames.index(f)] = distance
         
-        print('aslkdhflkasdf')
         print(values)
         
         df['rf_length_distance'] = values

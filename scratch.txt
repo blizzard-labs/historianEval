@@ -1,6 +1,4 @@
 TODO List-------
 * Reduce number of nodes in generated topologies before comparing RF distance (tree_gen_nni.py)
-* Add sequence length to model (modelfit.py)
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
 * Add estimated max gap dist (extract_params.py and modelfit.py)
-* 

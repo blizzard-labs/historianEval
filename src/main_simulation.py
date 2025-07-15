@@ -137,7 +137,7 @@ class evolSimulator:
         mcontent = re.sub(r'\)\d+:', r'):', content)
         #TODO: Add sequence length, indel dist to the tree file
         
-        seq_length = self.params['sequence_length'].iloc[seq_num - 1]
+        seq_length = self.params['alignment_length'].iloc[seq_num - 1]
         
         insert_rate = self.params['insertion_rate'].iloc[seq_num - 1]
         delete_rate = self.params['deletion_rate'].iloc[seq_num - 1]
