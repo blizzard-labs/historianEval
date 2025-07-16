@@ -1,0 +1,12 @@
+{
+  "burnin": 2,
+  "subsample": 1,
+  "until": null,
+  "prune": null,
+  "input_files": [
+    "data/simulation/experiment_2/seq_2/raw_seq.fasta"
+  ],
+  "alignment_file_names": [
+    "[PosixPath('C1.P1.fastas')]"
+  ]
+}

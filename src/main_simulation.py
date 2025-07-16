@@ -6,6 +6,7 @@ import re
 import pandas as pd
 import subprocess
 import random
+import time
 
 class evolSimulator:
     def __init__(self, parameters_file, consensus_tree_file, tag='none'):
@@ -202,7 +203,7 @@ class evolSimulator:
                         print(f'Error running indel-seq-gen on {tree_path}: {e}')
         
     
-    def runSoftwareSequence(self, sequence_folder, iterations=100):
+    def runSoftwareSequence(self, sequence_folder, iterations=1000):
         if os.path.exists(os.path.join(sequence_folder, 'sim.seq')):
             os.rename(os.path.join(sequence_folder, 'sim.seq'),
                     os.path.join(sequence_folder, 'raw_seq.fasta'))
@@ -216,7 +217,6 @@ class evolSimulator:
             "reconstruct",
             "-seqs", os.path.join(sequence_folder, 'raw_seq.fasta'),
             "-v3",
-            "-output", "fasta",
             "-mcmc",
             #"-samples", str(iterations)
         ] #Redirect stdout and stderr to a log file
@@ -225,21 +225,25 @@ class evolSimulator:
             "bali-phy",
             os.path.join(sequence_folder, 'raw_seq.fasta'),
             "-A", "Amino-Acids",
-            "-n", "results",
             "-i", str(iterations),
-            #"--name", os.path.join(sequence_folder, 'baliphy'),
+            "-n", os.path.join(sequence_folder, 'baliphy/results'),
         ]
         
+        '''
+        start = time.time()
         try:
             print('Running historian...')
             log_path = os.path.join(sequence_folder, 'historian', 'historian.log')
             with open(log_path, 'w') as log_f:
-                subprocess.run(historian_cmd, check=True)
-                #subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True)
+                #subprocess.run(historian_cmd, check=True)
+                subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True)
             print(f'Historian ran successfully on {sequence_folder}')
         except subprocess.CalledProcessError as e:
             print(f'Error running historian on {sequence_folder}: {e}')
-            
+        elapsed_h = start - time.time()
+        '''
+        
+        start = time.time()
         try:
             print('Running baliphy...')
             baliphy_log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
@@ -249,7 +253,9 @@ class evolSimulator:
             print(f'Baliphy ran successfully on {sequence_folder}')
         except subprocess.CalledProcessError as e:
             print(f'Error running baliphy on {sequence_folder}: {e}')
+        elapsed_b = start - time.time()
         
+        return elapsed_h, elapsed_b
     
     def evaluateResults(self):
         #MCMC mixing, rfl distance, align metrics, evolutionary parameters, spfn
@@ -267,11 +273,15 @@ def main():
     consensus = sys.argv[2]
     label = sys.argv[3] if len(sys.argv) > 3 else 'none'
     
+    results_h = {}
+    results_b = {}
+    
     es = evolSimulator(parameters, consensus, label)
 
     #es.generate_treetop()
     #es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
-    es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_2'))  # Example for sequence number 1, can be looped for all sequences
+    results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_2')) 
+    
 
 if __name__ == '__main__':
     main()

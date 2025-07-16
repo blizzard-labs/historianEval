@@ -1,0 +1,270 @@
+-----------------------------------------------------------
+'statreport' 'C1.log' '--skip=2' > 'Results/Report'
+'trees-consensus' '--map-tree=Results/MAP.PP.tree' '--greedy-consensus=Results/greedy.PP.tree' '--report' 'Results/consensus' 'C1.trees' '--support-levels=Results/c-levels.plot' '--skip=2' '--consensus=0.5:Results/c50.PP.tree,0.66:Results/c66.PP.tree,0.8:Results/c80.PP.tree,0.9:Results/c90.PP.tree,0.95:Results/c95.PP.tree,0.99:Results/c99.PP.tree,1.0:Results/c100.PP.tree'
+'tree-tool' 'Results/greedy.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/greedy.tree'
+'tree-tool' 'Results/MAP.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/MAP.tree'
+'tree-tool' 'Results/c50.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c50.tree'
+'tree-tool' 'Results/c66.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c66.tree'
+'tree-tool' 'Results/c80.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c80.tree'
+'tree-tool' 'Results/c90.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c90.tree'
+'tree-tool' 'Results/c95.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c95.tree'
+'tree-tool' 'Results/c99.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c99.tree'
+'tree-tool' 'Results/c100.PP.tree' '--strip-internal-names' '--name-all-nodes' > 'Results/c100.tree'
+'draw-tree' 'c50.tree' '--layout=equal-daylight'
+'draw-tree' 'c50.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c66.tree' '--layout=equal-daylight'
+'draw-tree' 'c66.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c80.tree' '--layout=equal-daylight'
+'draw-tree' 'c80.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c90.tree' '--layout=equal-daylight'
+'draw-tree' 'c90.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c95.tree' '--layout=equal-daylight'
+'draw-tree' 'c95.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c99.tree' '--layout=equal-daylight'
+'draw-tree' 'c99.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'c100.tree' '--layout=equal-daylight'
+'draw-tree' 'c100.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'greedy.tree' '--layout=equal-daylight'
+'draw-tree' 'greedy.tree' '--layout=equal-daylight' '--output=svg'
+'draw-tree' 'MAP.tree' '--layout=equal-daylight'
+'draw-tree' 'MAP.tree' '--layout=equal-daylight' '--output=svg'
+'pickout' '--no-header' '--large' 'pi' < 'Results/consensus' > 'Results/partitions'
+'trees-bootstrap' '--pred' 'Results/partitions.pred' '--LOD-table' 'Results/LOD-table' '--pseudocount=1' 'C1.trees' '--skip=2' > 'Results/partitions.bs'
+'trees-to-SRQ' 'Results/partitions.pred' '--max-points=1000' '--skip=2' 'C1.trees' > 'Results/partitions.SRQ'
+'trees-to-SRQ' 'Results/c50.tree' '--max-points=1000' '--skip=2' 'C1.trees' > 'Results/c50.SRQ'
+'trees-distances' 'matrix' '--max=800' '--jitter=0.3' '-V' '--skip=2' 'C1.trees' > 'Results/tree-MDS.M' 2> 'Results/tree-MDS.count'
+'/usr/local/bin/R' '--slave' '--vanilla' '--args' 'Results/tree-MDS.M' 'Results/tree-MDS.svg' '23' < '/opt/homebrew/lib/bali-phy/libexec/tree-plot.R'
+  err: Warning messages:
+1: In grSoftVersion() :
+  unable to load shared object '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/modules//R_X11.so':
+  dlopen(/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/modules//R_X11.so, 0x0006): Library not loaded: /opt/X11/lib/libSM.6.dylib
+  Referenced from: <5DF35BD4-5789-357C-B931-3EEDFD1A6C8A> /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/modules/R_X11.so
+  Reason: tried: '/opt/X11/lib/libSM.6.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/X11/lib/libSM.6.dylib' (no such file), '/opt/X11/lib/libSM.6.dylib' (no such file), '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libSM.6.dylib' (no such file), '/Library/Java/JavaVirtualMachines/jdk-11.0.18+10/Contents/Home/lib/server/libSM.6.dylib' (no such file)
+2: In cairoVersion() :
+  unable to load shared object '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/grDevices/libs//cairo.so':
+  dlopen(/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/grDevices/libs//cairo.so, 0x0006): Library not loaded: /opt/X11/lib/libXrender.1.dylib
+  Referenced from: <5F2DB685-0B04-32B6-A805-B370989FC049> /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/grDevices/libs/cairo.so
+  Reason: tried: '/opt/X11/lib/libXrender.1.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/opt/X11/lib/libXrender.1.dylib' (no such file), '/opt/X11/lib/libXrender.1.dylib' (no such file), '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libXrender.1.dylib' (no such file), '/Library/Java/JavaVirtualMachines/jdk-11.0.18+10/Contents/Home/lib/server/libXrender.1.dylib' (no such file)
+3: In svg(file = outfile, height = 8, width = 8) :
+  failed to load cairo DLL
+
+'/usr/local/bin/R' '--slave' '--vanilla' '--args' 'Results/tree-MDS.M' '23' < '/opt/homebrew/lib/bali-phy/libexec/tree-plot-3D.R'
+'alignment-cat' '-p' '-e' 'C1.P1.initial.fasta' > 'Results/Work/P1.initial-unordered.fasta'
+'alignment-cat' 'Results/Work/P1.initial-unordered.fasta' '--reorder-by-tree=Results/c50.tree' > 'Results/P1.initial.fasta'
+'alignment-max' '--score=multiply' > 'Results/Work/P1.consensus.pd-multiply-unordered.fasta'
+'alignment-cat' 'Results/Work/P1.consensus.pd-multiply-unordered.fasta' '--reorder-by-tree=Results/c50.tree' > 'Results/P1.consensus.pd-multiply.fasta'
+'alignment-max' '--score=wsum2' > 'Results/Work/P1.consensus.pd-wsum2-unordered.fasta'
+'alignment-cat' 'Results/Work/P1.consensus.pd-wsum2-unordered.fasta' '--reorder-by-tree=Results/c50.tree' > 'Results/P1.consensus.pd-wsum2.fasta'
+'alignment-max' '--score=wsum' > 'Results/Work/P1.consensus.pd-wsum-unordered.fasta'
+'alignment-cat' 'Results/Work/P1.consensus.pd-wsum-unordered.fasta' '--reorder-by-tree=Results/c50.tree' > 'Results/P1.consensus.pd-wsum.fasta'
+'alignment-max' '--score=sum' > 'Results/Work/P1.consensus.pd-sum-unordered.fasta'
+'alignment-cat' 'Results/Work/P1.consensus.pd-sum-unordered.fasta' '--reorder-by-tree=Results/c50.tree' > 'Results/P1.consensus.pd-sum.fasta'
+'summarize-ancestors' 'Results/P1.consensus.pd-wsum.fasta' '-n' 'Results/greedy.tree' '--nodes-min=0.1' '-A' 'C1.P1.fastas' '-T' 'C1.trees' > 'Results/P1.ancestors.fasta'
+  err: Node 'node_4': present in 0/3 = 0% of samples.
+Node 'node_8': present in 2/3 = 66.6667% of samples.
+Node 'node_28': present in 1/3 = 33.3333% of samples.
+Node 'node_33': present in 2/3 = 66.6667% of samples.
+Node 'node_53': present in 2/3 = 66.6667% of samples.
+Node 'node_40': present in 2/3 = 66.6667% of samples.
+Node 'node_17': present in 2/3 = 66.6667% of samples.
+Node 'node_52': present in 2/3 = 66.6667% of samples.
+Node 'node_32': present in 0/3 = 0% of samples.
+Node 'node_50': present in 1/3 = 33.3333% of samples.
+Node 'node_36': present in 3/3 = 100% of samples.
+Node 'node_10': present in 2/3 = 66.6667% of samples.
+Node 'node_20': present in 2/3 = 66.6667% of samples.
+Node 'node_1': present in 1/3 = 33.3333% of samples.
+Node 'node_23': present in 2/3 = 66.6667% of samples.
+Node 'node_12': present in 2/3 = 66.6667% of samples.
+Node 'node_5': present in 1/3 = 33.3333% of samples.
+Node 'node_38': present in 2/3 = 66.6667% of samples.
+Node 'node_7': present in 2/3 = 66.6667% of samples.
+Node 'node_13': present in 1/3 = 33.3333% of samples.
+Node 'node_26': present in 2/3 = 66.6667% of samples.
+Node 'node_21': present in 2/3 = 66.6667% of samples.
+Node 'node_16': present in 2/3 = 66.6667% of samples.
+Node 'node_37': present in 1/3 = 33.3333% of samples.
+Node 'node_27': present in 2/3 = 66.6667% of samples.
+Node 'node_48': present in 2/3 = 66.6667% of samples.
+Node 'node_49': present in 1/3 = 33.3333% of samples.
+Node 'node_42': present in 2/3 = 66.6667% of samples.
+Node 'node_29': present in 2/3 = 66.6667% of samples.
+Node 'node_46': present in 2/3 = 66.6667% of samples.
+Node 'node_2': present in 0/3 = 0% of samples.
+Node 'node_9': present in 2/3 = 66.6667% of samples.
+Node 'node_22': present in 2/3 = 66.6667% of samples.
+Node 'node_3': present in 1/3 = 33.3333% of samples.
+Node 'node_35': present in 0/3 = 0% of samples.
+Node 'node_44': present in 1/3 = 33.3333% of samples.
+Node 'node_47': present in 2/3 = 66.6667% of samples.
+Node 'node_19': present in 1/3 = 33.3333% of samples.
+Node 'node_14': present in 2/3 = 66.6667% of samples.
+Node 'node_51': present in 2/3 = 66.6667% of samples.
+Node 'node_11': present in 0/3 = 0% of samples.
+Node 'node_43': present in 2/3 = 66.6667% of samples.
+Node 'node_15': present in 1/3 = 33.3333% of samples.
+Node 'node_18': present in 1/3 = 33.3333% of samples.
+Node 'node_45': present in 2/3 = 66.6667% of samples.
+Node 'node_41': present in 2/3 = 66.6667% of samples.
+Node 'node_31': present in 1/3 = 33.3333% of samples.
+Node 'node_39': present in 2/3 = 66.6667% of samples.
+Node 'node_6': present in 2/3 = 66.6667% of samples.
+Node 'node_30': present in 1/3 = 33.3333% of samples.
+Node 'node_25': present in 2/3 = 66.6667% of samples.
+Node 'node_24': present in 1/3 = 33.3333% of samples.
+Node 'node_34': present in 2/3 = 66.6667% of samples.
+Node 'node_75': present in 2/3 = 66.6667% of samples.
+Node 'node_73': present in 1/3 = 33.3333% of samples.
+Node 'node_68': present in 2/3 = 66.6667% of samples.
+Node 'node_58': present in 1/3 = 33.3333% of samples.
+Node 'node_62': present in 1/3 = 33.3333% of samples.
+Node 'node_60': present in 1/3 = 33.3333% of samples.
+Node 'node_55': present in 1/3 = 33.3333% of samples.
+Node 'node_61': present in 0/3 = 0% of samples.
+Node 'node_64': present in 2/3 = 66.6667% of samples.
+Node 'node_76': present in 1/3 = 33.3333% of samples.
+Node 'node_72': present in 1/3 = 33.3333% of samples.
+Node 'node_70': present in 1/3 = 33.3333% of samples.
+Node 'node_54': present in 0/3 = 0% of samples.
+Node 'node_57': present in 2/3 = 66.6667% of samples.
+Node 'node_67': present in 0/3 = 0% of samples.
+Node 'node_71': present in 2/3 = 66.6667% of samples.
+Node 'node_74': present in 1/3 = 33.3333% of samples.
+Node 'node_59': present in 0/3 = 0% of samples.
+Node 'node_69': present in 1/3 = 33.3333% of samples.
+Node 'node_66': present in 0/3 = 0% of samples.
+Node 'node_56': present in 2/3 = 66.6667% of samples.
+Node 'node_65': present in 1/3 = 33.3333% of samples.
+Node 'node_63': present in 2/3 = 66.6667% of samples.
+Node 'node_85': present in 0/3 = 0% of samples.
+Node 'node_78': present in 1/3 = 33.3333% of samples.
+Node 'node_81': present in 0/3 = 0% of samples.
+Node 'node_82': present in 2/3 = 66.6667% of samples.
+Node 'node_89': present in 0/3 = 0% of samples.
+Node 'node_87': present in 0/3 = 0% of samples.
+Node 'node_77': present in 0/3 = 0% of samples.
+Node 'node_80': present in 1/3 = 33.3333% of samples.
+Node 'node_84': present in 0/3 = 0% of samples.
+Node 'node_88': present in 1/3 = 33.3333% of samples.
+Node 'node_86': present in 1/3 = 33.3333% of samples.
+Node 'node_79': present in 2/3 = 66.6667% of samples.
+Node 'node_83': present in 2/3 = 66.6667% of samples.
+Node 'node_97': present in 0/3 = 0% of samples.
+Node 'node_93': present in 2/3 = 66.6667% of samples.
+Node 'node_94': present in 1/3 = 33.3333% of samples.
+Node 'node_99': present in 1/3 = 33.3333% of samples.
+Node 'node_90': present in 0/3 = 0% of samples.
+Node 'node_92': present in 1/3 = 33.3333% of samples.
+Node 'node_96': present in 2/3 = 66.6667% of samples.
+Node 'node_98': present in 1/3 = 33.3333% of samples.
+Node 'node_91': present in 2/3 = 66.6667% of samples.
+Node 'node_95': present in 1/3 = 33.3333% of samples.
+Node 'node_105': present in 1/3 = 33.3333% of samples.
+Node 'node_102': present in 1/3 = 33.3333% of samples.
+Node 'node_107': present in 1/3 = 33.3333% of samples.
+Node 'node_101': present in 1/3 = 33.3333% of samples.
+Node 'node_104': present in 2/3 = 66.6667% of samples.
+Node 'node_106': present in 1/3 = 33.3333% of samples.
+Node 'node_100': present in 2/3 = 66.6667% of samples.
+Node 'node_103': present in 1/3 = 33.3333% of samples.
+Node 'node_112': present in 1/3 = 33.3333% of samples.
+Node 'node_114': present in 1/3 = 33.3333% of samples.
+Node 'node_109': present in 1/3 = 33.3333% of samples.
+Node 'node_111': present in 1/3 = 33.3333% of samples.
+Node 'node_113': present in 0/3 = 0% of samples.
+Node 'node_108': present in 2/3 = 66.6667% of samples.
+Node 'node_110': present in 0/3 = 0% of samples.
+Node 'node_118': present in 1/3 = 33.3333% of samples.
+Node 'node_120': present in 1/3 = 33.3333% of samples.
+Node 'node_116': present in 1/3 = 33.3333% of samples.
+Node 'node_119': present in 0/3 = 0% of samples.
+Node 'node_115': present in 2/3 = 66.6667% of samples.
+Node 'node_117': present in 0/3 = 0% of samples.
+Node 'node_123': present in 0/3 = 0% of samples.
+Node 'node_125': present in 1/3 = 33.3333% of samples.
+Node 'node_122': present in 1/3 = 33.3333% of samples.
+Node 'node_124': present in 2/3 = 66.6667% of samples.
+Node 'node_121': present in 0/3 = 0% of samples.
+Node 'node_128': present in 0/3 = 0% of samples.
+Node 'node_129': present in 1/3 = 33.3333% of samples.
+Node 'node_127': present in 1/3 = 33.3333% of samples.
+Node 'node_126': present in 0/3 = 0% of samples.
+Node 'node_132': present in 1/3 = 33.3333% of samples.
+Node 'node_133': present in 0/3 = 0% of samples.
+Node 'node_131': present in 2/3 = 66.6667% of samples.
+Node 'node_130': present in 1/3 = 33.3333% of samples.
+Node 'node_136': present in 1/3 = 33.3333% of samples.
+Node 'node_135': present in 2/3 = 66.6667% of samples.
+Node 'node_134': present in 2/3 = 66.6667% of samples.
+Node 'node_139': present in 2/3 = 66.6667% of samples.
+Node 'node_138': present in 1/3 = 33.3333% of samples.
+Node 'node_137': present in 2/3 = 66.6667% of samples.
+Node 'node_142': present in 2/3 = 66.6667% of samples.
+Node 'node_141': present in 1/3 = 33.3333% of samples.
+Node 'node_140': present in 0/3 = 0% of samples.
+Node 'node_145': present in 1/3 = 33.3333% of samples.
+Node 'node_144': present in 0/3 = 0% of samples.
+Node 'node_143': present in 1/3 = 33.3333% of samples.
+Node 'node_148': present in 1/3 = 33.3333% of samples.
+Node 'node_147': present in 1/3 = 33.3333% of samples.
+Node 'node_146': present in 0/3 = 0% of samples.
+Node 'node_151': present in 0/3 = 0% of samples.
+Node 'node_150': present in 1/3 = 33.3333% of samples.
+Node 'node_149': present in 0/3 = 0% of samples.
+Node 'node_154': present in 1/3 = 33.3333% of samples.
+Node 'node_153': present in 0/3 = 0% of samples.
+Node 'node_152': present in 0/3 = 0% of samples.
+Node 'node_157': present in 0/3 = 0% of samples.
+Node 'node_156': present in 1/3 = 33.3333% of samples.
+Node 'node_155': present in 0/3 = 0% of samples.
+Node 'node_160': present in 0/3 = 0% of samples.
+Node 'node_159': present in 1/3 = 33.3333% of samples.
+Node 'node_158': present in 1/3 = 33.3333% of samples.
+Node 'node_163': present in 0/3 = 0% of samples.
+Node 'node_162': present in 1/3 = 33.3333% of samples.
+Node 'node_161': present in 1/3 = 33.3333% of samples.
+Node 'node_166': present in 1/3 = 33.3333% of samples.
+Node 'node_165': present in 0/3 = 0% of samples.
+Node 'node_164': present in 0/3 = 0% of samples.
+Node 'node_168': present in 1/3 = 33.3333% of samples.
+Node 'node_167': present in 1/3 = 33.3333% of samples.
+Node 'node_170': present in 1/3 = 33.3333% of samples.
+Node 'node_169': present in 1/3 = 33.3333% of samples.
+Node 'node_172': present in 0/3 = 0% of samples.
+Node 'node_171': present in 1/3 = 33.3333% of samples.
+Node 'node_174': present in 0/3 = 0% of samples.
+Node 'node_173': present in 1/3 = 33.3333% of samples.
+Node 'node_176': present in 0/3 = 0% of samples.
+Node 'node_175': present in 0/3 = 0% of samples.
+Node 'node_178': present in 0/3 = 0% of samples.
+Node 'node_177': present in 0/3 = 0% of samples.
+Node 'node_180': present in 0/3 = 0% of samples.
+Node 'node_179': present in 1/3 = 33.3333% of samples.
+Node 'node_182': present in 0/3 = 0% of samples.
+Node 'node_181': present in 1/3 = 33.3333% of samples.
+
+'alignment-draw' 'Results/P1.initial.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.initial.html'
+'alignment-draw' 'Results/P1.consensus.pd-multiply.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.consensus.pd-multiply.html'
+'alignment-draw' 'Results/P1.consensus.pd-wsum2.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.consensus.pd-wsum2.html'
+'alignment-draw' 'Results/P1.consensus.pd-wsum.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.consensus.pd-wsum.html'
+'alignment-draw' 'Results/P1.consensus.pd-sum.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.consensus.pd-sum.html'
+'alignment-draw' 'Results/P1.ancestors.fasta' '--color-scheme' 'AA+contrast' '--show-ruler' > 'Results/P1.ancestors.html'
+'alignments-diff' 'Results/P1.initial.fasta' 'Results/P1.consensus.pd-wsum.fasta' > 'Results/P1.initial-diff.AU'
+'alignment-draw' 'Results/P1.initial.fasta' '--scale=identity' '--AU' 'Results/P1.initial-diff.AU' '--show-ruler' '--color-scheme=diff[1]+contrast' > 'Results/P1.initial-diff.html'
+'alignment-gild' 'Results/P1.initial.fasta' 'Results/MAP.tree' '--max-alignments=500' > 'Results/P1.initial-AU.prob'
+'alignment-draw' 'Results/P1.initial.fasta' '--color-scheme' 'AA+contrast+fade+fade+fade+fade' '--show-ruler' '--AU' 'Results/P1.initial-AU.prob' > 'Results/P1.initial-AU.html'
+'alignment-gild' 'Results/P1.consensus.pd-multiply.fasta' 'Results/MAP.tree' '--max-alignments=500' > 'Results/P1.consensus.pd-multiply-AU.prob'
+'alignment-draw' 'Results/P1.consensus.pd-multiply.fasta' '--color-scheme' 'AA+contrast+fade+fade+fade+fade' '--show-ruler' '--AU' 'Results/P1.consensus.pd-multiply-AU.prob' > 'Results/P1.consensus.pd-multiply-AU.html'
+'alignment-gild' 'Results/P1.consensus.pd-wsum2.fasta' 'Results/MAP.tree' '--max-alignments=500' > 'Results/P1.consensus.pd-wsum2-AU.prob'
+'alignment-draw' 'Results/P1.consensus.pd-wsum2.fasta' '--color-scheme' 'AA+contrast+fade+fade+fade+fade' '--show-ruler' '--AU' 'Results/P1.consensus.pd-wsum2-AU.prob' > 'Results/P1.consensus.pd-wsum2-AU.html'
+'alignment-gild' 'Results/P1.consensus.pd-wsum.fasta' 'Results/MAP.tree' '--max-alignments=500' > 'Results/P1.consensus.pd-wsum-AU.prob'
+'alignment-draw' 'Results/P1.consensus.pd-wsum.fasta' '--color-scheme' 'AA+contrast+fade+fade+fade+fade' '--show-ruler' '--AU' 'Results/P1.consensus.pd-wsum-AU.prob' > 'Results/P1.consensus.pd-wsum-AU.html'
+'alignment-gild' 'Results/P1.consensus.pd-sum.fasta' 'Results/MAP.tree' '--max-alignments=500' > 'Results/P1.consensus.pd-sum-AU.prob'
+'alignment-draw' 'Results/P1.consensus.pd-sum.fasta' '--color-scheme' 'AA+contrast+fade+fade+fade+fade' '--show-ruler' '--AU' 'Results/P1.consensus.pd-sum-AU.prob' > 'Results/P1.consensus.pd-sum-AU.html'
+'alignment-info' 'Results/P1.initial.fasta'
+'alignment-info' 'Results/P1.initial.fasta'
+'alignment-info' 'Results/P1.consensus.pd-multiply.fasta'
+'alignment-info' 'Results/P1.consensus.pd-wsum2.fasta'
+'alignment-info' 'Results/P1.consensus.pd-wsum.fasta'
+'alignment-info' 'Results/P1.consensus.pd-sum.fasta'
+'alignment-info' 'Results/P1.ancestors.fasta'

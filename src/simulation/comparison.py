@@ -163,9 +163,44 @@ class mcmcCompare:
         except Exception as e:
             raise Exception(f"Error processing trees: {str(e)}")
 
+    def analyze_baliphy_ess(self):
+        cmd = [
+            "bp-analyze"
+        ]
+        
+        analysis_path = os.path.join(self.baliphy_folder, 'analyze.log')
+        
+        try:
+            working_dir = os.path.join(self.baliphy_folder, 'results-1')
+            with open(analysis_path, 'w') as f: 
+                subprocess.run(cmd, cwd=working_dir, stdout= f, stderr=f, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f'Error analyzing baliphy output: {e}')
+        
+        with open(analysis_path, 'r') as f:
+            content = f.read()
+        
+        results = {}
+        for line_num, line in enumerate(content):
+            line = line.strip()
+            if line.startswith('NOTE: min_ESS (scalar)    = '):
+                results['ess_scalar'] = str(line[27:].strip())
+            elif line.startswith('NOTE: min_ESS (partition)    = '):
+                results['ess_top'] = str(line[30:].strip())
+            elif line.startswith('NOTE: ASDSF = '):
+                results['asdsf'] = str(line[14:].strip())
+            elif line.startswith('NOTE: MSDSF = '):
+                results['msdsf'] = str(line[14:].strip())
+            #TODO: Add other tags, with same format
+            #NOTE: PSRF-80%CI = NA
+            #NOTE: PSRF-RCF = NA
+        return results
     
+    def analyze_historian_ess(self):
+        pass
     
 def main():
+    #mc = mcmcCompare()
     pass
 
 if __name__ == '__main__':
