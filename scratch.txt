@@ -7,6 +7,8 @@ TODO List-------
 * Fixed number of iterations vs. until convergence
 * Colless index in model (+ in tree_gen_nni and seq characterization)
 * Historian/Baliphy parallelization
+* Sample run
+
 
 Metrics -----
 * SP, TC (alignments)
