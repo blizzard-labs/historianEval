@@ -104,13 +104,13 @@ class evolSimulator:
     
     def generate_idl_strings(self, insertion_rate, mean_insertion_length,
                             deletion_rate, mean_deletion_length,
-                            max_length=20, precision=9):
+                            max_length=25, precision=10, format='indelible'):
         p_ins = 1.0 / mean_insertion_length if mean_insertion_length > 0 else 0
         p_del = 1.0 / mean_deletion_length if mean_deletion_length > 0 else 0
         
         insertion_probs = []
         deletion_probs = []
-        
+        #! USE numpy geometric library
         for length in range(1, max_length + 1):
             ins_prob = self.geometric_pmf(length, p_ins)
             del_prob = self.geometric_pmf(length, p_del)
@@ -122,20 +122,23 @@ class evolSimulator:
             insertion_probs.append(str(round(ins_prob, precision)))
             deletion_probs.append(str(round(del_prob, precision)))
 
-        return ','.join(insertion_probs), ','.join(deletion_probs)
+        if format == 'indelible':
+            return '\n'.join(insertion_probs), '\n'.join(deletion_probs)
+        else:
+            return ','.join(insertion_probs), ','.join(deletion_probs)
 
     
-    def prep_guide_tree(self, tree_file, seq_num):
+    def prep_guide_tree(self, tree_file, seq_num, format="indelible"):
         target_folder = os.path.join(self.output_folder, 'seq_' + str(seq_num))
         n_name = tree_file.replace('.nwk', '.tree')
         
         os.rename(os.path.join(target_folder, tree_file),
                   os.path.join(target_folder, n_name))
         
-        #Modifying structure of the tree file to be compatible with indel-seq-gen
         with open(os.path.join(target_folder, n_name), 'r') as f:
             content = f.read()
         
+        #Modifying structure of the tree file to be compatible with indel-seq-gen
         mcontent = re.sub(r'\)\d+:', r'):', content)
         #TODO: Add sequence length, indel dist to the tree file
         
@@ -150,7 +153,7 @@ class evolSimulator:
         max_gap = 20 #! Maximum gap length is set to 20, must be changed in the future
         ins_idl, del_idl = self.generate_idl_strings(insert_rate, mean_insert_length, 
                                                     delete_rate, mean_delete_length,
-                                                    max_length=max_gap) 
+                                                    max_length=max_gap, format=format) 
         
         #Write the IDL strings to files
         ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl')) + '.txt'
@@ -161,14 +164,25 @@ class evolSimulator:
         with open(del_idl_f, 'w') as f:
             f.write(del_idl + '\n')
         
-        with open(os.path.join(target_folder, n_name), 'w') as f:
-            f.write('[' + str(seq_length) + ']')
-            f.write('{' + str(max_gap) + ',' + str(insert_rate) + '/' + str(delete_rate) + 
-                    ',' + str(n_name.replace('.tree', '_ins_idl.txt')) + '}') #+ '/' +str(n_name.replace('.tree', '_del_idl.txt')) + '}')
-            f.write(mcontent + '\n')
+        if format == "indelible":
+            with open(os.path.join(target_folder, n_name), 'w') as f:
+                f.write(f'[TYPE] AMINO ACID 2\n[MODEL] {n_name}\n')
+                f.write(f'   [submodel] LG\n')
+                f.write(f'   [insertmodel] USER {ins_idl_f}\n')
+                f.write(f'   [deletemodel] USER {del_idl_f}\n')
+                f.write(f'   [insertrate] {insert_rate}\n')
+                f.write(f'   [deleterate] {delete_rate}\n')
+                f.write(f'[TREE] {n_name} ', mcontent, '\n')
+                
+        else:
+            with open(os.path.join(target_folder, n_name), 'w') as f:
+                f.write('[' + str(seq_length) + ']')
+                f.write('{' + str(max_gap) + ',' + str(insert_rate) + '/' + str(delete_rate) + 
+                        ',' + str(n_name.replace('.tree', '_ins_idl.txt')) + '}') #+ '/' +str(n_name.replace('.tree', '_del_idl.txt')) + '}')
+                f.write(mcontent + '\n')
         
         return os.path.join(target_folder, n_name), n_name
-
+        
     
     def runIndelSeqGen(self):
         #Clean up output folders and extensions
@@ -178,7 +192,7 @@ class evolSimulator:
                 tree_file = os.listdir(os.path.join(self.output_folder, folder))[0]
                 tree_path = os.path.join(self.output_folder, folder, tree_file)
                 
-                tree_path, tree_file = self.prep_guide_tree(tree_file, idx + 1)
+                tree_path, tree_file = self.prep_guide_tree(tree_file, idx + 1, "isg")
                 ''' #? Useless code, but useful for future reference
                 self.generate_random_sequence('data/custom_gtr/GTR_equilibriums.tsv',
                                             int(self.params['n_sequences'].iloc[seq_num - 1]),
@@ -203,7 +217,16 @@ class evolSimulator:
                     except subprocess.CalledProcessError as e:
                         print(f'Error running indel-seq-gen on {tree_path}: {e}')
         
-    
+    def runIndelible(self):
+        #Cleanup output folders and extensions
+        for idx, f in enumerate(os.listdir(self.output_folder)):
+            folder = 'seq_' + str(idx + 1)
+            if os.path.isdir(os.path.join(self.output_folder, folder)):
+                tree_file = os.listdir(os.path.join(self.output_folder, folder))[0]
+                tree_path = os.path.join(self.output_folder, folder, tree_file)
+
+                #TODO: Add prep_guide_tree_idl function
+        
     def runSoftwareSequence(self, sequence_folder, iterations=1000):
         if os.path.exists(os.path.join(sequence_folder, 'sim.seq')):
             os.rename(os.path.join(sequence_folder, 'sim.seq'),

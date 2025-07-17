@@ -2,7 +2,7 @@ TODO List-------
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
 * Add estimated max gap dist (extract_params.py and modelfit.py)
 * source code broken for deletions and insertion distributions (indel-seq-gen)
-* Historian and baliphy to use same substitution/indel model
+* Historian and baliphy to use same substitution/indel model and fixed parameters
 * Fixed number of iterations vs. until convergence
 * Colless index in model (+ in tree_gen_nni and seq characterization)
 * Historian/Baliphy parallelization
