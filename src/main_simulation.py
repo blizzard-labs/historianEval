@@ -46,9 +46,10 @@ class evolSimulator:
         try:
             cmd = [
                 "python", 
-                "src/simulation/tree_gen_nni.py",
+                "src/simulation/tree_gen_spr.py",
                 self.consensus_tree_file,
                 self.output_folder,
+                ",".join(str(int(size)) for size in self.params['n_sequences'].tolist()),
                 ",".join(str(rf) for rf in self.params['rf_length_distance'].tolist()),
                 "--replicates", str(1),
                 "--max-iterations", str(1200),
@@ -188,7 +189,7 @@ class evolSimulator:
                 
                 cmd = [
                     "../../../../tools/indel-seq-gen",
-                    "--matrix", "JTT",
+                    "--matrix", "LG",
                     "--outfile", 'sim', #Prefix to all output files
                     "--alpha", str(self.params['gamma_shape'].iloc[idx]),
                     "--invar", str(invariant_rate),
@@ -216,7 +217,7 @@ class evolSimulator:
             "./tools/historian",
             "reconstruct",
             "-seqs", os.path.join(sequence_folder, 'raw_seq.fasta'),
-            "-v3",
+            "-v5",
             "-mcmc",
             #"-samples", str(iterations)
         ] #Redirect stdout and stderr to a log file
@@ -229,7 +230,7 @@ class evolSimulator:
             "-n", os.path.join(sequence_folder, 'baliphy/results'),
         ]
         
-        '''
+        
         start = time.time()
         try:
             print('Running historian...')
@@ -241,7 +242,7 @@ class evolSimulator:
         except subprocess.CalledProcessError as e:
             print(f'Error running historian on {sequence_folder}: {e}')
         elapsed_h = start - time.time()
-        '''
+        
         
         start = time.time()
         try:
@@ -279,8 +280,8 @@ def main():
     es = evolSimulator(parameters, consensus, label)
 
     #es.generate_treetop()
-    #es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
-    results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_2')) 
+    es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
+    #results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_25')) 
     
 
 if __name__ == '__main__':

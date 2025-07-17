@@ -262,8 +262,8 @@ def main():
     #mc.cleanup_modeltest_trees()
     #mc.estimate_treedist()
     #mc.extract_top_params()     
-    mc.generate_model()
-    mc.sample_model(n_samples=30)
+    #mc.generate_model()
+    mc.sample_model(n_samples=15)
     #mc.cleanup_params(mc.params_file)
     
     print('COMPLEETTEEEETETETETE!!!!')

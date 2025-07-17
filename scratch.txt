@@ -1,5 +1,4 @@
 TODO List-------
-* Reduce number of nodes in generated topologies before comparing RF distance (tree_gen_nni.py)
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
 * Add estimated max gap dist (extract_params.py and modelfit.py)
 * source code broken for deletions and insertion distributions (indel-seq-gen)
@@ -46,3 +45,25 @@ seq_2
 .
 .
 .
+
+Points to hit about program ----
+* Creation of a "topological" consensus tree
+* Multivariate distribution and sampling
+* Guide tree generation
+* Indel-seq-gen (custom protein gtr matrix, generating indel distribution... issues with that)
+* RFL scores 
+* Mixing statistics... ESS, MCT, ASDSF
+
+Questions -----
+* Controlled number of iterations?... how do they work with historian?
+* Which datasets would be best? (mamillian X chromosomes from orthoDB and more?)
+* Same substitution/indel models for baliphy and historian?
+* "new best log likelihood", trace files for historian 
+* Historian speed and how iterations/sequence works
+* Memory errors
+
+behavior per iter and second
+* no sampling parameters
+
+
+tree1_copy = eTree(tree1.clone().as_string('newick'))

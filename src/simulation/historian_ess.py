@@ -348,7 +348,7 @@ def main():
     parser.add_argument('log_file', help='Path to HISTORIAN log file')
     parser.add_argument('--burnin', type=float, default=0.1, 
                        help='Burnin fraction (default: 0.1)')
-    parser.add_argument('--plot', type=str, default=None,
+    parser.add_argument('--plot', type=str, default="yes",
                        help='Plot autocorrelation for specific parameter')
     
     args = parser.parse_args()

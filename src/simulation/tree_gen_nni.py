@@ -19,6 +19,7 @@ import random
 import sys
 from pathlib import Path
 from typing import List, Tuple, Optional
+from ete3 import Tree as eTree
 
 try:
     import dendropy
@@ -59,16 +60,34 @@ class NNITreeGenerator:
         except Exception as e:
             raise ValueError(f"Error loading tree from {tree_path}: {e}")
     
+    def prune_tree_to_n(self, tree, target_taxa_count):
+        all_taxa = list(tree.taxon_namespace)
+        if target_taxa_count >= len(all_taxa):
+            print('Tree already has fewer or equal number of taxa')
+            return tree
+        
+        taxa_to_keep = set(random.sample(all_taxa, int(target_taxa_count)))
+        taxa_to_remove = [taxon for taxon in all_taxa if taxon not in taxa_to_keep]
+        
+        tree.prune_taxa(taxa_to_remove)
+        return tree
+    
     def _calculate_rf_distance(self, tree1: dendropy.Tree, tree2: dendropy.Tree) -> int:
         """Calculate Robinson-Foulds distance between two trees."""
         try:
             # Ensure both trees use the same taxon namespace
+            #tree1_copy = eTree(tree1.clone().as_string('newick'))
+            #tree2_copy = eTree(tree2.clone().as_string('newick'))
+            
             tree1_copy = tree1.clone()
             tree2_copy = tree2.clone()
-            tree1_copy.taxon_namespace = self.taxon_namespace
-            tree2_copy.taxon_namespace = self.taxon_namespace
+            
+            #tree1_copy.taxon_namespace = self.taxon_namespace
+            #tree2_copy.taxon_namespace = self.taxon_namespace
             
             rf_distance = treecompare.symmetric_difference(tree1_copy, tree2_copy)
+            #rf_distance = tree1_copy.robinson_foulds(tree2_copy, unrooted_trees=False)[0]
+            
             return rf_distance
         except Exception as e:
             print(f"Warning: Error calculating RF distance: {e}")
@@ -146,7 +165,7 @@ class NNITreeGenerator:
         
         return tree_copy
     
-    def generate_variant_tree(self, target_rf_distance: int, max_iterations: int = 1200) -> Tuple[dendropy.Tree, int]:
+    def generate_variant_tree(self, tree_size: int, target_rf_distance: int, max_iterations: int = 1400) -> Tuple[dendropy.Tree, int]:
         """
         Generate a variant tree with approximately the target RF distance.
         
@@ -157,7 +176,7 @@ class NNITreeGenerator:
         Returns:
             Tuple of (variant_tree, actual_rf_distance)
         """
-        current_tree = self.consensus_tree.clone()
+        current_tree = self.prune_tree_to_n(self.consensus_tree.clone(), tree_size) #Prune to appropriate size before modification
         current_rf = 0
         iterations = 0
         
@@ -182,8 +201,8 @@ class NNITreeGenerator:
                 print(f"  Iteration {iterations}: RF distance = {current_rf}")
         
         return current_tree, current_rf
-    
-    def generate_multiple_variants(self, thresholds: List[float], replicates: int = 10, 
+
+    def generate_multiple_variants(self, sizes: List[int], thresholds: List[float], replicates: int = 10, 
                                  output_folder: str = "nni_variants") -> None:
         """
         Generate multiple variant trees for each threshold RF distance.
@@ -215,13 +234,11 @@ class NNITreeGenerator:
             f.write("Results:\n")
             f.write("-"*20 + "\n")
         
-        counter = 0
-        for threshold in thresholds:
-            counter += 1
+        for idx, threshold in enumerate(thresholds):
             print(f"Processing threshold RF distance: {threshold}")
             
             # Create subfolder for this threshold
-            threshold_folder = output_path / f"seq_{counter}"
+            threshold_folder = output_path / f"seq_{idx + 1}"
             threshold_folder.mkdir(exist_ok=True)
             
             successful_variants = 0
@@ -230,7 +247,7 @@ class NNITreeGenerator:
                 print(f"  Generating replicate {replicate + 1}/{replicates}...")
                 
                 try:
-                    variant_tree, actual_rf = self.generate_variant_tree(threshold)
+                    variant_tree, actual_rf = self.generate_variant_tree(sizes[idx], threshold)
                     
                     # Save the variant tree
                     output_file = threshold_folder / f"variant_{replicate + 1:03d}_rf_{actual_rf}.nwk"
@@ -267,13 +284,14 @@ Examples:
     
     parser.add_argument("consensus_tree", help="Path to consensus tree file (Newick format)")
     parser.add_argument("output_folder", help="Output folder for variant trees")
+    parser.add_argument("n_taxa", help="Comma-seperated list of number of taxa for tree")
     parser.add_argument("thresholds", help="Comma-separated list of RF distance thresholds")
     parser.add_argument("--replicates", "-r", type=int, default=10,
                        help="Number of variant trees per threshold (default: 10)")
     parser.add_argument("--seed", "-s", type=int, default=None,
                        help="Random seed for reproducibility")
-    parser.add_argument("--max-iterations", "-m", type=int, default=1200,
-                       help="Maximum NNI operations per variant (default: 1200)")
+    parser.add_argument("--max-iterations", "-m", type=int, default=1400,
+                       help="Maximum NNI operations per variant (default: 1400)")
     
     args = parser.parse_args()
     
@@ -283,6 +301,11 @@ Examples:
     except ValueError:
         print("Error: Thresholds must be comma-separated numbers")
         sys.exit(1)
+        
+    try:
+        sizes = [float(x.strip()) for x in args.n_taxa.split(",")]
+    except ValueError:
+        print('Error: N_taxa per tree must be comma-seperated numbers')
     
     # Validate inputs
     if not os.path.exists(args.consensus_tree):
@@ -292,6 +315,14 @@ Examples:
     if any(t <= 0 for t in thresholds):
         print("Error: All thresholds must be positive numbers")
         sys.exit(1)
+        
+    if any(t <= 0 for t in sizes):
+        print("Error: All n_taxa must be positive numbers")
+        sys.exit(1)
+        
+    if (len(thresholds) != len(sizes)):
+        print('Error: The number of thresholds must match the number of sizes(n_taxa)')
+        sys.exit(1)
     
     if args.replicates <= 0:
         print("Error: Number of replicates must be positive")
@@ -300,7 +331,7 @@ Examples:
     try:
         # Create generator and run
         generator = NNITreeGenerator(args.consensus_tree, args.seed)
-        generator.generate_multiple_variants(thresholds, args.replicates, args.output_folder)
+        generator.generate_multiple_variants(sizes, thresholds, args.replicates, args.output_folder)
         
     except Exception as e:
         print(f"Error: {e}")

@@ -1,0 +1,24 @@
+NNI Tree Variant Generation Summary
+========================================
+
+Consensus tree: data/model_gen/mamX10k/consensus.tree
+Thresholds: [326.8856580192187, 335.1826866278422, 373.5990327742795, 360.28189308825336, 345.1321958488625, 357.5875504374441, 315.7579376288483, 347.4958923681486, 365.29830710492, 321.3639785320115, 358.58599410999096, 361.30950658756296, 312.6391243351603, 347.2127694442816, 350.1988276945488]
+Replicates per threshold: 1
+
+Results:
+--------------------
+RF threshold 326.8856580192187: 1/1 successful variants
+RF threshold 335.1826866278422: 1/1 successful variants
+RF threshold 373.5990327742795: 1/1 successful variants
+RF threshold 360.28189308825336: 1/1 successful variants
+RF threshold 345.1321958488625: 1/1 successful variants
+RF threshold 357.5875504374441: 1/1 successful variants
+RF threshold 315.7579376288483: 1/1 successful variants
+RF threshold 347.4958923681486: 1/1 successful variants
+RF threshold 365.29830710492: 1/1 successful variants
+RF threshold 321.3639785320115: 1/1 successful variants
+RF threshold 358.58599410999096: 1/1 successful variants
+RF threshold 361.30950658756296: 1/1 successful variants
+RF threshold 312.6391243351603: 1/1 successful variants
+RF threshold 347.2127694442816: 1/1 successful variants
+RF threshold 350.1988276945488: 1/1 successful variants

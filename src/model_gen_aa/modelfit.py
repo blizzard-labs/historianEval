@@ -12,6 +12,7 @@ import sys
 import pickle
 import pandas as pd
 import numpy as np
+import numpy
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -355,7 +356,7 @@ def main():
         os.makedirs(output_folder)
     
     parameter_group = 'key_parameters'
-    
+    print(model_path)
     if parameter_file != 'none':
         if not os.path.exists(parameter_file):
             print(f"Error: Parameter file '{parameter_file}' does not exist.")
@@ -388,7 +389,6 @@ def main():
             pickle.dump(fitter, f, pickle.HIGHEST_PROTOCOL)
         print(f"Joint distributions saved to {output_folder}/model.pkl")
         
-
     elif model_path != 'none':
         with open(model_path, 'rb') as f:
             fitter = pickle.load(f)
