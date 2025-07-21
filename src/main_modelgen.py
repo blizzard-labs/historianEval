@@ -87,6 +87,7 @@ class modelConstructor:
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
         #Example: python protein_extractor.py ./protein_alignments/ ./results/ /usr/local/bin/modeltest-ng false
         
+        mpath = "tools/"
         if self.operate == "osx":
             m_path = "tools/modeltest-ng-osx"
         elif self.operate == "x86":
