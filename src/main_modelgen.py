@@ -292,8 +292,6 @@ def main():
     print(f'Cleaned data- ELAPSED TIME: {time.time() - start}')
     mc.extract_substitution_params()
     print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}')
-    mc.cleanup_modeltest_trees() #!Check if necessary
-    print(f'Cleaned modeltest trees- ELAPSED TIME: {time.time() - start}')
     mc.extract_top_params() 
     print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}')
         

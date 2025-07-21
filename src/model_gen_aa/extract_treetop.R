@@ -128,14 +128,6 @@ estimate_rates <- function(tree_file) {
       return(result)
     }
     
-    # Get the crown age
-    crown_age <- max(node.depth.edgelength(tree))
-    
-    if (crown_age <= 0) {
-      warning(sprintf("Invalid crown age in tree: %s", tree_file))
-      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
-    }
-
     # RPANDA requires ultrametric trees
     if (!is.ultrametric(tree)) {
       cat("  Tree is not ultrametric, attempting to make ultrametric...\n")
@@ -150,6 +142,14 @@ estimate_rates <- function(tree_file) {
     if (!is.rooted(tree)) {
         cat("  Tree is unrooted, rooting using midpoint...\n")
         tree <- midpoint.root(tree)
+    }
+    
+    # Get the crown age
+    crown_age <- max(node.depth.edgelength(tree))
+    
+    if (crown_age <= 0) {
+      warning(sprintf("Invalid crown age in tree: %s", tree_file))
+      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
     }
     
     # Store results for different models
