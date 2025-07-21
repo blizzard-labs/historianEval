@@ -1,3 +1,0 @@
-filename,n_sequences,alignment_length,method,rate_AC,rate_AG,rate_AT,rate_CG,rate_CT,rate_GT,freq_A,freq_C,freq_G,freq_T,gamma_shape,prop_invariant,indel_rate,mean_indel_length,total_gaps
-10009_NT_AL.fasta,184,2103,ModelTest-NG,1.6442,6.4302,0.7089,1.054,5.4537,1.0,0.28,0.2286,0.2208,0.2706,1.4063,0.0,2.697099381835473,6.895980253878703,19557
-10010_NT_AL.fasta,189,1323,ModelTest-NG,0.9926,4.7175,0.7215,1.131,3.9577,1.0,0.3333,0.2183,0.1883,0.2601,1.6721,0.0,4.060468631897203,4.697691734921817,12618
