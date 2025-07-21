@@ -129,6 +129,18 @@ estimate_rates <- function(tree_file) {
     }
     
     # RPANDA requires ultrametric trees
+
+    # Get the crown age
+    crown_age <- max(node.depth.edgelength(tree))
+    
+    if (crown_age <= 0) {
+      warning(sprintf("Invalid crown age in tree: %s", tree_file))
+      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
+    }
+    
+    cat("Check if tree is unrooted: ")
+    cat(is.rooted(tree))
+
     if (!is.ultrametric(tree)) {
       cat("  Tree is not ultrametric, attempting to make ultrametric...\n")
       tree <- chronos(tree, quiet = TRUE)
@@ -144,13 +156,6 @@ estimate_rates <- function(tree_file) {
         tree <- midpoint.root(tree)
     }
     
-    # Get the crown age
-    crown_age <- max(node.depth.edgelength(tree))
-    
-    if (crown_age <= 0) {
-      warning(sprintf("Invalid crown age in tree: %s", tree_file))
-      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
-    }
     
     # Store results for different models
     model_results <- list()
@@ -1082,129 +1087,128 @@ cat(sprintf("Tree files processed: %d\n", total_trees))
 cat(sprintf("Successful matches: %d\n", matched_count))
 cat(sprintf("Output written to: %s\n", output_csv))
 
-detailed_summary <- function(){
-  if (matched_count > 0) {
-    cat("\n=== RATE ESTIMATES SUMMARY ===\n")
-    spec_rates <- csv_data$speciation_rate[!is.na(csv_data$speciation_rate)]
-    ext_rates <- csv_data$extinction_rate[!is.na(csv_data$extinction_rate)]
-    net_div <- csv_data$net_diversification[!is.na(csv_data$net_diversification)]
-    
-    cat(sprintf("Speciation rate - Mean: %.4f, Range: %.4f - %.4f\n", 
-                mean(spec_rates), min(spec_rates), max(spec_rates)))
-    cat(sprintf("Extinction rate - Mean: %.4f, Range: %.4f - %.4f\n", 
-                mean(ext_rates), min(ext_rates), max(ext_rates)))
-    cat(sprintf("Net diversification - Mean: %.4f, Range: %.4f - %.4f\n", 
-                mean(net_div), min(net_div), max(net_div)))
-    
-    # Show method distribution
-    methods <- table(csv_data$diversification_method[!is.na(csv_data$diversification_method)])
-    cat("\n=== BEST MODELS SELECTED ===\n")
-    for (i in 1:length(methods)) {
-      cat(sprintf("%s: %d cases\n", names(methods)[i], methods[i]))
+if (matched_count > 0) {
+  cat("\n=== RATE ESTIMATES SUMMARY ===\n")
+  spec_rates <- csv_data$speciation_rate[!is.na(csv_data$speciation_rate)]
+  ext_rates <- csv_data$extinction_rate[!is.na(csv_data$extinction_rate)]
+  net_div <- csv_data$net_diversification[!is.na(csv_data$net_diversification)]
+  
+  cat(sprintf("Speciation rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(spec_rates), min(spec_rates), max(spec_rates)))
+  cat(sprintf("Extinction rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(ext_rates), min(ext_rates), max(ext_rates)))
+  cat(sprintf("Net diversification - Mean: %.4f, Range: %.4f - %.4f\n", 
+              mean(net_div), min(net_div), max(net_div)))
+  
+  # Show method distribution
+  methods <- table(csv_data$diversification_method[!is.na(csv_data$diversification_method)])
+  cat("\n=== BEST MODELS SELECTED ===\n")
+  for (i in 1:length(methods)) {
+    cat(sprintf("%s: %d cases\n", names(methods)[i], methods[i]))
+  }
+  
+  # Show model type distribution
+  model_types <- table(csv_data$model_type[!is.na(csv_data$model_type)])
+  cat("\n=== MODEL TYPE DISTRIBUTION ===\n")
+  for (i in 1:length(model_types)) {
+    cat(sprintf("%s: %d cases\n", names(model_types)[i], model_types[i]))
+  }
+  
+  # Show coalescent-specific summary
+  coal_models <- csv_data$model_type[!is.na(csv_data$model_type)] == "coalescent"
+  if (sum(coal_models) > 0) {
+    cat("\n=== COALESCENT MODEL SUMMARY ===\n")
+    coal_Ne <- csv_data$effective_pop_size[!is.na(csv_data$effective_pop_size)]
+    if (length(coal_Ne) > 0) {
+      cat(sprintf("Effective population size - Mean: %.4f, Range: %.4f - %.4f\n", 
+                  mean(coal_Ne), min(coal_Ne), max(coal_Ne)))
     }
     
-    # Show model type distribution
-    model_types <- table(csv_data$model_type[!is.na(csv_data$model_type)])
-    cat("\n=== MODEL TYPE DISTRIBUTION ===\n")
-    for (i in 1:length(model_types)) {
-      cat(sprintf("%s: %d cases\n", names(model_types)[i], model_types[i]))
-    }
-    
-    # Show coalescent-specific summary
-    coal_models <- csv_data$model_type[!is.na(csv_data$model_type)] == "coalescent"
-    if (sum(coal_models) > 0) {
-      cat("\n=== COALESCENT MODEL SUMMARY ===\n")
-      coal_Ne <- csv_data$effective_pop_size[!is.na(csv_data$effective_pop_size)]
-      if (length(coal_Ne) > 0) {
-        cat(sprintf("Effective population size - Mean: %.4f, Range: %.4f - %.4f\n", 
-                    mean(coal_Ne), min(coal_Ne), max(coal_Ne)))
-      }
-      
-      coal_growth <- csv_data$growth_rate[!is.na(csv_data$growth_rate)]
-      if (length(coal_growth) > 0) {
-        cat(sprintf("Growth rate - Mean: %.4f, Range: %.4f - %.4f\n", 
-                    mean(coal_growth), min(coal_growth), max(coal_growth)))
+    coal_growth <- csv_data$growth_rate[!is.na(csv_data$growth_rate)]
+    if (length(coal_growth) > 0) {
+      cat(sprintf("Growth rate - Mean: %.4f, Range: %.4f - %.4f\n", 
+                  mean(coal_growth), min(coal_growth), max(coal_growth)))
 
-      cat("\n=== GAMMA STATISTIC SUMMARY ===\n")
-      gamma_values <- csv_data$gamma[!is.na(csv_data$gamma)]
-      if (length(gamma_values) > 0) {
-        cat(sprintf("Gamma statistic - Mean: %.4f, Range: %.4f - %.4f\n", 
-                    mean(gamma_values), min(gamma_values), max(gamma_values)))
-        
-        # Count interpretations
-        gamma_interp <- table(csv_data$gamma_interpretation[!is.na(csv_data$gamma_interpretation)])
-        cat("\n=== GAMMA INTERPRETATIONS ===\n")
-        for (i in 1:length(gamma_interp)) {
-          cat(sprintf("%s: %d trees\n", names(gamma_interp)[i], gamma_interp[i]))
-        }
-        
-        # Significant results
-        significant_early <- sum(csv_data$gamma[!is.na(csv_data$gamma)] < -1.645)
-        significant_late <- sum(csv_data$gamma[!is.na(csv_data$gamma)] > 1.645)
-        total_gamma <- length(gamma_values)
-        
-        cat(sprintf("\nSignificant early diversification: %d/%d (%.1f%%)\n", 
-                    significant_early, total_gamma, 100 * significant_early / total_gamma))
-        cat(sprintf("Significant late diversification: %d/%d (%.1f%%)\n", 
-                    significant_late, total_gamma, 100 * significant_late / total_gamma))
-        cat(sprintf("Constant diversification: %d/%d (%.1f%%)\n", 
-                    total_gamma - significant_early - significant_late, total_gamma, 
-                    100 * (total_gamma - significant_early - significant_late) / total_gamma))
-      }
-    }
-    
-    # Show convergence status
-    converged <- sum(csv_data$convergence[!is.na(csv_data$convergence)] == 0)
-    total_converged <- sum(!is.na(csv_data$convergence))
-    if (total_converged > 0) {
-      cat(sprintf("\nConvergence: %d/%d (%.1f%%) models converged successfully\n", 
-                  converged, total_converged, 100 * converged / total_converged))
-    }
-    
-    # Show any errors
-    errors <- csv_data$tree_error[!is.na(csv_data$tree_error)]
-    if (length(errors) > 0) {
-      cat("\n=== ERRORS ===\n")
-      error_table <- table(errors)
-      for (i in 1:length(error_table)) {
-        cat(sprintf("%s: %d cases\n", names(error_table)[i], error_table[i]))
-      }
-    }
-    
-    # Show model comparison summary
-    cat("\n=== MODEL COMPARISON NOTES ===\n")
-    cat("The output CSV now includes:\n")
-    cat("- Birth-Death Models: 9 different combinations of birth/death rate variations\n")
-    cat("- Coalescent Models: 5 different population demographic models\n")
-    cat("- all_models_aic: AIC values for all fitted models\n")
-    cat("- best_models_ranking: Models ranked by AIC (best to worst)\n")
-    cat("- delta_aic: Delta AIC values relative to best model\n")
-    cat("- model_type: Indicates whether best model was 'birth_death' or 'coalescent'\n")
-    cat("- effective_pop_size: Effective population size (for coalescent models)\n")
-    cat("- growth_rate: Population growth rate (for coalescent models)\n")
-    cat("- coalescent_params: Detailed coalescent model parameters\n")
-    
-    # Summary of model selection
-    bd_selected <- sum(csv_data$model_type[!is.na(csv_data$model_type)] == "birth_death")
-    coal_selected <- sum(csv_data$model_type[!is.na(csv_data$model_type)] == "coalescent")
-    total_selected <- bd_selected + coal_selected
-    
-    if (total_selected > 0) {
-      cat(sprintf("\n=== MODEL SELECTION SUMMARY ===\n"))
-      cat(sprintf("Birth-Death models selected: %d (%.1f%%)\n", 
-                  bd_selected, 100 * bd_selected / total_selected))
-      cat(sprintf("Coalescent models selected: %d (%.1f%%)\n", 
-                  coal_selected, 100 * coal_selected / total_selected))
+    cat("\n=== GAMMA STATISTIC SUMMARY ===\n")
+    gamma_values <- csv_data$gamma[!is.na(csv_data$gamma)]
+    if (length(gamma_values) > 0) {
+      cat(sprintf("Gamma statistic - Mean: %.4f, Range: %.4f - %.4f\n", 
+                  mean(gamma_values), min(gamma_values), max(gamma_values)))
       
-      if (coal_selected > 0) {
-        cat("\nThis suggests that for some trees, demographic processes\n")
-        cat("(population size changes) provide better explanations than\n")
-        cat("birth-death processes (speciation/extinction rates).\n")
+      # Count interpretations
+      gamma_interp <- table(csv_data$gamma_interpretation[!is.na(csv_data$gamma_interpretation)])
+      cat("\n=== GAMMA INTERPRETATIONS ===\n")
+      for (i in 1:length(gamma_interp)) {
+        cat(sprintf("%s: %d trees\n", names(gamma_interp)[i], gamma_interp[i]))
       }
+      
+      # Significant results
+      significant_early <- sum(csv_data$gamma[!is.na(csv_data$gamma)] < -1.645)
+      significant_late <- sum(csv_data$gamma[!is.na(csv_data$gamma)] > 1.645)
+      total_gamma <- length(gamma_values)
+      
+      cat(sprintf("\nSignificant early diversification: %d/%d (%.1f%%)\n", 
+                  significant_early, total_gamma, 100 * significant_early / total_gamma))
+      cat(sprintf("Significant late diversification: %d/%d (%.1f%%)\n", 
+                  significant_late, total_gamma, 100 * significant_late / total_gamma))
+      cat(sprintf("Constant diversification: %d/%d (%.1f%%)\n", 
+                  total_gamma - significant_early - significant_late, total_gamma, 
+                  100 * (total_gamma - significant_early - significant_late) / total_gamma))
     }
   }
+  
+  # Show convergence status
+  converged <- sum(csv_data$convergence[!is.na(csv_data$convergence)] == 0)
+  total_converged <- sum(!is.na(csv_data$convergence))
+  if (total_converged > 0) {
+    cat(sprintf("\nConvergence: %d/%d (%.1f%%) models converged successfully\n", 
+                converged, total_converged, 100 * converged / total_converged))
+  }
+  
+  # Show any errors
+  errors <- csv_data$tree_error[!is.na(csv_data$tree_error)]
+  if (length(errors) > 0) {
+    cat("\n=== ERRORS ===\n")
+    error_table <- table(errors)
+    for (i in 1:length(error_table)) {
+      cat(sprintf("%s: %d cases\n", names(error_table)[i], error_table[i]))
+    }
+  }
+  
+  # Show model comparison summary
+  cat("\n=== MODEL COMPARISON NOTES ===\n")
+  cat("The output CSV now includes:\n")
+  cat("- Birth-Death Models: 9 different combinations of birth/death rate variations\n")
+  cat("- Coalescent Models: 5 different population demographic models\n")
+  cat("- all_models_aic: AIC values for all fitted models\n")
+  cat("- best_models_ranking: Models ranked by AIC (best to worst)\n")
+  cat("- delta_aic: Delta AIC values relative to best model\n")
+  cat("- model_type: Indicates whether best model was 'birth_death' or 'coalescent'\n")
+  cat("- effective_pop_size: Effective population size (for coalescent models)\n")
+  cat("- growth_rate: Population growth rate (for coalescent models)\n")
+  cat("- coalescent_params: Detailed coalescent model parameters\n")
+  
+  # Summary of model selection
+  bd_selected <- sum(csv_data$model_type[!is.na(csv_data$model_type)] == "birth_death")
+  coal_selected <- sum(csv_data$model_type[!is.na(csv_data$model_type)] == "coalescent")
+  total_selected <- bd_selected + coal_selected
+  
+  if (total_selected > 0) {
+    cat(sprintf("\n=== MODEL SELECTION SUMMARY ===\n"))
+    cat(sprintf("Birth-Death models selected: %d (%.1f%%)\n", 
+                bd_selected, 100 * bd_selected / total_selected))
+    cat(sprintf("Coalescent models selected: %d (%.1f%%)\n", 
+                coal_selected, 100 * coal_selected / total_selected))
+    
+    if (coal_selected > 0) {
+      cat("\nThis suggests that for some trees, demographic processes\n")
+      cat("(population size changes) provide better explanations than\n")
+      cat("birth-death processes (speciation/extinction rates).\n")
+    }
+  }
+}
 
-  cat("\nRPANDA analysis with Birth-Death AND Coalescent models complete!\n")
-  cat("Enhanced model comparison now includes demographic and diversification processes.\n")
+cat("\nRPANDA analysis with Birth-Death AND Coalescent models complete!\n")
+cat("Enhanced model comparison now includes demographic and diversification processes.\n")
 }
 
