@@ -12,7 +12,6 @@ import sys
 import pickle
 import pandas as pd
 import numpy as np
-import numpy
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -68,11 +67,13 @@ class PhylogeneticParameterFitter:
         '''
         
         return {
-            'key_parameters' : ['n_sequences', 'alignment_length', 'gamma_shape', 'prop_invariant',
+            'key_parameters' : ['n_sequences_tips', 'alignment_length', 'gamma_shape', 'prop_invariant',
                                 'insertion_rate', 'deletion_rate',
                                 'mean_insertion_length', 'mean_deletion_length',
                                 'normalized_colles_index', 'gamma',
-                                '']
+                                'best_BD_speciation_rate', 'best_BD_extinction_rate'
+                                'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
+                                'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
         }
 
     
@@ -286,7 +287,7 @@ class PhylogeneticParameterFitter:
         
         plt.tight_layout()
         plt.savefig(os.path.join(output_folder, 'param_fits.png'), dpi=300)
-        plt.show()
+        plt.close()
     
     def export_for_simulation(self, param_group='key_parameters', n_samples=100):
         """Export parameters in format suitable for indel-seq-gen"""

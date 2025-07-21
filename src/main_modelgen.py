@@ -227,14 +227,14 @@ class modelConstructor:
             print(f"Error estimating tree distances: {e}")
             raise
     
-    def generate_model(self):
+    def generate_model(self, parameters_f):
         #python src/model_gen/modelfit.py <output_folder> [parameter_file]
         try:
             cmd = [
                 "python",
                 "src/model_gen_aa/modelfit.py",
                 self.tree_folder.replace("/trees", ""),
-                self.params_file
+                parameters_f
             ]
             
             subprocess.run(cmd, check=True)
@@ -297,7 +297,11 @@ def main():
     mc.cleanup_params(mc.params_wr_file)
     print(f'Cleaned up tables- ELAPSED TIME: {time.time() - start}============================')
     
-    #mc.generate_model()
+    mc.generate_model(mc.params_wc_file)
+    print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
+    mc.sample_model(n_samples=3)
+    print(f'Sampled from model- ELAPSED TIME: {time.time() - start}============================')
+    
     
     
     print('COMPLEETTEEEETETETETE!!!!')
