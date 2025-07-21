@@ -6,10 +6,12 @@ import subprocess
 import logging
 import sys
 from pathlib import Path
-from Bio import Phylo
+from Bio import Phylo, AlignIO
 import utils.general as utils
 import model_gen_aa.clean_table
 import pandas as pd
+from io import StringIO
+import time
 
 class modelConstructor:
     def __init__(self, operate, label, alignment_folder, tree_folder="none", temp_folder="data/model_gen", output_folder="models", params_file="none", log_file="none", log=True):
@@ -45,13 +47,53 @@ class modelConstructor:
             sys.stdout = utils.StreamToLogger(logging.getLogger(), logging.INFO)
             sys.stderr = utils.StreamToLogger(logging.getLogger(), logging.ERROR) 
         
+    def cleanup_trees(self):
+        for file in os.listdir(self.tree_folder):
+            if os.path.isfile(os.path.join(self.tree_folder, file)) and (file.endswith(".nhx") or file.endswith(".newick")):
+                utils.strip_metadata(os.path.join(self.tree_folder, file))
+            if os.path.isfile(os.path.join(self.tree_folder, file)) and file.endswith(".rootree"):
+                path_obj = Path(os.path.join(self.tree_folder, file))
+                new_file_path = path_obj.with_suffix(".tree")
+                path_obj.rename(new_file_path)
+    
+    def cleanup_pfam_data(self):
+        self.cleanup_trees()
+        
+        for file in os.listdir(self.alignment_folder):
+            if os.path.isfile(os.path.join(self.alignment_folder, file)) and file.endswith(".seed"):
+                alignment = AlignIO.read(os.path.join(self.alignment_folder, file), "stockholm")
+                AlignIO.write(alignment, os.path.join(self.alignment_folder, file).replace(".seed", ".fasta"), "fasta")
+                os.remove(os.path.join(self.alignment_folder, file))
 
+    def cleanup_modeltest_trees(self):
+        modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
+        try:
+            existant_files = []
+            for file in os.listdir(self.tree_folder):
+                if os.path.isfile(os.path.join(self.tree_folder, file)):
+                    existant_files.append(file.split(".")[0])
+            
+            for file in os.listdir(modeltest_folder):
+                if file.endswith(".tree") and file.split(".")[0] not in existant_files:
+                    os.rename(os.path.join(modeltest_folder, file), os.path.join(self.tree_folder, file))
+            
+            self.cleanup_trees()
+            print(f"Trees cleaned and moved to {self.tree_folder}.")
+        except Exception as e:
+            print(f"Error cleaning up trees: {e}")
+            raise
+        
     def extract_substitution_params(self, only_indels=False):
         """Extracts substitution parameters from the alignment folder using modeltest-ng."""
         #Example: python protein_extractor.py ./protein_alignments/ ./results/ /usr/local/bin/modeltest-ng false
         
-        m_path = "tools/modeltest-ng-osx" if self.operate == "osx" else "tools/modeltest-ng-static"
-        
+        if self.operate == "osx":
+            m_path = "tools/modeltest-ng-osx"
+        elif self.operate == "x86":
+            m_path = "tools/"
+        else:
+            mpath = "tools/modeltest-ng-static"
+                
         cmd = [
             "python",
             "src/model_gen_aa/extract_params.py",
@@ -81,32 +123,6 @@ class modelConstructor:
             raise      
         '''
 
-    def cleanup_trees(self):
-        for file in os.listdir(self.tree_folder):
-            if os.path.isfile(os.path.join(self.tree_folder, file)) and (file.endswith(".nhx") or file.endswith(".newick")):
-                utils.strip_metadata(os.path.join(self.tree_folder, file))
-            if os.path.isfile(os.path.join(self.tree_folder, file)) and file.endswith(".rootree"):
-                path_obj = Path(os.path.join(self.tree_folder, file))
-                new_file_path = path_obj.with_suffix(".tree")
-                path_obj.rename(new_file_path)
-    
-    def cleanup_modeltest_trees(self):
-        modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
-        try:
-            existant_files = []
-            for file in os.listdir(self.tree_folder):
-                if os.path.isfile(os.path.join(self.tree_folder, file)):
-                    existant_files.append(file.split(".")[0])
-            
-            for file in os.listdir(modeltest_folder):
-                if file.endswith(".tree") and file.split(".")[0] not in existant_files:
-                    os.rename(os.path.join(modeltest_folder, file), os.path.join(self.tree_folder, file))
-            
-            self.cleanup_trees()
-            print(f"Trees cleaned and moved to {self.tree_folder}.")
-        except Exception as e:
-            print(f"Error cleaning up trees: {e}")
-            raise
                
     def generate_ml_trees(self, raxml_ng_path="tools/raxml-ng"):
         try:
@@ -256,8 +272,9 @@ def main():
     input_folder = sys.argv[3]
     log = sys.argv[4] if len(sys.argv) > 4 else False
     
-    mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
-    #mc.cleanup_trees()
+    
+    '''
+    mc.cleanup_trees()
     #mc.extract_substitution_params()
     #mc.cleanup_modeltest_trees()
     #mc.estimate_treedist()
@@ -265,6 +282,22 @@ def main():
     #mc.generate_model()
     mc.sample_model(n_samples=15)
     #mc.cleanup_params(mc.params_file)
+    '''
+    mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
+    
+    start = time.time()
+    #*PFAM SOCP TYPES PIPELINE
+    mc.cleanup_pfam_data()
+    print(f'Cleaned data- ELAPSED TIME: {time.time() - start}')
+    mc.extract_substitution_params()
+    print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}')
+    mc.cleanup_modeltest_trees() #!Check if necessary
+    print(f'Cleaned modeltest trees- ELAPSED TIME: {time.time() - start}')
+    mc.extract_top_params() 
+    print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}')
+        
+    #mc.generate_model()
+    
     
     print('COMPLEETTEEEETETETETE!!!!')
 

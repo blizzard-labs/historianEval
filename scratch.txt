@@ -1,4 +1,10 @@
+Added metrics
+* Colless imbalance metric
+* Gamma statistic
+* Tree height
+
 TODO List-------
+* Generate plain BD trees w/ parameters (mu, lambda) and SPR/NNI until colles index + gamma statistic threshold reached (simulated annealing)
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
 * Add estimated max gap dist (extract_params.py and modelfit.py)
 * source code broken for deletions and insertion distributions (indel-seq-gen)

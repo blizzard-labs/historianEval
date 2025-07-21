@@ -36,6 +36,9 @@ from Bio import AlignIO, SeqIO, Phylo
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import warnings
+
+import tree_metrics
+
 warnings.filterwarnings('ignore')
 
 class ProteinParameterExtractor:
@@ -642,6 +645,18 @@ class ProteinParameterExtractor:
             'mean_deletion_length': indel_params['mean_deletion_length'],
             'total_gaps': indel_params['total_gaps'],
             'indel_to_substitution_ratio': indel_params['indel_to_substitution_ratio']
+        })
+        
+        #Add tree shape parameters
+        with open (tree_file, "r") as f:
+            tree_str = tree_file.read()
+            tree_params = tree_metrics.analyze_tree_balance(tree_str)
+        
+        result.update({
+            'n_internal_nodes': tree_params['n_internal_nodes'],
+            'max_depth' : tree_params['max_depth'],
+            'colless_index': tree_params['colless_index'],
+            'normalized_colless_index' : tree_params['normalized_colless_index']
         })
         
         return result
