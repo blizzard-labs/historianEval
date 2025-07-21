@@ -55,8 +55,8 @@ output_csv <- if (length(args) >= 3) args[3] else gsub("\\.csv$", "_with_rates.c
 # Define all birth-death model combinations
 bd_model_combinations <- list(
   "BCSTDCST" = list(lamb_type = "constant", mu_type = "constant"),     # Birth Constant, Death Constant
-  "BEXPCDST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
-  "BLINCDST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
+  "BEXPDCST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
+  "BLINDCST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
   "BCSTDEXP" = list(lamb_type = "constant", mu_type = "exponential"),  # Birth Constant, Death Exponential
   "BEXPDEXP" = list(lamb_type = "exponential", mu_type = "exponential"), # Birth Exponential, Death Exponential
   "BLINDEXP" = list(lamb_type = "linear", mu_type = "exponential"),    # Birth Linear, Death Exponential
