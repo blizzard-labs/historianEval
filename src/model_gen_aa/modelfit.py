@@ -71,7 +71,8 @@ class PhylogeneticParameterFitter:
             'key_parameters' : ['n_sequences', 'alignment_length', 'gamma_shape', 'prop_invariant',
                                 'insertion_rate', 'deletion_rate',
                                 'mean_insertion_length', 'mean_deletion_length',
-                                'rf_length_distance']
+                                'normalized_colles_index', 'gamma',
+                                '']
         }
 
     

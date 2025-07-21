@@ -185,7 +185,7 @@ class modelConstructor:
             print(f"Error extracting topology parameters: {e}")
             raise
     
-    def cleanup_params(self, input_f):
+    def compute_params_splits(self, input_f):
         output_f = self.params_wc_file
         
         try:
@@ -282,7 +282,7 @@ def main():
     #mc.extract_top_params()     
     #mc.generate_model()
     mc.sample_model(n_samples=15)
-    #mc.cleanup_params(mc.params_file)
+    #mc.compute_params_splits(mc.params_file)
     '''
     mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
     
