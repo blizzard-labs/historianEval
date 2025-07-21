@@ -1,0 +1,56 @@
+# STOCKHOLM 1.0
+#=GF ID   GIT_CC
+#=GF AC   PF16559.9
+#=GF DE   GIT coiled-coil Rho guanine nucleotide exchange factor
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_2w6a
+#=GF GA   28.70 28.70;
+#=GF TC   28.70 29.10;
+#=GF NC   28.60 27.50;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   19136011
+#=GF RT   Structures of dimeric GIT1 and trimeric beta-PIX and
+#=GF RT   implications for GIT-PIX complex assembly.
+#=GF RA   Schlenker O, Rittinger K;
+#=GF RL   J Mol Biol. 2009;386:280-289.
+#=GF DR   INTERPRO; IPR032352;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   GIT-CC is the coiled-coil region of GIT (G protein-coupled
+#=GF CC   receptor kinase-interacting) proteins. This coiled-coil region
+#=GF CC   is the surface that associates with the equivalent
+#=GF CC   binding-region on beta-PIX, or p21-activated kinase-interacting
+#=GF CC   exchange factor proteins.  Both GIT and PIX complex together to
+#=GF CC   form a scaffold for the formation of multi-protein assemblies.
+#=GF CC   On its own the GIT-CC region assembles into a parallel
+#=GF CC   two-stranded CC in the asymmetric unit. Similarly the PIX
+#=GF CC   coiled-coil region assembles into a trimer. At least in vitro
+#=GF CC   the two regions associate together into a stable
+#=GF CC   heteropentameric complex that consists of one PIX trimer and one
+#=GF CC   GIT dimer [1].
+#=GF SQ   11
+#=GS W5KA43_ASTMX/381-445      AC W5KA43.2
+#=GS G5B651_HETGA/468-532      AC G5B651.1
+#=GS H2UM78_TAKRU/413-477      AC H2UM78.1
+#=GS I3JMD7_ORENI/389-454      AC I3JMD7.2
+#=GS E9G888_DAPPU/438-503      AC E9G888.1
+#=GS A7RWJ1_NEMVE/412-477      AC A7RWJ1.1
+#=GS A0A1I7VGI0_LOALO/442-509  AC A0A1I7VGI0.1
+#=GS U3JUS6_FICAL/449-514      AC U3JUS6.2
+#=GS U3FG87_CALJA/418-483      AC U3FG87.1
+#=GS I3K8X9_ORENI/417-482      AC I3K8X9.2
+#=GS G3P341_GASAC/414-478      AC G3P341.1
+W5KA43_ASTMX/381-445                 KSLDS.DQSD..GPVTVQDFLEVKNALLASEAKIEQLMKANVSLTEELRLLQKKLLSLQSENSSLRSQ
+G5B651_HETGA/468-532                 KSLDS.DLSD..GPVTVQEFMEVKNALVASEAKIQQLMKVNNNLSDELRIMQKKLQTLQSENSSLRKQ
+H2UM78_TAKRU/413-477                 KSLDS.DLSD..GPITMQEYVDLKNALTASEVKIQHLMKANNNLSDELRLMQKKLHTLQSENSSLRRQ
+I3JMD7_ORENI/389-454                 NTMDSSDLSD..GPITLQEYLEVKKALASSEAKVQQLMKVNNNLSEELRRLQKEPEYRLGGFGPGGDP
+E9G888_DAPPU/438-503                 KGLQDLNQQK..SGVSVEAYIGIKEQLSLSNVRMQELLASNTNMQTQIAQLQNMVQTLVQENNQLKTQ
+A7RWJ1_NEMVE/412-477                 KGTSTSFVLE..DTVPMENYLELKRALATAEARIQQLLQVNASMSQGIQELQSVQIPLAPNEDDDDDD
+A0A1I7VGI0_LOALO/442-509             KSDDSGDLLQETGPVMIDDFLELKEKVANAESTLTAVQQANTQILRMLTHLQSSVDRLNADNADVHDE
+U3JUS6_FICAL/449-514                 RSMDSSDLSD..GPITLQEYLEVKKALATSEAKVQQLMKVNNSLSDELRRLQREIHKLQAENTQIRQQ
+U3FG87_CALJA/418-483                 RSMDSSDLSD..GAVTLQEYLELKKALATSEAKVQQLMKVNSSLSDELRRLQREIHKLQAENLQLRQT
+I3K8X9_ORENI/417-482                 KSSESSDLSD..GPITVQEFMEVKSALTASEAKIQQLLKVNCHLSEELRLMQSKLNSLQTENTTLRWQ
+G3P341_GASAC/414-478                 KSQDS.ELSD..GPITIHEYMEVKTALSASEAKIQHLLKANNNLSDELRLMQKKLQSLQTENTSLRRH
+#=GC seq_cons                        KShDS.DLSD..GPlTlQEYlElKpALusSEAKlQQLhKsNssLS-ELRhLQ+clpsLQuENssLRpp

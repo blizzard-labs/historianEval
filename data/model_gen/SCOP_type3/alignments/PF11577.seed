@@ -1,0 +1,42 @@
+# STOCKHOLM 1.0
+#=GF ID   NEMO
+#=GF AC   PF11577.12
+#=GF DE   NF-kappa-B essential modulator NEMO
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_3brt
+#=GF GA   23.20 23.20;
+#=GF TC   23.20 23.30;
+#=GF NC   23.10 22.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 --cpu 4 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   18462684
+#=GF RT   Structure of a NEMO/IKK-associating domain reveals architecture
+#=GF RT   of the interaction site. 
+#=GF RA   Rushe M, Silvian L, Bixler S, Chen LL, Cheung A, Bowes S, Cuervo
+#=GF RA   H, Berkowitz S, Zheng T, Guckian K, Pellegrini M, Lugovskoy A; 
+#=GF RL   Structure. 2008;16:798-808.
+#=GF DR   INTERPRO; IPR021063;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   NEMO is a regulatory protein which is part of the IKK complex
+#=GF CC   along with the catalytic IKKalpha and beta kinases. The IKK
+#=GF CC   complex phosphorylates IkappaB targeting it for degradation
+#=GF CC   which results in the release of NF-kappaB which initiates the
+#=GF CC   inflammatory response, cell proliferation or cell
+#=GF CC   differentiation [1]. NEMO activates the IKK complex's activity
+#=GF CC   by associating with the unphosphorylated IKK kinase C
+#=GF CC   termini.The core domain of NEMO is a dimer which binds to two
+#=GF CC   fragments of IKK [1].
+#=GF SQ   5
+#=GS Q3ZC32_BOVIN/37-104  AC Q3ZC32.1
+#=GS OPTN_CHICK/37-104    AC Q90Z16.1
+#=GS F6Z6G3_XENTR/31-98   AC F6Z6G3.3
+#=GS Q8VC91_MOUSE/44-111  AC Q8VC91.1
+#=GS F1QHG7_DANRE/43-110  AC F1QHG7.1
+Q3ZC32_BOVIN/37-104             PHELLQQMRELLIENHQLKEAMKLNNQAMKGRFEELSAWTEKQKEERLYFETQSKEAKERLTALSLEN
+OPTN_CHICK/37-104               PEEMVQQMKELITENNELKEAMKLHNQAMKDRYEELSIWREKQKEEREFYETKFKEAKQCLLAKCVEN
+F6Z6G3_XENTR/31-98              DAEMLEQIKQLLMENNNLKETMKQMNQEMKERLEELLKRHNQHLLDLNSENELLRKELNSLREKNATS
+Q8VC91_MOUSE/44-111             EQGTPETLQRCLEENQELRDAIRQSNQMLRERCEELLHFQVSQREEKEFLMCKFQEARKLVERLSLEK
+F1QHG7_DANRE/43-110             DLAGNEIVQKLITDNHQLREALKRSNDALKERCEEMEGWQRRSREEREFLSCRFREARELVQRLAQEN
+#=GC seq_cons                   -pEhlEQl+cLLpENppLKEAMKpsNQAMKERhEELptWpc+Q+EEREFhps+F+EA+cpLpcLulEN

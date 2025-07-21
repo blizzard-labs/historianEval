@@ -1,0 +1,32 @@
+# STOCKHOLM 1.0
+#=GF ID   Scaffolding_pro
+#=GF AC   PF11418.12
+#=GF DE   Phi29 scaffolding protein
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_1no4
+#=GF GA   25.00 25.00;
+#=GF TC   25.70 26.40;
+#=GF NC   24.90 24.50;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   12778115
+#=GF RT   Bacteriophage phi29 scaffolding protein gp7 before and after
+#=GF RT   prohead assembly. 
+#=GF RA   Morais MC, Kanamaru S, Badasso MO, Koti JS, Owen BA, McMurray
+#=GF RA   CT, Anderson DL, Rossmann MG; 
+#=GF RL   Nat Struct Biol. 2003;10:572-576.
+#=GF DR   INTERPRO; IPR024374;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   This protein is also referred to as gp7. The protein contains a
+#=GF CC   DNA-binding function and may halve a role in mediating the
+#=GF CC   structural transition from prohead to mature virus and also
+#=GF CC   scaffold release [1].Gp7 is arranged within the capsid as a
+#=GF CC   series of concentric shells [1].
+#=GF SQ   2
+#=GS A0A0L0BZJ3_LUCCU/1-99  AC A0A0L0BZJ3.1
+#=GS SCAF_BPPH2/2-98        AC P13848.1
+A0A0L0BZJ3_LUCCU/1-99             MLTPEQHEAILNDLMNPETSIETRTQHLMTLRDDYVEVHVNHSTQTQQIDAFKVEVADLQASNSKLFRKIGIDGGTEEQKKNENQQSFSESVTL.DLLFK
+SCAF_BPPH2/2-98                   PLKPEEHEDILNKLLDPELAQSERTEALQQLRVNYGSFVSEYNDLTKSHEKLAAEKDDLIVSNSKLFRQIGL...TDKQEEDHKKADISETITIEDLEAK
+#=GC seq_cons                     .LpPEpHEsILNcLhsPEhu.ppRTptL.pLRssYsphhspass.Tpph-thtsEhsDL.sSNSKLFRpIGl...T-cQccscpptshSEolTl.DL.hK

@@ -1,0 +1,30 @@
+# STOCKHOLM 1.0
+#=GF ID   Hema_esterase
+#=GF AC   PF03996.19
+#=GF DE   Hemagglutinin esterase
+#=GF AU   Finn RD;0000-0001-8626-2148
+#=GF AU   Marshall M;
+#=GF SE   Pfam-B_505 (release 5.5)
+#=GF GA   25.00 25.00;
+#=GF TC   27.70 57.50;
+#=GF NC   21.20 19.70;
+#=GF BM   hmmbuild  --handHMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 -Z 75585367 --cpu 4 HMM pfamseq
+#=GF TP   Domain
+#=GF CL   CL0264
+#=GF NE   PF02710;
+#=GF NL   P68762.2/151-306
+#=GF DR   INTERPRO; IPR007142;
+#=GF DR   SCOP; 1flc; fa;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF SQ   3
+#=GS HEMA_CVMA5/9-391   AC P31615.2
+#=GS HEMA_INCAA/19-420  AC P68762.2
+#=GS HEMA_BRV1/2-378    AC P0C0V9.1
+#=GR HEMA_CVMA5/9-391   sAS   ....................................................*.................................................................................................................................................................................................................................................................................................................................*..*.........................................................
+HEMA_INCAA/19-420             ICLQKQVNSSFSLHNGFGGNLYATEEKRMFELVKPKAGASVLNQSTWIGFGDSRTDKS...NSAFPR..SADVSAKTAD..KFRSLSGGSLMLSMF..GPPGKVDYLYQGCGKHKVFYEGVNWSPHAAINCYRKN....WTDIKLNFQKNIYELASQSHCMSLVNALDKTIPLQATAGVAKNCNNSFLKNP..ALYTQEVNPSVEKCGKENLAFFTLPTQFGTYECKLHLVASCYFIY.......DSKEVYNKRGCDNYFQVIYDSSGKVVGGLDNRVSPYTGNSGDTPTMQ..CDMLQLKPGRYSVRSSPRFLLMPERSYCFD.MKEKGPVTAVQSIWGKGRESDHAVDQACLSTPGCMLIQKQKPYI..GEADDHHGDQEMRELLSGLDYEARCISQSG...WVNETSP...FTEEYLLPPKFGRCPLAAKEE
+#=GR HEMA_INCAA/19-420  sAS   ....................................................*.................................................................................................................................................................................................................................................................................................................................*..*.........................................................
+HEMA_BRV1/2-378               LSLI................LFFPSFAFAATPVTPYYGPGHITFD.WCGFGDSRSDCT...NPQSPM..SLDIPQQLCP..KFSSKSSSSMFLSLHWNNHSSFVSYDYFNCGVEKVFYEGVNFSPRKQYSCWDEGVDG.WIELKTRFYTKLYQMATTSRCIKLIQLQAPSSLPTLQAGVCRT.NKQLPDNPRLALLSDTVPTSVQ.........FVLPGSSGTTICTKHLVPFCYLNHGCFTTGGSCLPFGVSYVSDSFYYGYYDA............TPQIGST...ESHDYVCDYLFMEPGTYNASTVGKFLVYPTKSYCMDTMNITVPVQAVQSIWSEQYASDDAIGQAC.KAPYCIFYNKTTPYTVTNGSDANHGDDEVRMMMQGLLRNSSCISPQG.......STPLALYSTEMIYEPNYGSCPQFYKLF
+#=GR HEMA_BRV1/2-378    sAS   ....................................................*.................................................................................................................................................................................................................................................................................................................................*..*.........................................................
+#=GC seq_cons                 lsLl................LahsphsFuFs.VcPhsGsSHLNpD.WhGFGDSRSDCT...NsuaP+..SLDlssKLCs..KFSSKSGuSLFLShHassasuhVsYsYpGCGccKVFYEGVNFSP++uasCac+Gsst.Wh-lKsRFYs+lYEhAoQSRClSLVNlpssoussstsAGVCKs.NsphLcNP..ALlScEVsoSVpchhhEs.A.FTLPGp.GTh.CccHLVPhCYFNa...potGSSp-suNKYsoDSaaQuYYDushtVlhGhss..TPplGNTucsPohDhsCDYLtLcPGsYsAsSls+FLlhPoKSYChDpMKcpsPVQAVQSIWSctRpSDcAluQAC.psPYChFhNKosPYo.sGsuDAHHGDpEhRpLLSGLLYNuSCISQQG...asN.SSPhshYopEhlh.PpYG+CPpAAKlt
+#=GC RF                       xxxx................xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxx..xxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx.......................................................................................................................................................................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

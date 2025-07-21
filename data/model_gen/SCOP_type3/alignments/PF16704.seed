@@ -1,0 +1,32 @@
+# STOCKHOLM 1.0
+#=GF ID   Rab_bind
+#=GF AC   PF16704.9
+#=GF DE   Rab binding domain
+#=GF AU   Eberhardt R;0000-0001-6152-1369
+#=GF SE   PDB:3bbp
+#=GF GA   27.00 27.00;
+#=GF TC   27.20 27.20;
+#=GF NC   26.90 26.90;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   18243103
+#=GF RT   Rab and Arl GTPase family members cooperate in the localization
+#=GF RT   of the golgin GCC185.
+#=GF RA   Burguete AS, Fenn TD, Brunger AT, Pfeffer SR;
+#=GF RL   Cell. 2008;132:286-298.
+#=GF DR   INTERPRO; IPR032023;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This coiled-coil domain, found in GRIP and coiled-coil
+#=GF CC   domain-containing protein 2 and RANBP2-like and GRIP
+#=GF CC   domain-containing protein, has been shown to bind to Rab in GRIP
+#=GF CC   and coiled-coil domain-containing protein 2 [1].
+#=GF SQ   3
+#=GS U3INI9_ANAPP/1521-1585  AC U3INI9.2
+#=GS M3ZMR2_XIPMA/1491-1556  AC M3ZMR2.1
+#=GS G1NSP9_MYOLU/1550-1615  AC G1NSP9.1
+U3INI9_ANAPP/1521-1585             .EPSQWQTELSKDELIQKLNTTTKSADHLNELLRESEATNAILMEQIKLLKSEIRRLERNQEREKS
+M3ZMR2_XIPMA/1491-1556             QEPFVWTVEPSKSELTEKLSTATRSMEHMNGLLHETEATNAVLMEQITLLKSEVRRLERNQEREKS
+G1NSP9_MYOLU/1550-1615             TEPPLWHVEFTKEELMQKLSSTTKSADHLNGLLRETEATNAVLMEQIKLLKSEIRRLERNQEREKS
+#=GC seq_cons                      pEPslWpVEhSK-ELhQKLSTTTKSADHLNGLLRETEATNAVLMEQIKLLKSEIRRLERNQEREKS

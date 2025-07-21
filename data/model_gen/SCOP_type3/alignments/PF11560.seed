@@ -1,0 +1,35 @@
+# STOCKHOLM 1.0
+#=GF ID   LAP2alpha
+#=GF AC   PF11560.12
+#=GF DE   Lamina-associated polypeptide 2 alpha
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_2v0x
+#=GF GA   25.00 25.00;
+#=GF TC   25.10 25.00;
+#=GF NC   24.90 24.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -E 1000 -Z 75585367 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   17562312
+#=GF RT   Structural basis for dimerization of LAP2alpha, a component of
+#=GF RT   the nuclear lamina. 
+#=GF RA   Bradley CM, Jones S, Huang Y, Suzuki Y, Kvaratskhelia M, Hickman
+#=GF RA   AB, Craigie R, Dyda F; 
+#=GF RL   Structure. 2007;15:643-653.
+#=GF DR   INTERPRO; IPR021623;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   LAPs are components of the nuclear lamina which supports the
+#=GF CC   nuclear envelope.LAP2alpha is a non-membrane-associated member
+#=GF CC   of the LAP family which is unique. This family of proteins is
+#=GF CC   the C terminal domain of LAP2alpha which consists of residues
+#=GF CC   459-693 and constitutes a dimeric structure with an antiparallel
+#=GF CC   coiled coil. LAP2alpha is involved in cell-cycle regulation and
+#=GF CC   chromatin organisation and preferentially binds to lamin A/C
+#=GF CC   [1].
+#=GF SQ   2
+#=GS LAP2A_HUMAN/461-693  AC P42166.2
+#=GS LAP2A_MOUSE/459-692  AC Q61033.4
+LAP2A_HUMAN/461-693             AKTVVSHSLTTLGLEVAK.QSQHDKIDASELSFPFHESILKVIEEEWQQVDRQLPSLACKYPVSSREATQILSVPKVDDEILGFISEATPLGGIQAASTESCNQQLDLALCRAYEAAASALQIATHTAFVAKAMQADISQAAQILSSDPSRTHQALGILSKTYDAASYICEAAFDEVKMAAHTMGNATVGRRYLWLKDCKINLASKNKLASTPFKGGTLFGGEVCKVIKKRGNK
+LAP2A_MOUSE/459-692             AKSVVSHSLTTLGVEVSKPPPQHDKIEASEPSFPLHESILKVVEEEWQQIDRQLPSVACRYPVSSIEAARILSVPKVDDEILGFISEATPRAATQASSTESCDKHLDLALCRSYEAAASALQIAAHTAFVAKSLQADISQAAQIINSDPSDAQQALRILNRTYDAASYLCDAAFDEVRMSACAMGSSTMGRRYLWLKDCKISPASKNKLTVAPFKGGTLFGGEVHKVIKKRGNK
+#=GC seq_cons                   AKoVVSHSLTTLGlEVuK..sQHDKI-ASE.SFPhHESILKVlEEEWQQlDRQLPSlAC+YPVSShEAspILSVPKVDDEILGFISEATPhuuhQAuSTESCsppLDLALCRuYEAAASALQIAsHTAFVAKuhQADISQAAQIlsSDPScspQALtILs+TYDAASYlC-AAFDEV+MuApsMGsuThGRRYLWLKDCKIs.ASKNKLsssPFKGGTLFGGEVpKVIKKRGNK

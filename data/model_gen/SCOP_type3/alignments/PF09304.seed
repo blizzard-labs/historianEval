@@ -1,0 +1,35 @@
+# STOCKHOLM 1.0
+#=GF ID   Cortex-I_coil
+#=GF AC   PF09304.14
+#=GF DE   Cortexillin I, coiled coil
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Sammut SJ;0000-0003-4472-904X
+#=GF SE   pdb_1d7m
+#=GF GA   26.20 26.20;
+#=GF TC   26.20 26.30;
+#=GF NC   26.10 26.00;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   10745004
+#=GF RT   The coiled-coil trigger site of the rod domain of cortexillin I
+#=GF RT   unveils a distinct network of interhelical and intrahelical salt
+#=GF RT   bridges. 
+#=GF RA   Burkhard P, Kammerer RA, Steinmetz MO, Bourenkov GP, Aebi U; 
+#=GF RL   Structure. 2000;8:223-230.
+#=GF DR   INTERPRO; IPR015383;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   Members of this family are predominantly found in the
+#=GF CC   actin-bundling protein Cortexillin I from Dictyostelium
+#=GF CC   discoideum. They adopt a structure consisting of an
+#=GF CC   18-heptad-repeat alpha-helical coiled-coil, and are a
+#=GF CC   prerequisite for the assembly of Cortexillin I [1].
+#=GF SQ   3
+#=GS CTXB_POLPP/235-341  AC Q9Y0T3.1
+#=GS CTXA_DICDI/231-337  AC Q54HG2.1
+#=GS CTXA_POLPP/231-337  AC Q9Y0T4.1
+CTXB_POLPP/235-341             KEEREALEASQNSLANKLASLEQSLEGEKTSQDELARQKKELEESLRLIRQQNEQRNQRIADIQSKIDDALRGIDDEKMAKLDLESRLSKTEKDKAILELKLAETLD
+CTXA_DICDI/231-337             KEEKARLESSKNEMANRLAGLENSLESEKVSREQLIKQKDQLNSLLASLESEGAEREKRLRELEAKLDETLKNLELEKLARMELEARLAKTEKDRAILELKLAEAID
+CTXA_POLPP/231-337             KEEKERLEASKSDLASKLAGLQNSLESEKLSREQLIKQKDELKSLLASLEGEAAEREKFLRELEAKLEEILKNLELERLARMELESRLSKMEKDKAILELKLAEAQD
+#=GC seq_cons                  KEEKERLEASKN-LANKLAGLENSLESEKlSREQLIKQKDELcSLLASLEuEuAEREKRLRELEAKLDEsLKNLELEKLARMELESRLSKTEKDKAILELKLAEAlD

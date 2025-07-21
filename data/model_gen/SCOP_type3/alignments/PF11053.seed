@@ -1,0 +1,32 @@
+# STOCKHOLM 1.0
+#=GF ID   DNA_Packaging
+#=GF AC   PF11053.12
+#=GF DE   Terminase DNA packaging enzyme
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF AU   Finn RD;0000-0001-8626-2148
+#=GF SE   PRODOM
+#=GF GA   25.00 25.00;
+#=GF TC   25.20 25.00;
+#=GF NC   24.50 24.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   9013596
+#=GF RT   Purification and characterization of the small subunit of phage
+#=GF RT   T4 terminase, gp16, required for DNA packaging. 
+#=GF RA   Lin H, Simon MN, Black LW; 
+#=GF RL   J Biol Chem. 1997;272:3495-3501.
+#=GF DR   INTERPRO; IPR020342;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   Phage T4 terminase functions in packaging concatemeric DNA. The
+#=GF CC   T4 terminase is composed of a large subunit, gp17 ad a small
+#=GF CC   subunit, gp16. The role of gp16 is not well characterised
+#=GF CC   however it is known that it binds to double-stranded DNA but not
+#=GF CC   single stranded DNA [1].
+#=GF SQ   2
+#=GS Q6WHF0_BPKVM/3-151  AC Q6WHF0.1
+#=GS TERS_BPT4/1-149     AC P17311.1
+Q6WHF0_BPKVM/3-151             Q..LQALTQVDGLDLPGAIEAPEPEEFQPPVIKEVESHPTERVKDLEADYATVRDNAHFQQQLLRMAALKAFENASMSDAPRMMEVFATLMTQMTNNNKQILDIQKQMKDITQQEI....ASPQGGGGGTVQSINAETA.VFVGNARDLLNEVG.SR
+TERS_BPT4/1-149                MEGLDINKLLDISDLPG.IDGEEIKVYEPLQLVEVKSNPQNRTPDLEDDYGVVRRNMHFQQQMLMDAAKIFLETAKNADSPRHMEVFATLMGQMTTTNREILKLHKDMKDITSEQVGTKGAVPTG.......QMNIQNATVFMGSPTELMDEIGDAY
+#=GC seq_cons                  ...Lph.p.lDh.DLPG.I-u.E.c.apP..lhEVcSpPppRs.DLEsDYusVRcNhHFQQQhLh.AAhhhhEsAp.uDuPRhMEVFATLMsQMTssN+pILclpKpMKDITpppl....AsPpG.......phNhpsA.VFhGssp-LhsElG.uh

@@ -1,0 +1,40 @@
+# STOCKHOLM 1.0
+#=GF ID   HDV_ag
+#=GF AC   PF01517.22
+#=GF DE   Hepatitis delta virus delta antigen
+#=GF AU   Bateman A;0000-0002-6982-4660
+#=GF SE   Pfam-B_808 (release 4.0)
+#=GF GA   27.00 27.00;
+#=GF TC   29.60 40.30;
+#=GF NC   26.20 25.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 -Z 75585367 --cpu 4 HMM pfamseq
+#=GF TP   Family
+#=GF WK   Hepatitis_D
+#=GF RN   [1]
+#=GF RM   8245865
+#=GF RT   Characterization of RNA-binding domains of hepatitis delta
+#=GF RT   antigen. 
+#=GF RA   Poisson F, Roingeard P, Baillou A, Dubois F, Bonelli F, Calogero
+#=GF RA   RA, Goudeau A; 
+#=GF RL   J Gen Virol 1993;74:2473-2478.
+#=GF RN   [2]
+#=GF RM   9687364
+#=GF RT   Structural basis of the oligomerization of hepatitis delta
+#=GF RT   antigen. 
+#=GF RA   Zuccola HJ, Rozzelle JE, Lemon SM, Erickson BW, Hogle JM; 
+#=GF RL   Structure 1998;6:821-830.
+#=GF DR   INTERPRO; IPR002506;
+#=GF DR   SCOP; 1a92; fa;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   The hepatitis delta virus (HDV) encodes a single protein, the
+#=GF CC   hepatitis delta antigen (HDAg).  The central region of this
+#=GF CC   protein has been shown to bind RNA [1].  Several interactions
+#=GF CC   are also mediated by a coiled-coil region at the N terminus of
+#=GF CC   the protein [2].
+#=GF SQ   2
+#=GS A0A386CB41_9VIRU/1-179  AC A0A386CB41.1
+#=GS LHDAG_HDVD3/1-174       AC P29996.2
+A0A386CB41_9VIRU/1-179             MENKEESQKKKRGREETLQKWVDDRKRKRELEEELEKLRKRIKDRERKNPWLGNLKGML...KQDSGGGQEKKKEAAEPMDTGESPKKKKKKDYEGLSFTPEEKQRHKRKCDLENKKKQLNAKGKQLTSQEEDELRNLQEEDKKRLLKKREERERR.....SGGVNLFGSASPSTSGGGNASSTQGL
+LHDAG_HDVD3/1-174                  M.SRPEGRKNRGGREEVLEQWVSGRKKLEELERDLRKVKKKIKKLEDEHPWLGNIKGILGKKDKDGEGAPPAKRARTDQMEVDSGPRKRPSRG....GFTDKERQDHRRRKALENKRKQLSAGGKNLSKEEEEELRRLTEED........ERRERRIAGPQVGGVNPLEGGTRGAPGGGFVPSMQGV
+#=GC seq_cons                      M.s+.EupKp+tGREEsLppWVssRK+hcELEc-LcKl+K+IKchEccpPWLGNlKGhL...cpDutGu..tK+tts-.M-sspuP+K+.p+s....uFTscE+QcH+R+psLENK+KQLsAtGKpLoppEE-ELRpLpEED........EcRERR.....sGGVN.htuuo.ussGGG.ssShQGl

@@ -1,0 +1,56 @@
+# STOCKHOLM 1.0
+#=GF ID   INCENP_N
+#=GF AC   PF12178.12
+#=GF DE   Chromosome passenger complex (CPC) protein INCENP N terminal
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2qfa
+#=GF GA   25.00 25.00;
+#=GF TC   26.00 25.50;
+#=GF NC   24.10 24.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF WK   INCENP
+#=GF RN   [1]
+#=GF RM   17956729
+#=GF RT   Structure of a Survivin-Borealin-INCENP core complex reveals how
+#=GF RT   chromosomal passengers travel together.
+#=GF RA   Jeyaprakash AA, Klein UR, Lindner D, Ebert J, Nigg EA, Conti E;
+#=GF RL   Cell. 2007;131:271-285.
+#=GF DR   INTERPRO; IPR022006;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This domain family is found in eukaryotes, and is approximately
+#=GF CC   40 amino acids in length. INCENP is a regulatory protein in the
+#=GF CC   chromosome passenger complex. It is involved in regulation of
+#=GF CC   the catalytic protein Aurora B. It performs this function in
+#=GF CC   association with two other proteins - Survivin and Borealin.
+#=GF CC   These proteins form a tight three-helical bundle. The N terminal
+#=GF CC   domain is the domain involved in formation of this three helical
+#=GF CC   bundle.
+#=GF SQ   12
+#=GS G3IK71_CRIGR/6-41   AC G3IK71.1
+#=GS G3VMA3_SARHA/31-66  AC G3VMA3.2
+#=GS E9PM67_HUMAN/6-41   AC E9PM67.1
+#=GS INCE_CHICK/5-40     AC P53352.1
+#=GS H9GPE2_ANOCA/5-40   AC H9GPE2.3
+#=GS G1NBZ2_MELGA/5-40   AC G1NBZ2.2
+#=GS U3I2R7_ANAPP/3-38   AC U3I2R7.2
+#=GS INCE_XENTR/5-40     AC Q0IHP2.1
+#=GS W5MJ86_LEPOC/2-37   AC W5MJ86.1
+#=GS G3NPY2_GASAC/5-40   AC G3NPY2.1
+#=GS M3ZNV2_XIPMA/6-41   AC M3ZNV2.2
+#=GS H3DF80_TETNG/6-41   AC H3DF80.1
+G3IK71_CRIGR/6-41              PGPIHLLDLCDQKLLDFVCNIDNKDLMWLKEIEEEA
+G3VMA3_SARHA/31-66             MGSASILDLCGTKLMEFMCNVENKDMVWLQEIKEEA
+E9PM67_HUMAN/6-41              PGPIHLLELCDQKLMEFLCNMDNKDLVWLEEIQEEA
+INCE_CHICK/5-40                TGLARLPVVCNQRLAELLRQVDDVDLLWLEEIHEEA
+H9GPE2_ANOCA/5-40              RGPTHLLDVCNQKFSEFLFSAEYKYLVWLREIEEEA
+G1NBZ2_MELGA/5-40              DGPTQLLEVCGQRLSRFLHDAEHKHLAWLREVEEQG
+U3I2R7_ANAPP/3-38              EGPWRLLEVCEQRFSQFLHSAQHKHLAWLREVEEQG
+INCE_XENTR/5-40                ECLSHLLQVCARKTEEFVRTLDSKHMVWLLEIEEEA
+W5MJ86_LEPOC/2-37              SSTDALLQVFQGKLRDFEEEVDSKHMVWLKEIEQEA
+G3NPY2_GASAC/5-40              SSVRSLMQLFDGKAQEFTNDIITVHMVWLEEIQQEA
+M3ZNV2_XIPMA/6-41              PSVRSLTEMFVGKTQEFINEIENVHMVWLEEIQQEA
+H3DF80_TETNG/6-41              SSMQSLREMFVGKTQEFIDEITNVHLVWLDEIQQEA
+#=GC seq_cons                  sustpLL-lCspKhpEFlpsl-sKahVWLcEIcEEA

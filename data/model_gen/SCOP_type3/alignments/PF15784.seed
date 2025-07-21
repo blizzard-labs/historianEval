@@ -1,0 +1,45 @@
+# STOCKHOLM 1.0
+#=GF ID   GPS2_interact
+#=GF AC   PF15784.9
+#=GF DE   G-protein pathway suppressor 2-interacting domain
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   Jackhmmer:Q9H4R4
+#=GF GA   27.00 27.00;
+#=GF TC   27.50 27.90;
+#=GF NC   26.70 26.00;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   11931768
+#=GF RT   The N-CoR-HDAC3 nuclear receptor corepressor complex inhibits
+#=GF RT   the JNK pathway through the integral subunit GPS2.
+#=GF RA   Zhang J, Kalkum M, Chait BT, Roeder RG;
+#=GF RL   Mol Cell. 2002;9:611-623.
+#=GF DR   INTERPRO; IPR031557;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   GPS2_interact is the more N-terminal domain of two co-repressor
+#=GF CC   protein-families found in vertebrates. The domain is found in
+#=GF CC   NCoR and SMRT proteins; N-CoR (nuclear receptor co-repressor)
+#=GF CC   and SMRT (silencing mediator for retinoid and thyroid receptors)
+#=GF CC   are related corepressors that mediate transcriptional repression
+#=GF CC   by unliganded nuclear receptors and other classes of
+#=GF CC   transcriptional repressors. GPS2 is a stoichiometric subunit of
+#=GF CC   the N-CoR-HDAC3 complex. GPS2 links the complex to membrane
+#=GF CC   receptor-related intracellular JNK (c-Jun amino-terminal kinase)
+#=GF CC   signalling pathways [1].
+#=GF SQ   7
+#=GS E2AKE2_CAMFO/133-221      AC E2AKE2.1
+#=GS T1L2V3_TETUR/11-101       AC T1L2V3.1
+#=GS T1HM63_RHOPR/220-306      AC T1HM63.1
+#=GS E7EVU5_HUMAN/149-238      AC E7EVU5.1
+#=GS F7DM20_MACMU/141-229      AC F7DM20.3
+#=GS H7C1Y3_HUMAN/62-150       AC H7C1Y3.1
+#=GS A0A8M1N2Z2_DANRE/140-228  AC A0A8M1N2Z2.1
+E2AKE2_CAMFO/133-221                 YTPQTEAISPTLPE.PNTQEDAL...RSTKDELLQQIGKVDREIAKRENQLNMLRKRIKELEEAANKPLEATGLKRNIEEQSQQPKHQSLAQK
+T1L2V3_TETUR/11-101                  YYPGVEAISPALPS.EESQPDYSSTFRTSKDELLQNIDKIDREISQTETQISELKERKKQLELKAVSRDSVKDVRENVDNS.SETRQLSIAQH
+T1HM63_RHOPR/220-306                 YNPQVEAISPTLPT.DAAALQEDANFRSTKDDLLHGISKVDREITKTELQISKLKKKQQELEQAAKKPAIKQEEEEIPQPK.....HHSPAQK
+E7EVU5_HUMAN/149-238                 FGGKHEAPSSPISGQPCGDDQNASPSKLSKEELIQSMDRVDREIAKVEQQILKLKKKQQQLEEEAAKP...PEPEKPVSPPPVEQKHRSIVQI
+F7DM20_MACMU/141-229                 LTGKLEPVSPPSPP.HTDPELELVPPRLSKEELIQNMDRVDREITMVEQQISKLKKKQQQLEEEAAKP...PEPEKPVSPPPIESKHRSLVQI
+A0A8M1N2Z2_DANRE/140-228             SIGKIEPISPVSPV.PMEADLDLVPSRLSKEELIQNMDRVDREITMVEQQISKLRKKQQQLEEEAAKP...QEPERTISPPPSEAKHRSLVQI
+#=GC seq_cons                        hssplEslSPs.Ps..sss-.phss.RhSK-ELlQshD+VDREIohsEpQISKLKKKQQQLEEcAsKP....EsE+slsPss.EsKH+SlsQh

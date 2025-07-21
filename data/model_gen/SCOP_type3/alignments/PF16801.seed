@@ -1,0 +1,36 @@
+# STOCKHOLM 1.0
+#=GF ID   MSL1_dimer
+#=GF AC   PF16801.9
+#=GF DE   Dimerisation domain of Male-specific-Lethal 1
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_4b7y_A
+#=GF GA   25.00 25.00;
+#=GF TC   26.00 27.30;
+#=GF NC   21.90 24.90;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -E 1000 -Z 75585367 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   23084835
+#=GF RT   Msl1-mediated dimerization of the dosage compensation complex is
+#=GF RT   essential for male X-chromosome regulation in Drosophila.
+#=GF RA   Hallacli E, Lipp M, Georgiev P, Spielman C, Cusack S, Akhtar A,
+#=GF RA   Kadlec J;
+#=GF RL   Mol Cell. 2012;48:587-600.
+#=GF DR   INTERPRO; IPR031840;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   MSL1_dimer is the short coiled dimerisation domain of higher
+#=GF CC   eukaryotic MSL1, part of the MSL or Male-Specific Lethal
+#=GF CC   complex. This complex regulates the dosage compensation of the
+#=GF CC   male X chromosome in Drosophila and other eukaryotes. The
+#=GF CC   structure of the MSL1/MSL2 core shows that two MSL2 subunits
+#=GF CC   bind to a dimer formed by two molecules of MSL1. MSL11 is a
+#=GF CC   substrate for MSL2 E3 ubiquitin ligase activity [1].
+#=GF SQ   3
+#=GS W5L8X9_ASTMX/176-212  AC W5L8X9.2
+#=GS MSL1_DANRE/168-203    AC A9JRX0.1
+#=GS H3AKQ8_LATCH/16-52    AC H3AKQ8.1
+W5L8X9_ASTMX/176-212             HAATQTSCFRQILLLQLELIEQQQQQLQNKNKEIDDL
+MSL1_DANRE/168-203               .VDPQTSCIRQILLLQLELIEQQQKHLHNKNKEIEDL
+H3AKQ8_LATCH/16-52               HNSNQTACLKQILLLQLDLIEQQQQQLQAKEKEIDEL
+#=GC seq_cons                    HsusQTSClRQILLLQLELIEQQQQQLQNKNKEIDDL

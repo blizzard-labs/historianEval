@@ -1,0 +1,38 @@
+# STOCKHOLM 1.0
+#=GF ID   VGPC1_C
+#=GF AC   PF16799.9
+#=GF DE   C-terminal membrane-localisation domain of ion-channel, VCN1
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_3a2a
+#=GF GA   28.90 28.90;
+#=GF TC   30.30 29.40;
+#=GF NC   28.20 26.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   20147290
+#=GF RT   The role and structure of the carboxyl-terminal domain of the
+#=GF RT   human voltage-gated proton channel Hv1.
+#=GF RA   Li SJ, Zhao Q, Zhou Q, Unno H, Zhai Y, Sun F;
+#=GF RL   J Biol Chem. 2010;285:12047-12054.
+#=GF DR   INTERPRO; IPR031844;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   VCN1_C is the short C-terminal region of voltage-gated proton
+#=GF CC   channel 1 proteins in higher eukaryotes. The domain is necessary
+#=GF CC   for achieving the dimeric architecture, two monomers form a
+#=GF CC   dimer via parallel alpha-helical coiled-coil interaction. but it
+#=GF CC   is also essential for localising the protein to an intracellular
+#=GF CC   membrane [1].
+#=GF SQ   5
+#=GS G3WKU7_SARHA/222-266  AC G3WKU7.2
+#=GS F7FMV2_ORNAN/194-238  AC F7FMV2.2
+#=GS U3K331_FICAL/189-236  AC U3K331.1
+#=GS K7BGS6_PANTR/226-273  AC K7BGS6.1
+#=GS L9KSS9_TUPCH/568-618  AC L9KSS9.1
+G3WKU7_SARHA/222-266             RQLSRLRLINHQLATKIQHLEFSCNEKEQEIE...RLNKLLKDNGLL...E
+F7FMV2_ORNAN/194-238             QQLSRLRQANLQLVAKVQHLEFSCNEKEQEIE...RLNALLKQHGLI...N
+U3K331_FICAL/189-236             QQVSKLKQANLKLATRVEQLEHSCLEKEQEIE...RLNNILKQHGLLIQQK
+K7BGS6_PANTR/226-273             RQLLRLKQMNVQLAAKIQHLEFSCSEKEQEIE...RLNKLLRQHGLLGEVN
+L9KSS9_TUPCH/568-618             QQLLRLKQMNIQLAAKIQHLEFSCSEKGSLSDCHIPLMKLKSSIGLLLQQE
+#=GC seq_cons                    QQLSRLKQhNlQLAAKIQHLEFSCsEKEQEIE...RLNKLLKQHGLLhp.c

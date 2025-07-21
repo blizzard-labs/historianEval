@@ -1,0 +1,57 @@
+# STOCKHOLM 1.0
+#=GF ID   LRS4
+#=GF AC   PF10422.13
+#=GF DE   Monopolin complex subunit LRS4
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Wood V;0000-0001-6330-7526
+#=GF SE   Pfam-B_63451 (release 22.0)
+#=GF GA   24.20 24.20;
+#=GF TC   24.40 24.30;
+#=GF NC   24.00 23.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   11163190
+#=GF RT   Functional genomics identifies monopolin: a kinetochore protein
+#=GF RT   required for segregation of homologs during meiosis i. 
+#=GF RA   Toth A, Rabitsch KP, Galova M, Schleiffer A, Buonomo SB, Nasmyth
+#=GF RA   K; 
+#=GF RL   Cell. 2000;103:1155-1168.
+#=GF RN   [2]
+#=GF RM   17627824
+#=GF RT   The kinetochore proteins Pcs1 and Mde4 and heterochromatin are
+#=GF RT   required to prevent merotelic orientation. 
+#=GF RA   Gregan J, Riedel CG, Pidoux AL, Katou Y, Rumpf C, Schleiffer A,
+#=GF RA   Kearsey SE, Shirahige K, Allshire RC, Nasmyth K; 
+#=GF RL   Curr Biol. 2007;17:1190-1200.
+#=GF RN   [3]
+#=GF RM   12689592
+#=GF RT   Kinetochore recruitment of two nucleolar proteins is required
+#=GF RT   for homolog segregation in meiosis I. 
+#=GF RA   Rabitsch KP, Petronczki M, Javerzat JP, Genier S, Chwalla B,
+#=GF RA   Schleiffer A, Tanaka TU, Nasmyth K; 
+#=GF RL   Dev Cell. 2003;4:535-548.
+#=GF DR   INTERPRO; IPR018479;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   Monopolin is a protein complex, originally identified in
+#=GF CC   Saccharomyces cerevisiae, that is required for the segregation
+#=GF CC   of homologous centromeres to opposite poles of a dividing cell
+#=GF CC   during meiosis I [1][3]. The orthologous complex in
+#=GF CC   Schizosaccharomyces pombe is not required for meiosis I
+#=GF CC   chromosome segregation, but is proposed to play a similar
+#=GF CC   physiological role in clamping microtubule binding sites [2]. 
+#=GF CC   In S .cerevisiae this subunit is called LRS4, and in S. pombe it
+#=GF CC   is known as Mde4.
+#=GF SQ   5
+#=GS Q756D8_ASHGO/5-193  AC Q756D8.2
+#=GS Q6CWV4_KLULA/5-164  AC Q6CWV4.1
+#=GS Q6FNM3_CANGA/3-212  AC Q6FNM3.1
+#=GS LRS4_YEAST/5-232    AC Q04087.1
+#=GS MDE4_SCHPO/1-408    AC O43068.1
+Q756D8_ASHGO/5-193             LQLLADYYESVIRCEEI...........YIEF..............ISGLGPNKTKSGQQS.............GSVATEETISLKKQ.......................IEQLVSDSVKQRQEIE......................KLRELNKTQRAV......................LESKLETAKKQVA........RATGSANAGGARADDGGAAQEEGGAG.................FHLLSP....LRRGGRR.............................ASGGGAGAR...............AGLRLALDAGNETIF........DG.................................ADEDTEAVLGVEAVAGAGVRAREVGRALRCTGE
+Q6CWV4_KLULA/5-164             LQLVAEYYQSVIKCEKI...................................FRTNAKQND...........LSGLMLTRENISLRNQ.......................VQQLTLDLQLKKEELD......................NAKKLHKTQKAL......................LESKLENAKAAVK........KQTTQSSESG........SEEIERVK.................FHLLSP....IQNERSK.................................SFEKQ..............PSRLRQVIDRNQATLFD.......DE.................................TDDTANRTDDVLF...........LNSLKPNND
+Q6FNM3_CANGA/3-212             LQVVADYYRCVLENERI...........YYEYQLNRRETVKNSRSEDEFSGSERTNALK...................TDEQLQLQRQ.......................VNKLTVDLQSMAHENE......................RLREFQKTQKQI......................LESKIQQLKKTVDSFK.....NERNSSSSSHVRTPP.....RQTRSGAYTQGKDTDL..SRRGGFHLLSP....IVGNVNP.................................GKEKA...............GGLKETLKVGRNTIFDKNSSLLDDD.................................DDDDDDEINGTSVKERSRVTGRK....LRSSSS
+LRS4_YEAST/5-232               LQLLSNYYKAKLDSERI...........YNEY..........VQSQYEFASLDKLNNNKGD.............PKKVVDETLFLQRQ.......................IAQLNKQLQLSFQENE......................KLLSVQKNQKAL......................YQSKLSSKDAFIDDLKLKLKVEQISVDKHNKERTPSTGRDEQQRNSKAAHTSKPT.........IHLLSP....IVNRDKPNNQTNDRGGNDP.................DSPTSQRRS...............RGLRSLLSSGKNTIFDSISKNLDDE.................................INENAHIRNDTTSSKIAGKSPSR.LSALQKSPE
+MDE4_SCHPO/1-408               MSTISTSTDSKLDNLGLSVTSRRNQILFYLSKALNLAHLLRSDSLQKSFLDALKQSATDSELLHKNLDEIKFLQNEKLNNEKLLEQEQNEANDYRLKVERLEHKISDYVQEINSLNSQLQIQKSNPEKHEDAVSQNRLRGSLDTVSSPSKTHKANKDEKATRLHLIIANLKKALKEKDAEVLNLQSHVSSKESELDRFKIKLETEESNWKVRLQVLESKLATQDRKLRMQKKSTERKSLLVSPRVSSPKLFSPSKQAIMGTRQPNATSGSPLSVTPFLQKTSTSIGLSSSPPQSSPSAQSSQPFSRDKYPHSMTVSPSNARYLKKHLDDTIPSNVSDINHNDHLKIPQSPSSLSPSKIPIRKKRKLKDTVSNCEFTEEDSESSFLLETIQPTKSTLRRSISPLKKRND
+#=GC seq_cons                  LQLlA-YYcSVL-sE+I...........YhEa..........sp.phpFhuspKTNAscs-.............sphlT-EsLpLQ+Q.......................IsQLssDLQlp+pEsE......................KL+clpKTQKAl......................LESKLpotKupVDphK.....cpossuscupsRssshuts-cppRupthppt+.o.........FHLLSP....IhsscpP.............................sSssupc+p...............uGLRplLcsGcsTIFDp.Sp..cD-.................................sDEDu-pssslpshphutsosR+.lsuL+sos-

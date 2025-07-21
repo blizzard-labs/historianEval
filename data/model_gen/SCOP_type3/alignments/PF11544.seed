@@ -1,0 +1,38 @@
+# STOCKHOLM 1.0
+#=GF ID   Spc42p
+#=GF AC   PF11544.12
+#=GF DE   Spindle pole body component Spc42p
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_2q6q
+#=GF GA   25.60 25.60;
+#=GF TC   25.80 25.90;
+#=GF NC   25.20 25.50;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   9215630
+#=GF RT   The yeast spindle pole body is assembled around a central
+#=GF RT   crystal of Spc42p.
+#=GF RA   Bullitt E, Rout MP, Kilmartin JV, Akey CW;
+#=GF RL   Cell. 1997;89:1077-1086.
+#=GF DR   INTERPRO; IPR021611;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   Spc42p is a 42-kD component of the S.cerevisiae spindle body
+#=GF CC   that localises to the electron dense central region of the SPB
+#=GF CC   [1].Spc42p is a phosphoprotein which forms a polymeric layer at
+#=GF CC   the periphery of the SPB central plaque. This functions during
+#=GF CC   SPB duplication and also facilitates the attachment of the SPB
+#=GF CC   to the nuclear membrane [1].
+#=GF SQ   5
+#=GS SPC42_CANGA/77-149   AC Q6FLP6.1
+#=GS SPC42_KLULA/35-108   AC Q6CL89.1
+#=GS SPC42_VANPO/71-145   AC A7TQU0.1
+#=GS SPC42_ASHGO/56-129   AC Q75DH2.1
+#=GS G8ZQ87_TORDC/53-122  AC G8ZQ87.1
+SPC42_CANGA/77-149              NDLISQNKELQTTVHTQREEIERLNIIIGQFRAKLTKYSVMNRKLE.DELRGSERSSNALNKDRNDDRNDSILE...
+SPC42_KLULA/35-108              NELIKQNKDLHKQVTEKQEEIDRLNVLIGSFRAKLIKYTELNKKMQRDQQEQQHNRHQSFES.KPRYKAEFTSES..
+SPC42_VANPO/71-145              NRLIKQNKELNNKLNSKQDEINRLNSLVGSLRAKLIKYTELNKKLN.SDLQNFQNSEIINNS.ITEDVNDYIQVPKK
+SPC42_ASHGO/56-129              SSLIKQNKDLLAKLDEKDRELEKLNVLVGSLRGKLIKYTELNKKLQ.AQ.AQAARVPSPPEP.AAEPAADYLQLPRR
+G8ZQ87_TORDC/53-122             NRLIKQNKELILKLDGKQEEIDRLNILVGSLRGKLIKYTEMNKKLE.TE.....SRVSSGTT.TTENEQDYIQVPKR
+#=GC seq_cons                   NcLIKQNKELpsKLcsKQEEI-RLNlLVGSLRAKLIKYTELNKKLp.s-.pptpssssusso.psEscsDYIQlP++

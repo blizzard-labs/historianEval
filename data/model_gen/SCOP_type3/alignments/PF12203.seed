@@ -1,0 +1,52 @@
+# STOCKHOLM 1.0
+#=GF ID   HDAC4_Gln
+#=GF AC   PF12203.12
+#=GF DE   Glutamine rich N terminal domain of histone deacetylase 4
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2o94
+#=GF GA   25.00 25.00;
+#=GF TC   25.00 25.00;
+#=GF NC   24.60 24.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   17360518
+#=GF RT   Crystal structure of a conserved N-terminal domain of histone
+#=GF RT   deacetylase 4 reveals functional insights into glutamine-rich
+#=GF RT   domains.
+#=GF RA   Guo L, Han A, Bates DL, Cao J, Chen L;
+#=GF RL   Proc Natl Acad Sci U S A. 2007;104:4297-4302.
+#=GF DR   INTERPRO; IPR024643;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   This domain is found in eukaryotes, and is approximately 90
+#=GF CC   amino acids in length. The family is found in association with
+#=GF CC   Pfam:PF00850. The domain forms an alpha helix which complexes to
+#=GF CC   form a tetramer. The glutamine rich domains have many intra- and
+#=GF CC   inter-helical interactions which are thought to be involved in
+#=GF CC   reversible assembly and disassembly of proteins. The domain is
+#=GF CC   part of histone deacetylase 4 (HDAC4) which removes acetyl
+#=GF CC   groups from histones. This restores their positive charge to
+#=GF CC   allow stronger DNA binding thus restricting transcriptional
+#=GF CC   activity.
+#=GF SQ   9
+#=GS H3D919_TETNG/28-116  AC H3D919.1
+#=GS B7ZDF4_MOUSE/26-114  AC B7ZDF4.1
+#=GS H3B8Y5_LATCH/49-150  AC H3B8Y5.1
+#=GS C9IZS0_HUMAN/37-127  AC C9IZS0.2
+#=GS I3J443_ORENI/66-161  AC I3J443.1
+#=GS W5L1S7_ASTMX/36-126  AC W5L1S7.2
+#=GS U3I9T4_ANAPP/77-163  AC U3I9T4.2
+#=GS G3T6K8_LOXAF/34-116  AC G3T6K8.1
+#=GS C9J481_HUMAN/31-121  AC C9J481.1
+H3D919_TETNG/28-116             VDTTMREQQLQQELVLLKQQQELQKQMLFAEFQKKHEVLTRQHEVQLQEHLKQ....QQELLA.........AKRQQE.LEQKRKLEQQ.....RHE.EQEKHRLEQQL
+B7ZDF4_MOUSE/26-114             MDPALREQQLQQELLVLKQQQQLQKQLLFAEFQKQHDHLTRQHEVQLQKHLKQ....QQEMLA.........AKRQQE.LEQQRQREQQ.....RQE.ELEKQRLEQQL
+H3B8Y5_LATCH/49-150             VDPLFREQQLQHELLILKQQQQMQKQLLFAEFQKQHEHLTRQHEVQLQEHIKQIASPHQIFHVVYMCPLSSFMKRQQE.LEQQQKLEQQ.....RQE.ELEKQRLEQQL
+C9IZS0_HUMAN/37-127             VDPVVREKQLQQELLLIQQQQQIQKQLLIAEFQKQHENLTRQHQAQLQEHIKL....QQELLA.........IKQQQELLEKEQKLEQQ.....RQEQEVERHRREQQL
+I3J443_ORENI/66-161             SDPGLWERQLQQELLLIQKQQQIQKQLLISEFQKQHEKLTRQHQAQLQEHLKL....QQELQA.........MKQQQELAEKERRLEQQQQQQSQQEKEQEKHRREHHI
+W5L1S7_ASTMX/36-126             VDSSLQDQQLQQELLSLKHKQQVQRQLLIAEFQRQHEQLSRQHEAQLQEHIKH....QQDLLA.........LQHQQELLEHHRKMEKH.....RVEQELEKQQREQKL
+U3I9T4_ANAPP/77-163             TEPTLREQQLQQELLALKQKQQIQRQILIAEFQRQHEQLSRQHEAQLHEHIKQ....QQEMLA.........MKHQQELLEHQRKLEQH.....RQEQELEKQHR....
+G3T6K8_LOXAF/34-116             AEPALREQQLQQELLALKQKQQLQRQILIAEFQRQHEQLSRQHEAQLHEHVKQ....NEKL............THEQTRCIHQRNMRKG.....VEDRECSRGH.....
+C9J481_HUMAN/31-121             AEPALREQQLQQELLALKQKQQIQRQILIAEFQRQHEQLSRQHEAQLHEHIKQ....QQEMLA.........MKHQQELLEHQRKLERH.....RQEQELEKQHREQKL
+#=GC seq_cons                   sDPsLREQQLQQELLhLKQpQQlQ+QlLIAEFQ+QHEpLoRQHEAQLQEHlKQ....QQEhLA.........hK+QQEhLE+pRKLEQp.....RQEpElEKp+hEQpL

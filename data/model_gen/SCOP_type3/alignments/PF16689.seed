@@ -1,0 +1,36 @@
+# STOCKHOLM 1.0
+#=GF ID   APC_N_CC
+#=GF AC   PF16689.9
+#=GF DE   Coiled-coil N-terminus of APC, dimerisation domain
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_1deb
+#=GF GA   27.40 27.40;
+#=GF TC   27.50 34.00;
+#=GF NC   27.20 27.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 --cpu 4 -E 1000 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   10926498
+#=GF RT   Crystal structure of the amino-terminal coiled-coil domain of
+#=GF RT   the APC tumor suppressor.
+#=GF RA   Day CL, Alber T;
+#=GF RL   J Mol Biol. 2000;301:147-156.
+#=GF DR   INTERPRO; IPR032038;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   APC_N_CC is the N-terminal, coiled-coil dimerisation domain of
+#=GF CC   the adenomatosis polyposis coli (APC) tumour-repressor proteins.
+#=GF CC   It plays a key role in the regulation of cellular levels of the
+#=GF CC   oncogene product beta-catenin. Coiled-coil regions are binding
+#=GF CC   repeats that in this case bind to the armadillo repeat region of
+#=GF CC   beta-catenin [1].
+#=GF SQ   4
+#=GS F6YFA6_CIOIN/59-110  AC F6YFA6.2
+#=GS D6RFL6_HUMAN/4-55    AC D6RFL6.1
+#=GS D3YYQ9_MOUSE/6-57    AC D3YYQ9.1
+#=GS W5PQM7_SHEEP/6-56    AC W5PQM7.1
+F6YFA6_CIOIN/59-110             SRYDQLLQQVECLKLENTTLKKELSNNSSQISKLESEALNLKEMVVMLGNSI
+D6RFL6_HUMAN/4-55               ASYDQLLKQVEALKMENSNLRQELEDNSNHLTKLETEASNMKEVLKQLQGSI
+D3YYQ9_MOUSE/6-57               ASYEQLVRQVEALKAENTHLRQELRDNSSHLSKLETETSGMKEVLKHLQGKL
+W5PQM7_SHEEP/6-56               AAYEQLVRQGEALPRTAT.WRQELRDNSSHLSKLETETSGMKAVLQHLQGKL
+#=GC seq_cons                   AuY-QLl+QVEALKhENTpLRQELcDNSSHLSKLETEsSsMKEVLppLQGpl

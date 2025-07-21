@@ -1,0 +1,44 @@
+# STOCKHOLM 1.0
+#=GF ID   COMP
+#=GF AC   PF11598.12
+#=GF DE   Cartilage oligomeric matrix protein
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_1fbm
+#=GF GA   23.90 23.90;
+#=GF TC   23.90 23.90;
+#=GF NC   23.80 23.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   9736606
+#=GF RT   All-trans retinol, vitamin D and other hydrophobic compounds
+#=GF RT   bind in the axial pore of the five-stranded coiled-coil domain
+#=GF RT   of cartilage oligomeric matrix protein. 
+#=GF RA   Guo Y, Bozic D, Malashkevich VN, Kammerer RA, Schulthess T,
+#=GF RA   Engel J; 
+#=GF RL   EMBO J. 1998;17:5265-5272.
+#=GF DR   INTERPRO; IPR024665;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   This family of proteins represents the five-stranded coiled-coil
+#=GF CC   domain of cartilage oligomeric matrix protein (COMP). This
+#=GF CC   region has a binding site between two internal rings formed by
+#=GF CC   Leu37 and Thr40 [1]
+#=GF SQ   8
+#=GS F6TNY6_CIOIN/233-275  AC F6TNY6.2
+#=GS Q7QK54_ANOGA/252-296  AC Q7QK54.5
+#=GS Q9VM97_DROME/243-287  AC Q9VM97.2
+#=GS TSP4B_DANRE/221-265   AC Q8JGW0.1
+#=GS TSP4_HUMAN/218-262    AC P35443.2
+#=GS Q08D10_XENTR/216-260  AC Q08D10.1
+#=GS F6T2M3_CIOIN/234-278  AC F6T2M3.2
+#=GS TSP3_HUMAN/226-270    AC P49746.1
+F6TNY6_CIOIN/233-275             ..VSELIVQLSDLTSVLQDIHHEMKEQILEARALRTTIQQCTLCK
+Q7QK54_ANOGA/252-296             DCDENILKLLGELMKLVKELKEEVKGQRHEINYLRGLIENCAGCQ
+Q9VM97_DROME/243-287             DCEDALARSLSDLLALVKLLREDVAHQRQEIAYLRMLLENCAGCK
+TSP4B_DANRE/221-265              LNTKQLTTQMLELTKVINELKDVLIQQVKETSFLRNTISECQACG
+TSP4_HUMAN/218-262               DFNRQFLGQMTQLNQLLGEVKDLLRQQVKETSFLRNTIAECQACG
+Q08D10_XENTR/216-260             DVSRQLIGQITQMNQLLGELRDVMRQQVKETMFLRNTISECQACG
+F6T2M3_CIOIN/234-278             DVATVLAAQLLQFTRMMTSLKTDMRHMAQETALLRQTIIRCHACG
+TSP3_HUMAN/226-270               EQTKALVTQLTLFNQILVELRDDIRDQVKEMSLIRNTIMECQVCG
+#=GC seq_cons                    DsscpLlsQLopLspllsEL+--l+pQl+EsuaLRsTIpcCpuCG

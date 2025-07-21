@@ -1,0 +1,51 @@
+# STOCKHOLM 1.0
+#=GF ID   P66_CC
+#=GF AC   PF16563.9
+#=GF DE   Coiled-coil and interaction region of P66A and P66B with MBD2
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_2l2l
+#=GF GA   26.40 26.40;
+#=GF TC   26.40 26.40;
+#=GF NC   26.30 26.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   21490301
+#=GF RT   p66Alpha-MBD2 coiled-coil interaction and recruitment of Mi-2
+#=GF RT   are critical for globin gene silencing by the MBD2-NuRD complex.
+#=GF RA   Gnanapragasam MN, Scarsdale JN, Amaya ML, Webb HD, Desai MA,
+#=GF RA   Walavalkar NM, Wang SZ, Zu Zhu S, Ginder GD, Williams DC Jr;
+#=GF RL   Proc Natl Acad Sci U S A. 2011;108:7487-7492.
+#=GF DR   INTERPRO; IPR032346;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   This family is a short coiled-coil interaction region on the
+#=GF CC   transcriptional repressors P66A and P66B. The P66A and B, or
+#=GF CC   alpha and beta, complex with MBDs or methyl-binding
+#=GF CC   domain-containing proteins via a coiled-coil region on each.
+#=GF CC   This P66-MBD2 complex forms part of an assembly with NuRD,
+#=GF CC   nucleosome remodelling and deacetylation protein.  MBD2-NuRD
+#=GF CC   binds methylated DNA and regulates transcription of eg, the
+#=GF CC   foetal beta-globin gene during development [1].
+#=GF SQ   10
+#=GS A0A1I7VQF7_LOALO/186-235  AC A0A1I7VQF7.1
+#=GS E0VAG1_PEDHC/197-239      AC E0VAG1.1
+#=GS D6WPN0_TRICA/106-149      AC D6WPN0.2
+#=GS B4QP88_DROSI/182-226      AC B4QP88.1
+#=GS W5JB16_ANODA/164-209      AC W5JB16.1
+#=GS H9H2H8_MELGA/46-89        AC H9H2H8.2
+#=GS W5K2N3_ASTMX/169-212      AC W5K2N3.1
+#=GS H2VAZ8_TAKRU/142-185      AC H2VAZ8.3
+#=GS B3S807_TRIAD/55-98        AC B3S807.1
+#=GS H9FW63_MACMU/136-179      AC H9FW63.1
+A0A1I7VQF7_LOALO/186-235             EQKKEREMMVKALEAELRREEAKLSMLRKLRISQQHSVKQIQEANIRKLT
+E0VAG1_PEDHC/197-239                 ADLNEKEKLLRKLREDLRNEEMKLVLLKKLRQSQ.......MKENIAILP
+D6WPN0_TRICA/106-149                 SELKQRDRGLRRLREDLRAEEMKLVLLKKLKQSQQ......LKENVAVLP
+B4QP88_DROSI/182-226                 AELKEREKSLRKLRQDLRNEETKLMLLKKLKQSQQ.....VMKENLVVTP
+W5JB16_ANODA/164-209                 AEIWERERGLRKLREELRSEETKLVLLKKLKQSQQV....MMKENLIVTP
+H9H2H8_MELGA/46-89                   KSIEERQQLIKQLRDELRLEEARLVLLKKLRQSQL......QKENVVQKT
+W5K2N3_ASTMX/169-212                 KSVAERQRVIKALREELRLEEARLVLLKKLRQSQL......QKENLSHKV
+H2VAZ8_TAKRU/142-185                 SSPEEREHTIKQLKEELRIQEAKLVLLKKLRQSQI......QKESSVQKT
+B3S807_TRIAD/55-98                   NTHSTKLDKINKLKEDLRHEEAKLLLLQLINQSQN......IKDSTNDRF
+H9FW63_MACMU/136-179                 SSPEERERMIKQLKEELRLEEAKLVLLKKLRQSQI......QKEATAQKP
+#=GC seq_cons                        uslcERE+hl+pLREELRtEEAKLVLLKKLRQSQ........KENlspps

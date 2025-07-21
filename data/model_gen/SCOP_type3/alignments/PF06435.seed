@@ -1,0 +1,35 @@
+# STOCKHOLM 1.0
+#=GF ID   DUF1079
+#=GF AC   PF06435.15
+#=GF DE   Repeat of unknown function (DUF1079)
+#=GF AU   Moxon SJ;0000-0003-4644-1816
+#=GF SE   Pfam-B_1911 (release 10.0)
+#=GF GA   27.00 27.00;
+#=GF TC   35.80 31.40;
+#=GF NC   20.30 18.10;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 -Z 75585367 --cpu 4 HMM pfamseq
+#=GF TP   Repeat
+#=GF WK   Domain_of_unknown_function
+#=GF RN   [1]
+#=GF RM   10671460
+#=GF RT   The UspA1 protein and a second type of UspA2 protein mediate
+#=GF RT   adherence of Moraxella catarrhalis to human epithelial cells in
+#=GF RT   vitro. 
+#=GF RA   Lafontaine ER, Cope LD, Aebi C, Latimer JL, McCracken GH Jr,
+#=GF RA   Hansen EJ; 
+#=GF RL   J Bacteriol 2000;182:1364-1373.
+#=GF DR   INTERPRO; IPR010494;
+#=GF DR   SO; 0001068; polypeptide_repeat;
+#=GF CC   This family consists of several repeats of 31 residues in length
+#=GF CC   and seems to be exclusive to Moraxella catarrhalis UspA
+#=GF CC   proteins. The UspA1 and UspA2 proteins of Moraxella catarrhalis
+#=GF CC   are structurally related and are exposed on the bacterial cell
+#=GF CC   surface where can function adhesins [1]. This family is commonly
+#=GF CC   found with the Pfam:PF03895 family.
+#=GF SQ   2
+#=GS D5VA98_MORCB/604-633  AC D5VA98.1
+#=GS D5VA98_MORCB/386-416  AC D5VA98.1
+D5VA98_MORCB/604-633             INNIYELAQQQDQHSSD.IKTLAKASAANTD
+D5VA98_MORCB/386-416             LADYNELQDQYAKKQTDAIDALNKASSENTQ
+#=GC seq_cons                    lssh.ELtpQ.sp+poD.IcsLsKASutNTp

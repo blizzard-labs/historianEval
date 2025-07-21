@@ -1,0 +1,45 @@
+# STOCKHOLM 1.0
+#=GF ID   HlyE
+#=GF AC   PF06109.17
+#=GF DE   Haemolysin E (HlyE)
+#=GF AU   Moxon SJ;0000-0003-4644-1816
+#=GF SE   Pfam-B_9001 (release 9.0)
+#=GF GA   25.00 25.00;
+#=GF TC   25.00 28.20;
+#=GF NC   24.50 24.90;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF WK   Haemolysin_E
+#=GF RN   [1]
+#=GF RM   10660049
+#=GF RT   E. coli hemolysin E (HlyE, ClyA, SheA): X-ray crystal structure
+#=GF RT   of the toxin and observation of membrane pores by electron
+#=GF RT   microscopy. 
+#=GF RA   Wallace AJ, Stillman TJ, Atkins A, Jamieson SJ, Bullough PA,
+#=GF RA   Green J, Artymiuk PJ; 
+#=GF RL   Cell 2000;100:265-276.
+#=GF DR   INTERPRO; IPR027018;
+#=GF DR   SCOP; 1qoy; fa;
+#=GF DR   TC; 1.C.10;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   This family consists of several enterobacterial haemolysin
+#=GF CC   (HlyE) proteins.Hemolysin E (HlyE) is a novel pore-forming toxin
+#=GF CC   of Escherichia coli, Salmonella typhi, and Shigella flexneri.
+#=GF CC   HlyE is unrelated to the well characterised pore-forming E. coli
+#=GF CC   hemolysins of the RTX family, haemolysin A (HlyA), and the
+#=GF CC   enterohaemolysin encoded by the plasmid borne ehxA gene of E.
+#=GF CC   coli 0157. However, it is evident that expression of HlyE in the
+#=GF CC   absence of the RTX toxins is sufficient to give a hemolytic
+#=GF CC   phenotype in E. coli. HlyE is a protein of 34 kDa that is
+#=GF CC   expressed during anaerobic growth of E. coli. Anaerobic
+#=GF CC   expression is controlled by the transcription factor, FNR, such
+#=GF CC   that, upon ingestion and entry into the anaerobic mammalian
+#=GF CC   intestine, HlyE is produced and may then contribute to the
+#=GF CC   colonisation of the host [1].
+#=GF SQ   2
+#=GS HLYE_ECOLI/4-293         AC P77335.4
+#=GS A0A7M7GHL1_NASVI/32-340  AC A0A7M7GHL1.1
+HLYE_ECOLI/4-293                    IVADKTVEVVKNAIETADGALDLYNKYLDQVIPWQTFDETIKELSRFKQEYSQAASVLVGDIKTLLMDSQDKYFEATQTVYEWCGVATQLLAAYILLFDEYNEKKASAQKDIL....IKVLDDGITKLNEAQKSLLVSSQSFNNASGKLLALDSQL...TNDFSEKSSY......FQSQVDKIRKEAYAGAAAGV...........VAGPFGLIISYSIA.....AGVVEGKLIPELKNKLKSVQNFFTTLSNTVKQANKDIDAAKLKLTTEIAAIGEIK..............TETETTRFYVDYDDLMLSLLKEAAKKMINTCNEYQKRHG
+A0A7M7GHL1_NASVI/32-340             I.........ERALKSLSNVVVKYKSEFDTRVKFHQLQEAIDAIDEAMLDYQGVAKNKLDQLRTLNSNARNTYQDCVGPVFEWCVSINSTFNIFIPFIS..DARLTEHDRDIIWNMTINTLRDGEKKTSNSLE.LLVLVQNKTAAVKNL..LDSMLHDIHDDFGPQGYYGMQKAALKNAIAEIQRARKALIIVGIIGLIFTAITAFVTGPIGLSLALATAFPPAIAAVVKGQRQATYEEQLQTIQAFFNILDDRINKASEIANQINLDLAEDKNNLHELAGLLSAADRNKQLLLTDSPTVR..........ALLVPSFRNLGNKCHEYAMWHG
+#=GC seq_cons                       I.........cpAlcohssslshYpp.hDphl.apphpEsIctlschh.-YptsApshlspl+TL..supspY.-sstsVaEWCsshsphhshaI.hhs..st+hsptp+DIl....IpsLcDG.pKhspu.c.LLV.sQshssAstpL..LDS.L...psDFu.pu.Y......hpstlscIp+tthAhhhsGl...........VsGPhGL.luhuhA.....AuVVcGph.sphcppLpolQsFFshLssplppAsc.hsthpLcLsp-hssltElt..............T-o.TsR..........uLLh.uh+phhNpCpEYthhHG

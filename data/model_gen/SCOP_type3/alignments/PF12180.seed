@@ -1,0 +1,49 @@
+# STOCKHOLM 1.0
+#=GF ID   EABR
+#=GF AC   PF12180.12
+#=GF DE   TSG101 and ALIX binding domain of CEP55
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_3e1r
+#=GF GA   25.00 25.00;
+#=GF TC   25.10 25.70;
+#=GF NC   24.90 24.60;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   18948538
+#=GF RT   Midbody targeting of the ESCRT machinery by a noncanonical
+#=GF RT   coiled coil in CEP55.
+#=GF RA   Lee HH, Elia N, Ghirlando R, Lippincott-Schwartz J, Hurley JH;
+#=GF RL   Science. 2008;322:576-580.
+#=GF DR   INTERPRO; IPR022008;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This domain family is found in eukaryotes, and is approximately
+#=GF CC   40 amino acids in length. This domain is the active domain of
+#=GF CC   CEP55. CEP55 is a protein involved in cytokinesis, specifically
+#=GF CC   in abscission of the plasma membrane at the midbody. To perform
+#=GF CC   this function, CEP55 complexes with ESCRT-I (by a Proline rich
+#=GF CC   sequence in its TSG101 domain) and ALIX. This is the domain on
+#=GF CC   CEP55 which binds to both TSG101 and ALIX. It also acts as a
+#=GF CC   hinge between the N and C termini. This domain is called EABR.
+#=GF SQ   9
+#=GS A0A8N7TE24_DANRE/230-263  AC A0A8N7TE24.1
+#=GS H3CNT2_TETNG/214-247      AC H3CNT2.1
+#=GS W5N7T9_LEPOC/255-288      AC W5N7T9.1
+#=GS TNIP2_MOUSE/215-248       AC Q99JG7.1
+#=GS D2H3D1_AILME/171-204      AC D2H3D1.1
+#=GS M4A0N2_XIPMA/165-197      AC M4A0N2.1
+#=GS I3KQ64_ORENI/146-179      AC I3KQ64.2
+#=GS CEP55_DANRE/164-197       AC Q502I3.1
+#=GS H0X6T2_OTOGA/236-269      AC H0X6T2.1
+A0A8N7TE24_DANRE/230-263             KKRVAYVESLNSKWQKYDSSREEYVRGLCQKLKE
+H3CNT2_TETNG/214-247                 KQRVAYVQSLNSQWQKYDSSREDYIRSLCHRPKE
+W5N7T9_LEPOC/255-288                 KQQVAYVENLNAKWQKYDSSREEFVKGLCQKLKQ
+TNIP2_MOUSE/215-248                  KQKVTHVEDLNAKWQRYDASRDEYVKGLHAQLKR
+D2H3D1_AILME/171-204                 EIQLKDALEKNQQWLVYDQQREAYVKGLLAKIFE
+M4A0N2_XIPMA/165-197                 D.QLKDALEKNQQWLVYDQQREVFVQSVVARTME
+I3KQ64_ORENI/146-179                 QIHLRDALEKNKQWLEYDQQREAYVRAILARMLW
+CEP55_DANRE/164-197                  QEQLRDALEKNQHWLVYDQQREAYVQGVLARIKD
+H0X6T2_OTOGA/236-269                 KQKVLHVEDLNAKWQRYDTSRDEYVREIHAQLRE
+#=GC seq_cons                        cppltcs.-hNppW.cYDppREtYV+ulhA+l+-

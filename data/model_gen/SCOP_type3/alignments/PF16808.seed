@@ -1,0 +1,37 @@
+# STOCKHOLM 1.0
+#=GF ID   PKcGMP_CC
+#=GF AC   PF16808.9
+#=GF DE   Coiled-coil N-terminus of cGMP-dependent protein kinase
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   pdb_1zxa
+#=GF GA   35.00 35.00;
+#=GF TC   35.00 35.00;
+#=GF NC   34.80 34.90;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 --cpu 4 -E 1000 HMM pfamseq
+#=GF TP   Coiled-coil
+#=GF RN   [1]
+#=GF RM   16131665
+#=GF RT   Rapid and accurate structure determination of coiled-coil
+#=GF RT   domains using NMR dipolar couplings: application to
+#=GF RT   cGMP-dependent protein kinase Ialpha.
+#=GF RA   Schnell JR, Zhou GP, Zweckstetter M, Rigby AC, Chou JJ;
+#=GF RL   Protein Sci. 2005;14:2421-2428.
+#=GF DR   INTERPRO; IPR031831;
+#=GF DR   SO; 0001080; coiled_coil;
+#=GF CC   PKcGMP_CC is the N-terminal coiled-coil, dimerisation, domain of
+#=GF CC   cGMP-protein kinases [1].
+#=GF SQ   6
+#=GS E0VGP0_PEDHC/59-93    AC E0VGP0.1
+#=GS E2ASN5_CAMFO/141-175  AC E2ASN5.1
+#=GS H0Z3X6_TAEGU/16-50    AC H0Z3X6.2
+#=GS H2YVX2_CIOSA/10-44    AC H2YVX2.1
+#=GS H2LPG6_ORYLA/10-44    AC H2LPG6.2
+#=GS L5JNH1_PTEAL/10-44    AC L5JNH1.1
+E0VGP0_PEDHC/59-93               TILSMKDERIRELENQINLQEKEINELRSQLDKFQ
+E2ASN5_CAMFO/141-175             DLLHAKDERIAELEAAVCCRDAEIQELRSHLDKFL
+H0Z3X6_TAEGU/16-50               EELRQRDALIDELELELDQKDELIQKLQNELDKYR
+H2YVX2_CIOSA/10-44               HKVLLKDERIRELECMLAEKDEEIEELKAKLDKFQ
+H2LPG6_ORYLA/10-44               KILLLKEERIRDLERRLADREDEIQELKRKLHKCQ
+L5JNH1_PTEAL/10-44               KILMLKEERIKELEKRLSEKEEEIQELKRKLHKCQ
+#=GC seq_cons                    clLhhKDERI+ELEppLsp+--EIQEL+s+LDKaQ
