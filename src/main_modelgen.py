@@ -93,7 +93,7 @@ class modelConstructor:
         elif self.operate == "x86":
             m_path = "tools/"
         else:
-            mpath = "tools/modeltest-ng-static"
+            m_path = "tools/modeltest-ng-static"
                 
         cmd = [
             "python",
