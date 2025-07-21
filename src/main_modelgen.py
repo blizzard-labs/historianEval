@@ -6,7 +6,7 @@ import subprocess
 import logging
 import sys
 from pathlib import Path
-from Bio import Phylo, AlignIO
+from Bio import Phylo, AlignIO, SeqIO
 import utils.general as utils
 import model_gen_aa.clean_table
 import pandas as pd
@@ -56,7 +56,7 @@ class modelConstructor:
                 new_file_path = path_obj.with_suffix(".tree")
                 path_obj.rename(new_file_path)
     
-    def cleanup_pfam_data(self):
+    def cleanup_pfam_data(self, min_species=3):
         self.cleanup_trees()
         
         for file in os.listdir(self.alignment_folder):
@@ -64,6 +64,15 @@ class modelConstructor:
                 alignment = AlignIO.read(os.path.join(self.alignment_folder, file), "stockholm")
                 AlignIO.write(alignment, os.path.join(self.alignment_folder, file).replace(".seed", ".fasta"), "fasta")
                 os.remove(os.path.join(self.alignment_folder, file))
+        
+        for filename in os.listdir(self.alignment_folder):
+            if filename.endswith(".fasta"):
+                filepath = os.path.join(self.alignment_folder, filename)
+                records = list(SeqIO.parse(filepath, "fasta"))
+                
+                if len(records) < min_species:
+                    os.remove(filepath)
+                    os.remove(os.path.join(self.tree_folder, filepath.replace(".fasta", ".tree")))
 
     def cleanup_modeltest_trees(self):
         modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
