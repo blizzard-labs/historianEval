@@ -22,7 +22,7 @@ def clean_protein_evolution_data(input_file, output_file=None):
     cleaned_data = {}
     
     # Basic information columns
-    cleaned_data['Filename'] = df['filename'].str.replace('.fasta', '', regex=False)
+    cleaned_data['Filename'] = df['filename']
     cleaned_data['n_sequences_tips'] = df['n_sequences']  # Same as n_tips based on your data
     cleaned_data['alignment_length'] = df['alignment_length']
     
@@ -92,6 +92,7 @@ def clean_protein_evolution_data(input_file, output_file=None):
             cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')
     
     # Round numeric values to reasonable precision
+    '''
     for col in numeric_columns:
         if col in cleaned_df.columns:
             if col in ['insertion_rate', 'deletion_rate']:
@@ -102,6 +103,7 @@ def clean_protein_evolution_data(input_file, output_file=None):
                 cleaned_df[col] = cleaned_df[col].round(4)
             else:
                 cleaned_df[col] = cleaned_df[col].round(3)
+    '''
     
     # Save to file if output path is provided
     if output_file:

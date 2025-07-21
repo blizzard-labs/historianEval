@@ -138,9 +138,6 @@ estimate_rates <- function(tree_file) {
       return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
     }
     
-    cat("Check if tree is unrooted: ")
-    cat(is.rooted(tree))
-
     if (!is.ultrametric(tree)) {
       cat("  Tree is not ultrametric, attempting to make ultrametric...\n")
       tree <- chronos(tree, quiet = TRUE)

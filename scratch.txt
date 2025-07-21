@@ -1,8 +1,3 @@
-Added metrics
-* Colless imbalance metric
-* Gamma statistic
-* Tree height
-
 TODO List-------
 * Generate plain BD trees w/ parameters (mu, lambda) and SPR/NNI until colles index + gamma statistic threshold reached (simulated annealing)
 * Utilize custom GTR protein exchangabilities (simulation/main.py or evolve.py)
@@ -14,6 +9,9 @@ TODO List-------
 * Historian/Baliphy parallelization
 * Sample run
 
+
+Issues ----
+* Tree is unrooted with Pfam data
 
 Metrics -----
 * SP, TC (alignments)

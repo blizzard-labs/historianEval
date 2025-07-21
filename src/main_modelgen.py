@@ -24,7 +24,7 @@ class modelConstructor:
         self.output_file = f"{self.output_folder}/{label}.json"
         self.params_file = params_file
         self.params_wr_file = params_file.replace(".csv", "_with_rates.csv")
-        self.params_wc_file = self.params_file.replace(".csv", "_cleaned.csv")
+        self.params_wc_file = params_file.replace(".csv", "_cleaned.csv")
         
         os.makedirs(self.temp_folder, exist_ok=True)
         if (self.tree_folder == "none"):
@@ -185,7 +185,7 @@ class modelConstructor:
             print(f"Error extracting topology parameters: {e}")
             raise
     
-    def compute_params_splits(self, input_f):
+    def cleanup_params(self, input_f):
         output_f = self.params_wc_file
         
         try:
@@ -282,19 +282,21 @@ def main():
     #mc.extract_top_params()     
     #mc.generate_model()
     mc.sample_model(n_samples=15)
-    #mc.compute_params_splits(mc.params_file)
+    #mc.cleanup_params(mc.params_file)
     '''
     mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
     
     start = time.time()
     #*PFAM SOCP TYPES PIPELINE
     mc.cleanup_pfam_data()
-    print(f'Cleaned data- ELAPSED TIME: {time.time() - start}')
+    print(f'Cleaned data- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_substitution_params()
-    print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}')
+    print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_top_params() 
-    print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}')
-        
+    print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}============================')
+    mc.cleanup_params(mc.params_wr_file)
+    print(f'Cleaned up tables- ELAPSED TIME: {time.time() - start}============================')
+    
     #mc.generate_model()
     
     
