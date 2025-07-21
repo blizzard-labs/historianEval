@@ -650,7 +650,7 @@ class ProteinParameterExtractor:
         #Add tree shape parameters
         if len(tree_file) > 0:
             with open (tree_file, "r") as f:
-                tree_str = tree_file.read()
+                tree_str = f.read()
                 tree_params = tree_metrics.analyze_tree_balance(tree_str)
         
         result.update({
@@ -689,7 +689,7 @@ class ProteinParameterExtractor:
                     
                     if f.replace(".tree", "").strip() == c.split("/")[-1].replace(".fasta", "").replace(".fa", ""):
                         tree_file = os.path.join(tree_folder, f)
-                        print(f"Pre-existant tree found for {f}")
+                        print(f"Pre-existant tree found for {f}!")
                     
                     ''' ORTHOMAM DB
                     if f.replace(".tree", "").strip() == c.split("/")[-1].replace("_AA.fasta", "").replace(".fa", ""):
