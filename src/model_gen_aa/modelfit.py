@@ -70,8 +70,8 @@ class PhylogeneticParameterFitter:
             'key_parameters' : ['n_sequences_tips', 'alignment_length', 'gamma_shape', 'prop_invariant',
                                 'insertion_rate', 'deletion_rate',
                                 'mean_insertion_length', 'mean_deletion_length',
-                                'normalized_colles_index', 'gamma',
-                                'best_BD_speciation_rate', 'best_BD_extinction_rate'
+                                'normalized_colless_index', 'gamma',
+                                'best_BD_speciation_rate', 'best_BD_extinction_rate',
                                 'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
                                 'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
         }
@@ -87,7 +87,8 @@ class PhylogeneticParameterFitter:
         self.numeric_data = self.numeric_data.dropna()
         
         # Log-transform rate parameters (they're often log-normal)
-        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length']
+        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length',
+                       'best_BD_speciation_rate', 'best_BD_extinction_rate']
         
         for param in rate_params:
             if param in self.numeric_data.columns:

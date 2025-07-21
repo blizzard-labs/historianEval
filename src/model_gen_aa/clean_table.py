@@ -44,6 +44,9 @@ def clean_protein_evolution_data(input_file, output_file=None):
     cleaned_data['best_coal_growth_rate'] = df['coal_growth_rate']
     cleaned_data['best_coal_eff_pop_size'] = df['coal_effective_pop_size']
     
+    cleaned_data['gamma'] = df['gamma']
+    cleaned_data['normalized_colless_index'] = df['normalized_colless_index']
+    
     # AIC scores for best models
     
     bd_weights = []
@@ -80,7 +83,7 @@ def clean_protein_evolution_data(input_file, output_file=None):
         'gamma_shape', 'prop_invariant', 'insertion_rate', 'deletion_rate',
         'mean_insertion_length', 'mean_deletion_length', 'best_BD_speciation_rate',
         'best_BD_extinction_rate', 'best_coal_growth_rate', 'best_coal_eff_pop_size',
-        'bd_weight', 'tree_length', 'crown_age'
+        'bd_weight', 'tree_length', 'crown_age', 'gamma', 'normalized_colless_index'
     ]
     
     # Add model indicator columns (these should remain as integers)
