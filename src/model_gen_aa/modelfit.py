@@ -380,7 +380,7 @@ def main():
         fitter.fit_marginal_distributions()
         
         # Fit joint distribution for amino acid frequencies
-        print("Fitting joint distribution for amino acid frequencies...")
+        #print("Fitting joint distribution for amino acid frequencies...")
         fitter.fit_joint_distribution_copula(parameter_group)
         
         # Validate fit
