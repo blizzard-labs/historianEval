@@ -72,7 +72,7 @@ class modelConstructor:
                 
                 if len(records) < min_species:
                     os.remove(filepath)
-                    os.remove(os.path.join(self.tree_folder, filepath.replace(".fasta", ".tree")))
+                    os.remove(os.path.join(self.tree_folder, filename.replace(".fasta", ".tree")))
 
     def cleanup_modeltest_trees(self):
         modeltest_folder = os.path.join(self.temp_folder, "temp_modeltest")
