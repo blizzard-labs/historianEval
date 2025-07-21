@@ -1,0 +1,105 @@
+# STOCKHOLM 1.0
+#=GF ID   KASH
+#=GF AC   PF10541.13
+#=GF DE   Nuclear envelope localisation domain
+#=GF AU   Finn RD;0000-0001-8626-2148
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   PROSITE_PS51049
+#=GF GA   23.00 23.00;
+#=GF TC   23.00 23.10;
+#=GF NC   22.70 22.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -E 1000 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF WK   KASH_domains
+#=GF RN   [1]
+#=GF RM   12169658
+#=GF RT   Role of ANC-1 in tethering nuclei to the actin cytoskeleton.
+#=GF RA   Starr DA, Han M;
+#=GF RL   Science. 2002;298:406-409.
+#=GF RN   [2]
+#=GF RM   19948484
+#=GF RT   Membrane proteins Bqt3 and -4 anchor telomeres to the nuclear
+#=GF RT   envelope to ensure chromosomal bouquet formation.
+#=GF RA   Chikashige Y, Yamane M, Okamasa K, Tsutsumi C, Kojidani T, Sato
+#=GF RA   M, Haraguchi T, Hiraoka Y;
+#=GF RL   J Cell Biol. 2009;187:413-427.
+#=GF RN   [3]
+#=GF RM   19687252
+#=GF RT   Bringing KASH under the SUN: the many faces of
+#=GF RT   nucleo-cytoskeletal connections.
+#=GF RA   Razafsky D, Hodzic D;
+#=GF RL   J Cell Biol. 2009;186:461-472.
+#=GF DR   INTERPRO; IPR012315;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   The KASH (for Klarsicht/ANC-1/Syne-1 homology) or KLS domain is
+#=GF CC   a highly hydrophobic nuclear envelope localisation domain of
+#=GF CC   approximately 60 amino acids comprising a 20-amino-acid
+#=GF CC   transmembrane region and a 30-35-residue C-terminal region that
+#=GF CC   lies between the inner and the outer nuclear membranes [1].
+#=GF CC   During meiotic prophase, telomeres cluster to form a bouquet
+#=GF CC   arrangement of chromosomes. SUN and KASH domain proteins form
+#=GF CC   complexes that span both membranes of the nuclear envelope. The
+#=GF CC   KASH domain links the dynein motor complex of the microtubules,
+#=GF CC   through the outer nuclear membrane to the Sad1 domain in the
+#=GF CC   inner nuclear membrane which then interacts with the bouquet
+#=GF CC   proteins Bqt1 and Bqt2 that are complexed with Bqt4, Rap1 and
+#=GF CC   Taz1 and attached to the telomere [2].  SUN domain-containing
+#=GF CC   proteins are essential for recruiting KASH domain proteins at
+#=GF CC   the outer nuclear membrane, and KASH domains provide a generic
+#=GF CC   NE tethering device for functionally distinct proteins whose
+#=GF CC   cytoplasmic domains mediate nuclear positioning, maintain
+#=GF CC   physical connections with other cellular organelles, and
+#=GF CC   possibly even influence chromosome dynamics [3].
+#=GF SQ   25
+#=GS A0A8R1EBT6_CAEJA/570-627    AC A0A8R1EBT6.1
+#=GS B7PAC5_IXOSC/138-195        AC B7PAC5.1
+#=GS E9G7E9_DAPPU/3824-3878      AC E9G7E9.1
+#=GS T1I3D0_RHOPR/11233-11288    AC T1I3D0.1
+#=GS B0X6K4_CULQU/631-687        AC B0X6K4.1
+#=GS F7CZE3_HORSE/334-394        AC F7CZE3.3
+#=GS W5KSU1_ASTMX/563-620        AC W5KSU1.2
+#=GS W5NC25_LEPOC/511-568        AC W5NC25.1
+#=GS H0ZR05_TAEGU/937-993        AC H0ZR05.2
+#=GS G3SW04_LOXAF/919-975        AC G3SW04.1
+#=GS L5JQY5_PTEAL/72-128         AC L5JQY5.1
+#=GS G5B484_HETGA/923-979        AC G5B484.1
+#=GS A0A1D5QJN6_MACMU/919-975    AC A0A1D5QJN6.2
+#=GS F7EJP0_ORNAN/928-984        AC F7EJP0.3
+#=GS F6WDM2_MONDO/969-1025       AC F6WDM2.3
+#=GS A0A8M1NDL6_DANRE/1044-1100  AC A0A8M1NDL6.1
+#=GS I3JDY7_ORENI/768-824        AC I3JDY7.2
+#=GS G3NX87_GASAC/1907-1963      AC G3NX87.1
+#=GS G3N5V5_GASAC/6757-6813      AC G3N5V5.1
+#=GS H2YLP8_CIOSA/116-176        AC H2YLP8.1
+#=GS E9H6W5_DAPPU/1040-1092      AC E9H6W5.1
+#=GS B4K3K7_DROGR/405-458        AC B4K3K7.1
+#=GS E0W3Y5_PEDHC/383-436        AC E0W3Y5.1
+#=GS G1QE34_MYOLU/882-939        AC G1QE34.1
+#=GS H3A7S5_LATCH/1394-1450      AC H3A7S5.1
+A0A8R1EBT6_CAEJA/570-627               RWRRVLRTALPLQALLVLLMGAACLVPHC...D....DEYCCQLLNNFAKSFDPSLEFVNGPPPF
+B7PAC5_IXOSC/138-195                   FWGRVARAALPIQLLLLVLLGAASLLPMS...E....QDFSCVLTNNFARSLDPMLRYPQGPPPI
+E9G7E9_DAPPU/3824-3878                 FFGRVIRTALPIQAVMLLVLGVASLVP..........SNNSCMDANTFVDSLEFVLGYPDGAPPT
+T1I3D0_RHOPR/11233-11288               FFGRVMRASVPISAFLLLLLGAASLLPTT...Q....NDFSC..SNNLFYNLVPILRYPNGHPPI
+B0X6K4_CULQU/631-687                   FLGRVVRASLPIQAMLLLLLGVVTLMPHG........EDYSCTLTNNFARSLEPMLRYPNGPPPI
+F7CZE3_HORSE/334-394                   PGAPAPASRWPLT.FLLLLFLFLLLVGAT...VLLPLSGDPCSSPARLARTPYVVLSYVNGPPPV
+W5KSU1_ASTMX/563-620                   HLVDVLRSRVMLYILLALLLVVVIWPPAV...L....KDNQCHRSNTLERSFHFALRYVNGPPPT
+W5NC25_LEPOC/511-568                   VLLRLAKAALFLFLSLALVLALLRQLPAG...A....SDPRCHRANTFARSLRLMLHYVNGPPPT
+H0ZR05_TAEGU/937-993                   YLRRACRAALPLQLLLLLLLLLAFLLPLA...Q....ETHSCTLANNFARSFKLMLRY.EGPPPT
+G3SW04_LOXAF/919-975                   VMTSACKGSPPLGLSLLLFLLVGFLVPVG...D....QGRSCTLANNFARSFKFMLRY.DGPPPT
+L5JQY5_PTEAL/72-128                    LLRRVCCVALPLQMLLLLLLLLLLLLPVG...N....EGRHCALANNLASSFTLMLRY.NGPPPT
+G5B484_HETGA/923-979                   LLRKACCLVLWLLLLLLLFLLLLFLLPAG...E....EALSCTQANNFASSFLLMLHY.NGPPPT
+A0A1D5QJN6_MACMU/919-975               LFRRVCCVALPLQLLLLLFLLLLFLLPIR...E....EDRSCTLANNFARSFTLMLRY.NGPPPT
+F7EJP0_ORNAN/928-984                   FLERVCCMALPLQLLLLLLLLLLFLLPLE...E....ETHSCALSNNYARSFNLMLRY.NGPPPT
+F6WDM2_MONDO/969-1025                  FLNRVCCVALPLQLFLLSLLLFLLLLPLG...Q....ERWSCTFSNNFARSFKLMLRY.EGPPPT
+A0A8M1NDL6_DANRE/1044-1100             FLYRVCRVALPLQLLLLALLLLAFLLPMM...D....EGTSCSLANNFARSFNIMLRY.DGPPPT
+I3JDY7_ORENI/768-824                   FY.RALRAAFPLQLLLLLLLLLPCLIPMS...E....SDSSCTLTNNFAWSFYPMLHYTNGPPPT
+G3NX87_GASAC/1907-1963                 FY.RVLRAAFPLHLLLVFLLLLPCLIPVS...E....SEAGCTGANNFARSFYPMLRYTNGPPPT
+G3N5V5_GASAC/6757-6813                 FL.RVLRAAFPLHLLLLLLLLVSCLVPLS...D....ESFSCTLSNNLARSFYPMLSYTNGPPPT
+H2YLP8_CIOSA/116-176                   IFWRVVKASVPFYIFFFFIYFLLWLSSASCIID....DRTICLQRNNLHYSFTPLLTWTDGPPPT
+E9H6W5_DAPPU/1040-1092                 W.WRIVRAALPFHLALIALLLAACVM...........EPSCCNYLNTFGSSLVPKLSYLGGPPPI
+B4K3K7_DROGR/405-458                   WAWRIARAAVPMQLALFTFFCAACMM...........QPNCCDNLNNLSMSFTPQLRYIRGPPPI
+E0W3Y5_PEDHC/383-436                   WIWRLIRCALPFHIALIALWCVAYLM...........ESRCCDSLNNLESSLSPVLRYDFGPPPV
+G1QE34_MYOLU/882-939                   FLYRVLRAALPLQLLLLLLIGLACLVPMS...E....EDYSCALSNNFARSFHPMLRYTNGPPPL
+H3A7S5_LATCH/1394-1450                 FL.RVLKVAALLQIFLLILIGLACLLPIT...E....EDYRCSHFNNFARSFHPMLSYTDGPPPT
+#=GC seq_cons                          ahhRVsRuALPLpLhLLLLLhlshLlPhs...p....-stuCshuNNFARSFp.MLRYssGPPPT

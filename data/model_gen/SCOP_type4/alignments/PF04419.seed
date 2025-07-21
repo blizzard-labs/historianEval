@@ -1,0 +1,135 @@
+# STOCKHOLM 1.0
+#=GF ID   SERF-like_N
+#=GF AC   PF04419.18
+#=GF DE   Small EDRK-rich factor 1/2-like, N-terminal
+#=GF PI   4F5;
+#=GF AU   Bateman A;0000-0002-6982-4660
+#=GF AU   Wood V;0000-0001-6330-7526
+#=GF SE   Wood V
+#=GF GA   22.30 22.30;
+#=GF TC   22.30 22.30;
+#=GF NC   22.20 22.20;
+#=GF BM   hmmbuild --amino HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -E 1000 -Z 75585367 HMM pfamseq
+#=GF TP   Disordered
+#=GF RN   [1]
+#=GF RM   9731538
+#=GF RT   Identification of a candidate modifying gene for spinal muscular
+#=GF RT   atrophy by comparative genomics. 
+#=GF RA   Scharf JM, Endrizzi MG, Wetter A, Huang S, Thompson TG, Zerres
+#=GF RA   K, Dietrich WF, Wirth B, Kunkel LM; 
+#=GF RL   Nat Genet 1998;20:83-86.
+#=GF RN   [2]
+#=GF RM   22854022
+#=GF RT   SERF protein is a direct modifier of amyloid fiber assembly.
+#=GF RA   Falsone SF, Meyer NH, Schrank E, Leitinger G, Pham CL,
+#=GF RA   Fodero-Tavoletti MT, Holmberg M, Dulle M, Scicluna B, Gesslbauer
+#=GF RA   B, Ruckert HM, Wagner GE, Merle DA, Nollen EA, Kungl AJ, Hill
+#=GF RA   AF, Cappai R, Zangger K;
+#=GF RL   Cell Rep. 2012;2:358-371.
+#=GF RN   [3]
+#=GF RM   31034892
+#=GF RT   Increased Aggregation Tendency of Alpha-Synuclein in a Fully
+#=GF RT   Disordered Protein Complex.
+#=GF RA   Merle DA, Witternigg A, Tam-Amersdorfer C, Hartlmuller C,
+#=GF RA   Spreitzer E, Schrank E, Wagner-Lichtenegger S, Werzer O, Zangger
+#=GF RA   K, Kungl AJ, Madl T, Meyer NH, Falsone SF;
+#=GF RL   J Mol Biol. 2019;431:2581-2598.
+#=GF RN   [4]
+#=GF RM   20723760
+#=GF RT   Identification of MOAG-4/SERF as a regulator of age-related
+#=GF RT   proteotoxicity.
+#=GF RA   van Ham TJ, Holmberg MA, van der Goot AT, Teuling E,
+#=GF RA   Garcia-Arencibia M, Kim HE, Du D, Thijssen KL, Wiersma M,
+#=GF RA   Burggraaff R, van Bergeijk P, van Rheenen J, Jerre van Veluw G,
+#=GF RA   Hofstra RM, Rubinsztein DC, Nollen EA;
+#=GF RL   Cell. 2010;142:601-612.
+#=GF DR   INTERPRO; IPR007513;
+#=GF DR   SO; 0100003; intrinsically_unstructured_polypeptide_region;
+#=GF CC   Members of this entry are short proteins that are rich in
+#=GF CC   aspartate, glutamate, lysine and arginine that are found to be
+#=GF CC   ubiquitously expressed [1]. This entry represents the N-terminal
+#=GF CC   region of small EDRK-rich factors (SERFs), including SERF1
+#=GF CC   (UniProt:O75920), SERF2 from human, and similar proteins. This
+#=GF CC   region appears to be found at the N-terminus of some longer
+#=GF CC   proteins. Many proteins contain a C-terminal zinc finger domain
+#=GF CC   Pfam:PF12907. SERF1/2 are positive regulators of amyloid protein
+#=GF CC   aggregation and proteotoxicity; they induce conformational
+#=GF CC   changes in amyloid proteins, driving them into compact
+#=GF CC   formations preceding the formation of aggregates [2-4].
+#=GF SQ   37
+#=GS A4S433_OSTLU/1-37       AC A4S433.1
+#=GS Q5BT45_SCHJA/1-37       AC Q5BT45.1
+#=GS A8XJE4_CAEBR/1-38       AC A8XJE4.1
+#=GS Q1RL63_CIOIN/1-36       AC Q1RL63.1
+#=GS A0A0D9RHU6_CHLSB/1-38   AC A0A0D9RHU6.1
+#=GS A2I456_MACHI/1-41       AC A2I456.1
+#=GS Q7PNM0_ANOGA/1-41       AC Q7PNM0.2
+#=GS A7RQF4_NEMVE/1-38       AC A7RQF4.1
+#=GS A0A077TQW1_PLACH/4-36   AC A0A077TQW1.1
+#=GS A2YHJ0_ORYSI/3-36       AC A2YHJ0.1
+#=GS A4RZ85_OSTLU/3-37       AC A4RZ85.1
+#=GS Y2309_ARATH/3-37        AC O64818.1
+#=GS A1CCH0_ASPCL/1-34       AC A1CCH0.1
+#=GS A4HUF3_LEIIN/3-41       AC A4HUF3.1
+#=GS Q553T6_DICDI/3-38       AC Q553T6.1
+#=GS A0A0D1CS77_USTMA/1-34   AC A0A0D1CS77.1
+#=GS Q5KLR0_CRYNJ/1-35       AC Q5KLR0.1
+#=GS G4UBI9_NEUT9/3-36       AC G4UBI9.1
+#=GS A7TH18_VANPO/1-36       AC A7TH18.1
+#=GS YIN2_SCHPO/1-34         AC Q9UTF0.1
+#=GS A8Y1E8_CAEBR/1-43       AC A8Y1E8.1
+#=GS A0A0N4TWI2_BRUPA/1-38   AC A0A0N4TWI2.1
+#=GS A7RLR9_NEMVE/1-39       AC A7RLR9.1
+#=GS A0A0D3G7I7_9ORYZ/19-53  AC A0A0D3G7I7.1
+#=GS A5AXN0_VITVI/245-281    AC A5AXN0.1
+#=GS Q8GXU7_ARATH/1-36       AC Q8GXU7.1
+#=GS Q0IT26_ORYSJ/1-35       AC Q0IT26.1
+#=GS Q4WNN0_ASPFU/1-37       AC Q4WNN0.1
+#=GS E9D0P3_COCPS/1-37       AC E9D0P3.1
+#=GS Q1K5H1_NEUCR/1-37       AC Q1K5H1.1
+#=GS Q5B540_EMENI/1-37       AC Q5B540.1
+#=GS A8BVJ6_GIAIC/1-39       AC A8BVJ6.1
+#=GS A5JZQ1_PLAVS/1-35       AC A5JZQ1.1
+#=GS Q5CQG7_CRYPI/6-43       AC Q5CQG7.1
+#=GS Q4DJ29_TRYCC/1-37       AC Q4DJ29.1
+#=GS A0A8M1NT34_DANRE/1-38   AC A0A8M1NT34.1
+#=GS SERF1_MOUSE/1-38        AC O88892.1
+A4S433_OSTLU/1-37                  MARGLSRELAKEKAQKKQGKNA......SKGNKEDLTPARRA..E
+Q5BT45_SCHJA/1-37                  MARGQQKMQSQQKNAKKQAELKK...STT....DTKKAAAKAL.H
+A8XJE4_CAEBR/1-38                  MARGHQKALSQQRNAEKTAKAKK...AVGS...DQKTAAMKSL.H
+Q1RL63_CIOIN/1-36                  MARGHQKIQSQKKNQEKQAKLKN...KT.....DHKSAAKAAL.I
+A0A0D9RHU6_CHLSB/1-38              MARGQQKIQSQQKNAKKQAGQKK...KQGH...DQKAAAKAAL.I
+A2I456_MACHI/1-41                  MARGHQKLQSQAKAAEKAAKMKK...QQCHNANEQKKAAQKAL.V
+Q7PNM0_ANOGA/1-41                  MARGHQKIQSQQKAQEKAAKLKK...QQGHGLSDQMKAAQKAL.V
+A7RQF4_NEMVE/1-38                  MARGHQKIQSQQKNAEKKKKMEK...AQGH...DQKKAASKAL.I
+A0A077TQW1_PLACH/4-36              GSNACKRNQARERKTVE...........VKGGKSQIKANQEAL.N
+A2YHJ0_ORYSI/3-36                  GGHGQKSKMARERNMEKN..........KGAKGSQLEANKKAM.N
+A4RZ85_OSTLU/3-37                  GGNAQKSATARKKAMEKAQ.........KAGAGSQLAANAKAM.S
+Y2309_ARATH/3-37                   GGNAQKSAMARAKNLEKAK.........AAGKGSQLEANKKAM.S
+A1CCH0_ASPCL/1-34                  MGNGAKAASKRERNAKDA..........KGSAKSQLKVNEAAK.D
+A4HUF3_LEIIN/3-41                  SGNGCRANQRREREMKKAQSAG......VKHTSEDMKKHEQSKNA
+Q553T6_DICDI/3-38                  SGNGAKAQQKRERNLKRNEG........ASSAKSQLKTNEAAK.T
+A0A0D1CS77_USTMA/1-34              MGNGAKAQQKRERNAKAA..........GGEAKSQKKTNEAAR.N
+Q5KLR0_CRYNJ/1-35                  MGNGAKAQAKRDRNTKGAA.........GKGDQSQLKSNAAAM.T
+G4UBI9_NEUT9/3-36                  GGNGAKAAQKRERNAKNA..........AAGPKSQLKTNAAAM.N
+A7TH18_VANPO/1-36                  MARGNQRDLARAKNLKKQKEQ.......GKSQKKDGDPKKRM..E
+YIN2_SCHPO/1-34                    MSRGNQRDVDRARNLKKSQ.........ASKKKQAGDPTKRL..E
+A8Y1E8_CAEBR/1-43                  MTRGNQRDLAREKNQKKMAEQKKRQGAAGQEGNAGLSMDNRM..N
+A0A0N4TWI2_BRUPA/1-38              MTRGNQRELARERNLKKQQQQK.....KSQPHQDGVKLDNRM..E
+A7RLR9_NEMVE/1-39                  MTRGNQRELARAKNQKKQTGKKA....SEHDANKGQNLTDRK..Q
+A0A0D3G7I7_9ORYZ/19-53             CARGDQRERDRQRAQARKPV........VKGRDDGLTPEQRR..E
+A5AXN0_VITVI/245-281               ISRGNQRDRDRERAASRNPSKG......SKGKDDGLTPEQRR..E
+Q8GXU7_ARATH/1-36                  MTRGSQRERDRERAAARAGGK.......GKNGDDGLTPEQRR..E
+Q0IT26_ORYSJ/1-35                  MTRGNQRDRDRERAQARKPN........AKGPQDGLTPEQRR..E
+Q4WNN0_ASPFU/1-37                  MTRGNQRDRDREKALKAKAKQK......TANTLSGSEFQRAK..E
+E9D0P3_COCPS/1-37                  MARGNQREKAREKTQKEMAQQK......KKNNMSGTEFARTK..E
+Q1K5H1_NEUCR/1-37                  MSRGNQREKAREANLKKQAAQK......KVNTKSGTEMQRDK..E
+Q5B540_EMENI/1-37                  MTRGNQRDRDRERQRKKAESEK......KANTLSGTAFARKK..E
+A8BVJ6_GIAIC/1-39                  MTRGNQRDVDRERARKRKERNEG....GRSRAHTGVDLAETK..E
+A5JZQ1_PLAVS/1-35                  MTRGNQREVDRIRSSKRND.........KAKQNSTVKDASKNL.N
+Q5CQG7_CRYPI/6-43                  MSRGNQRDIDRQRAQKRQDRTA......PKTGKSIIEQKEKIL.S
+Q4DJ29_TRYCC/1-37                  MTRGNQRDLAREKNMKKQQEKQ......KGRRSDGMSVAQRK..E
+A0A8M1NT34_DANRE/1-38              MTRGNQRELARQKNVKKHSDMQ.....KGKRNDDGLSAAARK..Q
+SERF1_MOUSE/1-38                   MARGNQREIARQKNMKKTQEIS.....KGKRKEDSLTASQRK..Q
+#=GC seq_cons                      MuRGsQ+phsRp+stK+ptt........spstpsthpssp+t..p

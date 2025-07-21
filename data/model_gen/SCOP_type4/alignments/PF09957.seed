@@ -1,0 +1,98 @@
+# STOCKHOLM 1.0
+#=GF ID   VapB_antitoxin
+#=GF AC   PF09957.13
+#=GF DE   Bacterial antitoxin of type II TA system, VapB
+#=GF PI   DUF2191; VapB;
+#=GF AU   COGs;
+#=GF AU   Finn RD;0000-0001-8626-2148
+#=GF AU   Sammut SJ;0000-0003-4472-904X
+#=GF SE   COGs (COG5450)
+#=GF GA   23.40 23.40;
+#=GF TC   23.40 23.40;
+#=GF NC   23.30 23.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF WK   Toxin-antitoxin_system
+#=GF CL   CL0057
+#=GF RN   [1]
+#=GF RM   15718296
+#=GF RT   Toxin-antitoxin loci are highly abundant in free-living but lost
+#=GF RT   from host-associated prokaryotes.
+#=GF RA   Pandey DP, Gerdes K;
+#=GF RL   Nucleic Acids Res. 2005;33:966-976.
+#=GF RN   [2]
+#=GF RM   20011113
+#=GF RT   Comprehensive functional analysis of Mycobacterium tuberculosis
+#=GF RT   toxin-antitoxin systems: implications for pathogenesis, stress
+#=GF RT   responses, and evolution.
+#=GF RA   Ramage HR, Connolly LE, Cox JS;
+#=GF RL   PLoS Genet. 2009;5:e1000767.
+#=GF DR   INTERPRO; IPR019239;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   VapB is the antitoxin of a bacterial toxin-antitoxin gene pair.
+#=GF CC   The cognate toxin is VapC, Pfam:PF05016. The family contains
+#=GF CC   several related antitoxins from Cyanobacteria and
+#=GF CC   Actinobacterial families. Antitoxins of this class carry an
+#=GF CC   N-terminal ribbon-helix-helix domain, RHH, that is highly
+#=GF CC   conserved across all type II bacterial antitoxins, which
+#=GF CC   dimerises with the RHH domain of a second VapB molecule. A hinge
+#=GF CC   section follows the RHH, with an additional pair of flexible
+#=GF CC   alpha helices at the C-terminus. This C-terminus is the
+#=GF CC   Toxin-binding region of the dimer, and so is specific to the
+#=GF CC   cognate toxin, whereas the RHH domain has the specific function
+#=GF CC   of lying across the RNA-binding groove of the toxin dimer and
+#=GF CC   inactivating the active-site - a more general function of all
+#=GF CC   antitoxins.
+#=GF SQ   25
+#=GS Q124P4_POLSJ/1-47   AC Q124P4.1
+#=GS Q82BL1_STRAW/2-49   AC Q82BL1.1
+#=GS VAPB6_MYCTU/3-45    AC P9WJ57.1
+#=GS A0ZI46_NODSP/1-47   AC A0ZI46.1
+#=GS B1WYD1_CROS5/1-47   AC B1WYD1.1
+#=GS Q73PC1_TREDE/1-47   AC Q73PC1.1
+#=GS A5GB97_GEOUR/1-47   AC A5GB97.1
+#=GS Q2FLV1_METHJ/1-47   AC Q2FLV1.1
+#=GS Q2FNJ2_METHJ/1-47   AC Q2FNJ2.1
+#=GS VPB11_MYCTU/7-49    AC P9WLU3.1
+#=GS VPB15_MYCTU/7-50    AC P9WLM7.1
+#=GS Q7AQ19_MYCLE/3-56   AC Q7AQ19.1
+#=GS B2HSG4_MYCMM/3-54   AC B2HSG4.1
+#=GS Y634A_MYCTU/16-68   AC P9WKS5.1
+#=GS Q73SG9_MYCPA/11-61  AC Q73SG9.1
+#=GS Q7D057_AGRFC/1-48   AC Q7D057.2
+#=GS B8GLV4_THISH/1-43   AC B8GLV4.1
+#=GS A8ZTF6_DESOH/1-44   AC A8ZTF6.1
+#=GS A5G896_GEOUR/35-78  AC A5G896.1
+#=GS Q58AH0_CUPMC/1-44   AC Q58AH0.1
+#=GS A1VX34_POLNA/1-45   AC A1VX34.1
+#=GS Q3JAZ0_NITOC/1-47   AC Q3JAZ0.1
+#=GS Q73R95_TREDE/1-44   AC Q73R95.1
+#=GS Q7NCS8_GLOVI/1-47   AC Q7NCS8.1
+#=GS Q8YSF9_NOSS1/25-71  AC Q8YSF9.1
+Q124P4_POLSJ/1-47              MITNIDIDEVVVAEAMRLSG.ARTKREVVDRALREMVARAR....RP.....SIREL
+Q82BL1_STRAW/2-49              SVTQIDLDDEALAEAMRLMG.VTTKKETVNAALRDYVARIK....RL....DAAEKL
+VAPB6_MYCTU/3-45               .VTQIDLDDEALADVMRIAA.VHTKKEAVNLAMRDYVERFR....RI.....EA...
+A0ZI46_NODSP/1-47              MINNIVIDEKLIDDAIKATG.IKTQREVIELGLKTLIKLKE....QE.....KIKTY
+B1WYD1_CROS5/1-47              MATNLEIDDQLIQEALKIGG.HSTKREVVEAALKEYVQRRK....QL.....EITEL
+Q73PC1_TREDE/1-47              MATNLAINEELLDTAYKIGG.YSTKKETVNTALEEFIKRRK....SE.....DLIKL
+A5GB97_GEOUR/1-47              MATNLAIDDKLLEEARTVGK.HATKKAVVNEALAEYIQRRK....QA.....EIINL
+Q2FLV1_METHJ/1-47              MATNLAVDDNLISEALVIGG.CNTKKAAVTEALIEYIQRRK....QI.....QITSL
+Q2FNJ2_METHJ/1-47              MASNLALDDDLIKEAQRIGG.VKTKKGVITEALIEYIQRRK....QI.....EIISQ
+VPB11_MYCTU/7-49               SRTNIDIDDELAAEVMRRFG.LTTKRAAVDLALRRLVGSPL....SR.....E....
+VPB15_MYCTU/7-50               SRTNIEIDDELVAAAQRMYR.LDSKRSAVDLALRRLVGEPL....GR....DE....
+Q7AQ19_MYCLE/3-56              KKVEIEVDDDLVQEVIRRYG.LLGRREAVHLALKALLGEPGVGGLSEQ..DPEYDEF
+B2HSG4_MYCMM/3-54              KKVEIEIDDDLVQEAIRRYR.LAGPREVVHLALRTLLAEAGE.NGGGD...DEYDEF
+Y634A_MYCTU/16-68              KRVEIEVDDDLIQKVIRRYR.VKGAREAVNLALRTLLGEAD...TAEHGHDDEYDEF
+Q73SG9_MYCPA/11-61             KKVEIEVDLELVDEAIRRFH.LADAREAVNLALRTLLHEGD...SVAS..EDEYDEF
+Q7D057_AGRFC/1-48              MRTNIELDDALIAEAMEITG.LPTKKATVEKALRDLVENLG....RR....KALQEL
+B8GLV4_THISH/1-43              MRTTLNIDDQLLAEAQRITG.MTEKAALVREGLRALIERES....AR........R.
+A8ZTF6_DESOH/1-44              MRTTLNIEDGLIDKASKMTG.IKEKTALVKLGLEALIARES....GK........RL
+A5G896_GEOUR/35-78             MRTTLNIEDALLEKAAKLTG.ITEKTSLVRLGLQALIAKES....SK........RL
+Q58AH0_CUPMC/1-44              MRTTIALDDELLAKAQAYTG.LSEKTAIVREALKALIQREA....AK........RL
+A1VX34_POLNA/1-45              MRTTLTIDDQLFARAVALAEPGIEKSELIRECVKAFIQRQA....AR........RL
+Q3JAZ0_NITOC/1-47              MRTNIDLDDKLLEAAFRCVS.VKSKKELVHLALKEFVEHHQ....RK.....DLREL
+Q73R95_TREDE/1-44              MRTTIVLNESKIQQAFALTK.IKTKTELIEVAIDNLIKKYQ....IQ........DL
+Q7NCS8_GLOVI/1-47              MRTNVELDDALLEEAFQLTN.VRTKKELLQLALQELIRARK....KR.....NLLDL
+Q8YSF9_NOSS1/25-71             MQITLNLDESLLNEAFQLTN.LTTQEELMNLALQEFVRSRR....KK.....NLLDL
+#=GC seq_cons                  M+TslslDDpLls-Ah+lsu.lpoK+ElVchAL+phlp+tp....pc.....ph.cL

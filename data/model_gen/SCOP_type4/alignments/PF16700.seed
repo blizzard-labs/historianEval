@@ -1,0 +1,30 @@
+# STOCKHOLM 1.0
+#=GF ID   SNCAIP_SNCA_bd
+#=GF AC   PF16700.9
+#=GF DE   Synphilin-1 alpha-Synuclein-binding domain
+#=GF AU   Eberhardt R;0000-0001-6152-1369
+#=GF SE   PDB:2kes
+#=GF GA   27.00 27.00;
+#=GF TC   28.10 39.40;
+#=GF NC   25.80 26.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   19762560
+#=GF RT   Interaction with synphilin-1 promotes inclusion formation of
+#=GF RT   alpha-synuclein: mechanistic insights and pathological
+#=GF RT   implication.
+#=GF RA   Xie YY, Zhou CJ, Zhou ZR, Hong J, Che MX, Fu QS, Song AX, Lin
+#=GF RA   DH, Hu HY;
+#=GF RL   FASEB J. 2010;24:196-205.
+#=GF DR   INTERPRO; IPR032027;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This coiled-coil domain found in Synphilin-1 is responsible for
+#=GF CC   binding to alpha-Synuclein [1].
+#=GF SQ   2
+#=GS W5KZN6_ASTMX/485-529  AC W5KZN6.2
+#=GS M4ALD8_XIPMA/534-579  AC M4ALD8.2
+W5KZN6_ASTMX/485-529             VETCMSLASQVVKLTKQLHEQTTARIAIQNQVQLLFQSQDPNGRP.
+M4ALD8_XIPMA/534-579             VETCMSLASQVVKLTKQLNEQTAERINLQKHLQRLMDPSKAEGTPS
+#=GC seq_cons                    VETCMSLASQVVKLTKQLpEQTstRIslQpplQhLhpspcspGpP.

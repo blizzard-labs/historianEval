@@ -1,0 +1,39 @@
+# STOCKHOLM 1.0
+#=GF ID   TERF2_RBM
+#=GF AC   PF16772.9
+#=GF DE   Telomeric repeat-binding factor 2 Rap1-binding motif
+#=GF AU   Eberhardt R;0000-0001-6152-1369
+#=GF SE   PDB:3k6g
+#=GF GA   27.00 27.00;
+#=GF TC   28.70 28.00;
+#=GF NC   26.60 26.20;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   21217703
+#=GF RT   A conserved motif within RAP1 has diversified roles in telomere
+#=GF RT   protection and regulation in different organisms.
+#=GF RA   Chen Y, Rai R, Zhou ZR, Kanoh J, Ribeyre C, Yang Y, Zheng H,
+#=GF RA   Damay P, Wang F, Tsujii H, Hiraoka Y, Shore D, Hu HY, Chang S,
+#=GF RA   Lei M;
+#=GF RL   Nat Struct Mol Biol. 2011;18:213-221.
+#=GF DR   INTERPRO; IPR031902;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This domain, found in telomeric repeat-binding factor 2, binds
+#=GF CC   to the C-terminus of repressor activator protein 1 (RAP1)
+#=GF CC   (telomeric repeat-binding factor 2-interacting protein 1) [1].
+#=GF SQ   6
+#=GS G1N8X2_MELGA/433-473  AC G1N8X2.3
+#=GS U3III9_ANAPP/304-344  AC U3III9.2
+#=GS H9G7L7_ANOCA/356-396  AC H9G7L7.3
+#=GS G3I013_CRIGR/197-237  AC G3I013.1
+#=GS G3WL30_SARHA/332-372  AC G3WL30.2
+#=GS F6TLV6_ORNAN/277-317  AC F6TLV6.2
+G1N8X2_MELGA/433-473             PLRTVTTYGISVLREAFKMLSNSPDSDALFNKLDETDLPSP
+U3III9_ANAPP/304-344             PPGTVTTYGISVLREAFKILSDSPDADALFTKLDETDFSLP
+H9G7L7_ANOCA/356-396             PLERPTSYGFSVIRQAFEILSDSEDPDATFQKLDETDWTFP
+G3I013_CRIGR/197-237             PRNTPTTIGIRTLKAAFKALSTAQDSEAAFAKLDQKDLVLP
+G3WL30_SARHA/332-372             LPEGPSTFGISTLKRAFKSLSDSQDPEAAFTKLDQKDVTVP
+F6TLV6_ORNAN/277-317             LPESPATFGISALKGAFKTLSTFQDPDAAFTKLDQKDILIP
+#=GC seq_cons                    P.coPTTaGISsL+pAFKhLSsSpDsDAsFsKLDppDlslP

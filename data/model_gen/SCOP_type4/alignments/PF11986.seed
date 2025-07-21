@@ -1,0 +1,43 @@
+# STOCKHOLM 1.0
+#=GF ID   PB1-F2
+#=GF AC   PF11986.12
+#=GF DE   Influenza A Proapoptotic protein
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2hn8
+#=GF GA   27.00 27.00;
+#=GF TC   27.80 132.50;
+#=GF NC   26.10 17.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -E 1000 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   17052982
+#=GF RT   Structural characterization and oligomerization of PB1-F2, a
+#=GF RT   proapoptotic influenza A virus protein.
+#=GF RA   Bruns K, Studtrucker N, Sharma A, Fossen T, Mitzner D, Eissmann
+#=GF RA   A, Tessmer U, Roder R, Henklein P, Wray V, Schubert U;
+#=GF RL   J Biol Chem. 2007;282:353-363.
+#=GF DR   INTERPRO; IPR021045;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   PB1-F2 is a protein found in almost all known strains of
+#=GF CC   Influenza A virus - a negative sense ssRNA Orthomyxovirus [1].
+#=GF CC   It originates from translation of the viral polymerase gene in
+#=GF CC   an alternative reading frame [1]. PB1-F2 consists of two
+#=GF CC   independent structural domains, two closely neighboring short
+#=GF CC   helices at the N terminus, and an extended C-terminal helix [1].
+#=GF CC    Although the protein has originally been described to induce
+#=GF CC   apoptosis, it has now been shown that PB1-F2 more likely acts as
+#=GF CC   an apoptosis promoter in concert with other apoptosis-inducing
+#=GF CC   agents [1]. PB1-F2 promotes apoptosis by localising to the
+#=GF CC   mitochondria where it destabilises the membrane. This will cause
+#=GF CC   release of cytochrome C which activates the caspase cascade of
+#=GF CC   apoptosis through the endogenous pathway [1]. In this way it
+#=GF CC   acts like the Bcl-2 protein family which are physiological
+#=GF CC   apoptotic regulators in cells [1].
+#=GF SQ   2
+#=GS PB1F2_I96A0/1-87  AC P0C791.1
+#=GS PB1F2_I34A1/1-87  AC P0C0U1.1
+PB1F2_I96A0/1-87             MEQEQDTPWTQSTEHINIQKRGNGQRTQRLEHPNSIRLMDHYLRIMSRVGMHKQIVYWKQWLSLKNPTQGSLKTRVLKRWKLFSKQE
+PB1F2_I34A1/1-87             MGQEQDTPWILSTGHISTQKRQDGQQTPKLEHRNSTRLMGHCQKTMNQVVMPKQIVYWKQWLSLRNPILVFLKTRVLKRWRLFSKHE
+#=GC seq_cons                MtQEQDTPWh.STtHIshQKRtsGQpT.+LEH.NShRLMsHh.+hMspVsM.KQIVYWKQWLSL+NPh.s.LKTRVLKRW+LFSKpE

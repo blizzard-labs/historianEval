@@ -1,0 +1,45 @@
+# STOCKHOLM 1.0
+#=GF ID   Inhibitor_Mig-6
+#=GF AC   PF11555.12
+#=GF DE   EGFR receptor inhibitor Mig-6
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_2rf9
+#=GF GA   25.00 25.00;
+#=GF TC   25.00 25.00;
+#=GF NC   24.90 24.90;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 -Z 75585367 --cpu 4 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   18046415
+#=GF RT   Inhibition of the EGF receptor by binding of MIG6 to an
+#=GF RT   activating kinase domain interface. 
+#=GF RA   Zhang X, Pickin KA, Bose R, Jura N, Cole PA, Kuriyan J; 
+#=GF RL   Nature. 2007;450:741-744.
+#=GF DR   INTERPRO; IPR021619;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   When the kinase domain of EGFR binds to segment one of Mitogen
+#=GF CC   induced gene 6 (Mig-6), EGFR becomes inactive due to the
+#=GF CC   conformation it adopts which is Src/CDK like. The binding of the
+#=GF CC   two proteins prevents EGFR acting as a cyclin-like activator for
+#=GF CC   other kinase domains [1].The structure of Mig-6(1) consists of
+#=GF CC   alpha helices-G and -H with a polar surface and hydrophobic
+#=GF CC   residues for interactions with EGFR. A critical step for the
+#=GF CC   activation of EGFR is the formation of an asymmetric dimer
+#=GF CC   involving the kinase domains of the protein. Since Mig-6 binds
+#=GF CC   to the kinase domain it blocks this process and EGFR becomes
+#=GF CC   inactive [1].
+#=GF SQ   6
+#=GS H0ZH03_TAEGU/790-861  AC H0ZH03.2
+#=GS M4AS18_XIPMA/837-920  AC M4AS18.2
+#=GS G3PVJ8_GASAC/829-899  AC G3PVJ8.1
+#=GS I3KQV3_ORENI/851-941  AC I3KQV3.1
+#=GS W5LC29_ASTMX/815-888  AC W5LC29.2
+#=GS H3CR13_TETNG/813-880  AC H3CR13.1
+H0ZH03_TAEGU/790-861             RPPQIPPRDPLSQPTSRTPSPMALQVGSPQQ.................RAA..LCSCLSTSPGKPMPTTQSFALDPKYATPKVIQAQGKDC
+M4AS18_XIPMA/837-920             RPPQIPPRDPLSQPNSRTPSPNCAVVGSLQQRICSV.......SPSTHQASHSYSSHLSTSPGKPMPTTHSFASDPKYAAPKVIQAQGRDN
+G3PVJ8_GASAC/829-899             QPPRIPPRDPLSQPGSRTPSPM..AHHTSC..................PPAHTYGSYLSSSPGKLMPTTHSFASDPKYAAPKVIQAQGHGR
+I3KQV3_ORENI/851-941             RPPQIPPRDPLSQPGSRTPSPMGLVVGSPQQRLYSVSPNTMQAAITTCPPTHTYSSYLSTSPGKLMPTTHSFASDPKYAAPKVIQAQVQGK
+W5LC29_ASTMX/815-888             HPPQIPPRDPLSQPGSRTPSPMGLHVGSHCS.................PASIYGSSYLSSSPGKLMPTTQSFASDPKYAAPKVILAQGKDK
+H3CR13_TETNG/813-880             HPPQVPPREPLSQPGSRTPSPRGLVVGS.......................PHYSCYLSTSPGKLMATTHSFASDPNYAAAKVSQAQGKEA
+#=GC seq_cons                    +PPQIPPRDPLSQPGSRTPSPMuLsVGS.pp..................suhpYSSYLSTSPGKLMPTTHSFASDPKYAAPKVIQAQG+-p

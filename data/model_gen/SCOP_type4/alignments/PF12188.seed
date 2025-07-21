@@ -1,0 +1,46 @@
+# STOCKHOLM 1.0
+#=GF ID   STAT2_C
+#=GF AC   PF12188.12
+#=GF DE   Signal transducer and activator of transcription 2 C terminal
+#=GF PI   STAT2_Cterm;
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2ka4
+#=GF GA   27.00 27.00;
+#=GF TC   27.30 28.90;
+#=GF NC   24.80 19.40;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   15175343
+#=GF RT   STAT2 nuclear trafficking.
+#=GF RA   Banninger G, Reich NC;
+#=GF RL   J Biol Chem. 2004;279:39199-39206.
+#=GF DR   INTERPRO; IPR022756;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This domain family is found in eukaryotes, and is approximately
+#=GF CC   60 amino acids in length. The family is found in association
+#=GF CC   with Pfam:PF02865, Pfam:PF00017, Pfam:PF01017, Pfam:PF02864.
+#=GF CC   There is a conserved DLP sequence motif. STATs are involved in
+#=GF CC   transcriptional regulation and are the only regulators known to
+#=GF CC   be modulated by tyrosine phosphorylation. STAT2 forms a trimeric
+#=GF CC   complex with STAT1 and IRF-9 (Interferon Regulatory Factor 9),
+#=GF CC   on activation of the cell by interferon, which is called ISGF3
+#=GF CC   (Interferon-stimulated gene factor 3). The C terminal domain of
+#=GF CC   STAT2 contains a nuclear export signal (NES) which allows export
+#=GF CC   of STAT2 into the cytoplasm along with any complexed molecules.
+#=GF SQ   6
+#=GS F6R1P6_MACMU/783-838  AC F6R1P6.1
+#=GS G5BB74_HETGA/736-791  AC G5BB74.1
+#=GS G3HRN9_CRIGR/737-793  AC G3HRN9.1
+#=GS STAT2_MOUSE/854-908   AC Q9WVL2.1
+#=GS E1B8Z4_BOVIN/789-844  AC E1B8Z4.2
+#=GS G3TE30_LOXAF/773-828  AC G3TE30.1
+F6R1P6_MACMU/783-838             SQPVPEPDLPCDLRHLNTEPMEIFRNC.VKIEEIMPNGDPLLAGQNTVDEAYVSRPS
+G5BB74_HETGA/736-791             SQPVPDSDLPHDLQHLSTKDMEIFRNT.VNIEDIMPNGDPLLAGQNVMDEPYMSCPS
+G3HRN9_CRIGR/737-793             SQLSPESDLPQDLQQLNMVDMEIFRNNIINIDDIMPHGDPLLADQNIGDEAYMSCQS
+STAT2_MOUSE/854-908              LQQPSESDLPEDLQQISVEDLKKLSNP..STEYITTNENPMLAGESSGDETSIPYHS
+E1B8Z4_BOVIN/789-844             LQPMPEPDLPYDLRHLNTEDMEIFRNS.MRIEEIMPNGDPVLPCQNTMDEADIFNPS
+G3TE30_LOXAF/773-828             .EPVPEPDLPHDLRHLNIEEMEIFRNSSMKLEEILPNGDPPLPAPSTMDDVYVSCPS
+#=GC seq_cons                    .QPsPEsDLPpDLpHLNsEDMEIFRNs.hpIE-IMPNGDPlLAuQNohDEsYlSsPS

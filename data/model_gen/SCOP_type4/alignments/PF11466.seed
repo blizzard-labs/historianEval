@@ -1,0 +1,58 @@
+# STOCKHOLM 1.0
+#=GF ID   Doppel
+#=GF AC   PF11466.12
+#=GF DE   Prion-like protein Doppel
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF AU   El-Gebali S;0000-0003-1378-5495
+#=GF SE   pdb_1z65
+#=GF GA   25.00 25.00;
+#=GF TC   32.30 32.90;
+#=GF NC   24.90 19.40;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   16388591
+#=GF RT   NMR solution structure of the peptide fragment 1-30, derived
+#=GF RT   from unprocessed mouse Doppel protein, in DHPC micelles.
+#=GF RA   Papadopoulos E, Oglecka K, Maler L, Jarvet J, Wright PE, Dyson
+#=GF RA   HJ, Graslund A;
+#=GF RL   Biochemistry. 2006;45:159-166.
+#=GF RN   [2]
+#=GF RM   23973967
+#=GF RT   NMR solution structure and SRP54M predicted interaction of the
+#=GF RT   N-terminal sequence (1-30) of the ovine Doppel protein.
+#=GF RA   Pimenta J, Viegas A, Sardinha J, Martins IC, Cabrita EJ, Fontes
+#=GF RA   CM, Prates JA, Pereira RM;
+#=GF RL   Peptides. 2013;49:32-40.
+#=GF DR   INTERPRO; IPR021566;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   Dpl is a homologue related to the prion protein (PrP). Dpl is
+#=GF CC   toxic to neurons and is expressed in the brains of mice that do
+#=GF CC   not express PrP. In DHPC and SDS micelles, Dpl shoes about 40%
+#=GF CC   alpha-helical structure however in aqueous solution it consists
+#=GF CC   of a random coil. The alpha helical segment can adopt a
+#=GF CC   transmembrane localisation also in a membrane. The unprocessed
+#=GF CC   Dpl protein is thought to posses a possible channel formation
+#=GF CC   mechanism which may be related to toxicity through direct
+#=GF CC   interaction with cell membranes and damage to the cell membrane
+#=GF CC   [1]. It is suggested that the peptide is neither in an entirely
+#=GF CC   random coil nor in a completely alpha-helical conformation,
+#=GF CC   possible continuously interchanging between the two
+#=GF CC   conformations [2].
+#=GF SQ   7
+#=GS A0A2I3SH27_PANTR/1-30  AC A0A2I3SH27.1
+#=GS A2BDH5_MONDO/1-30      AC A2BDH5.1
+#=GS A0A7N4PMQ5_SARHA/1-30  AC A0A7N4PMQ5.1
+#=GS PRND_MOUSE/1-30        AC Q9QUG3.1
+#=GS PRND_SHEEP/1-30        AC Q9GJY2.1
+#=GS G5B4V7_HETGA/1-30      AC G5B4V7.1
+#=GS G1U3H4_RABIT/1-30      AC G1U3H4.1
+A0A2I3SH27_PANTR/1-30             MRKHLSWWWLATVCMLLFSHLSAVQARGIK
+A2BDH5_MONDO/1-30                 MRRHLGICWIAIFFALLFSDLSLVKAKTTR
+A0A7N4PMQ5_SARHA/1-30             MRTPLETWWIAIFFTLLFSDLSLVKAKGIR
+PRND_MOUSE/1-30                   MKNRLGTWWVAILCMLLASHLSTVKARGIK
+PRND_SHEEP/1-30                   MRKHLGGCWLAIVCVLLFSQLSSVKARGIK
+G5B4V7_HETGA/1-30                 MKTPLGVWALALACVLLLCHLSSVTARGIK
+G1U3H4_RABIT/1-30                 MRKHLGAWGLAIVCVLLFSHLPPAKARGIK
+#=GC seq_cons                     MRp+LGsWWlAIhCsLLFScLSsVKARGIK

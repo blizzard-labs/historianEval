@@ -1,0 +1,84 @@
+# STOCKHOLM 1.0
+#=GF ID   GFD1
+#=GF AC   PF17331.6
+#=GF DE   GFD1 mRNA transport factor
+#=GF AU   El-Gebali S;0000-0003-1378-5495
+#=GF SE   PRODOM:PD098974
+#=GF GA   23.40 23.40;
+#=GF TC   23.40 23.40;
+#=GF NC   22.90 21.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 -Z 75585367 --cpu 4 HMM pfamseq
+#=GF TP   Motif
+#=GF RN   [1]
+#=GF RM   20463024
+#=GF RT   Structural basis for the function of the Saccharomyces
+#=GF RT   cerevisiae Gfd1 protein in mRNA nuclear export.
+#=GF RA   Zheng C, Fasken MB, Marshall NJ, Brockmann C, Rubinson ME, Wente
+#=GF RA   SR, Corbett AH, Stewart M;
+#=GF RL   J Biol Chem. 2010;285:20704-20715.
+#=GF DR   INTERPRO; IPR020401;
+#=GF DR   SO; 0001067; polypeptide_motif;
+#=GF CC   Following transcription, mRNA is processed, packaged into
+#=GF CC   messenger ribonucleoprotein (mRNP) particles, and transported
+#=GF CC   through nuclear pores (NPCs) to the cytoplasm. Gfd1 is one of
+#=GF CC   several factors that, although not essential for mRNA export,
+#=GF CC   enhances the efficiency of the process, either by facilitating
+#=GF CC   integration of different steps in the gene expression pathway or
+#=GF CC   by increasing the rate of key steps. Gfd1 localizes to the
+#=GF CC   cytoplasm and nuclear rim. It interacts with a number of
+#=GF CC   components of the mRNA export machinery in yeast. Most notably,
+#=GF CC   Gfd1 interacts with the Dbp5-activating protein, Gle1, the
+#=GF CC   cytoplasmic nucleoporin Nup42/Rip1, the putative RNA helicase,
+#=GF CC   Dbp5, and a protein implicated in mRNA export, Zds1. Gfd1 forms
+#=GF CC   a complex with Nab2 both in vitro and in vivo in which Gfd1
+#=GF CC   binds to the N-terminal domain of Nab2. The crystal structure,
+#=GF CC   together with complementary NMR data, indicated that residues
+#=GF CC   126-150 of Gfd1 form a single alpha-helix that binds primarily
+#=GF CC   to helix 2 of Nab2-N. Gfd1 functions to co-ordinate Dbp5 and
+#=GF CC   Gle1 to facilitate the removal of Nab2 from mRNPs at the
+#=GF CC   cytoplasmic face of nuclear pores [1].
+#=GF SQ   21
+#=GS A0A1G4K756_9SACH/133-176  AC A0A1G4K756.1
+#=GS A0A1G4MCU6_LACFM/153-196  AC A0A1G4MCU6.1
+#=GS C5DDY1_LACTC/180-223      AC C5DDY1.1
+#=GS A0A0C7MYI5_9SACH/181-224  AC A0A0C7MYI5.1
+#=GS A0A1G4K1H9_9SACH/194-237  AC A0A1G4K1H9.1
+#=GS G8JNW6_ERECY/219-262      AC G8JNW6.1
+#=GS Q751C0_ASHGO/171-214      AC Q751C0.2
+#=GS H2AQM8_KAZAF/132-175      AC H2AQM8.1
+#=GS G8ZNM7_TORDC/57-100       AC G8ZNM7.1
+#=GS J5PDM2_SACK1/128-171      AC J5PDM2.1
+#=GS J7SAF9_KAZNA/148-191      AC J7SAF9.1
+#=GS G0WHJ5_NAUDC/111-160      AC G0WHJ5.1
+#=GS A0A1S7HBH6_9SACH/240-283  AC A0A1S7HBH6.1
+#=GS A0A1E5RES4_9ASCO/179-219  AC A0A1E5RES4.1
+#=GS G0VC45_NAUCC/139-178      AC G0VC45.1
+#=GS A7THT1_VANPO/133-176      AC A7THT1.1
+#=GS G8BVL2_TETPH/221-264      AC G8BVL2.1
+#=GS A0A1X7R8Y6_9SACH/153-196  AC A0A1X7R8Y6.1
+#=GS I2H1R5_TETBL/157-200      AC I2H1R5.1
+#=GS Q6FS90_CANGA/190-233      AC Q6FS90.1
+#=GS Q6CVX1_KLULA/161-204      AC Q6CVX1.1
+A0A1G4K756_9SACH/133-176             KQDLLQAKIGEQKKILGTSRHKQQQENLLSDFLKDDTGFD.......WNDD
+A0A1G4MCU6_LACFM/153-196             KMDVLKRKIEEQKQIQEKNHHKAQQTSLLNDFLNNDTAFD.......WDDE
+C5DDY1_LACTC/180-223                 KMELLKQKVEEQKRIKETNQHKSQQTELLKDFLNDDASFN.......WEDE
+A0A0C7MYI5_9SACH/181-224             KSEILKRKIEEQRKIRNANIRKAQQFDLLQDFLKDDDDKG.......WEED
+A0A1G4K1H9_9SACH/194-237             KSEILKRKIEEQRKIRAANLHKAQQSDLLKDFLNDDSYTN.......WDDE
+G8JNW6_ERECY/219-262                 RTNVLKKKIEEQKRMLEEKKHKALQKQILDEFLCDECPLE.......WDES
+Q751C0_ASHGO/171-214                 TVSELERRIFEQRKLLAMRQHQAEQERLLQDFLCDDFPLE.......WDEN
+H2AQM8_KAZAF/132-175                 KIDILKKKIEEQRQIFEEKKHKEQQKQLLEDFLNDDSTFD.......WDDE
+G8ZNM7_TORDC/57-100                  KKALLKKKIEEQRQIYEKNQHQKQQKELLESFLNDDGGFQ.......WSDE
+J5PDM2_SACK1/128-171                 KMKLLKKKIEEQREILQKTHHNKQQQQVLMDFLNDEGNSN.......WVDD
+J7SAF9_KAZNA/148-191                 KTALLREKLEEQRRIFAEKERKSEQQKLLDDFLNDDSTLN.......WADD
+G0WHJ5_NAUDC/111-160                 KMDLLRKKIEEQKIIFQEKK.KATQQKLLNDFLNDDGTNSIFDSSSNWLDD
+A0A1S7HBH6_9SACH/240-283             KSDILKQRIEEQRRILEEKQHKKEQDDLLKSFLNGDDTLQ.......WDED
+A0A1E5RES4_9ASCO/179-219             KVDLLKKKIAEQKKILEKTHEKKKIMDSIDMLTKD...LD.......WDAE
+G0VC45_NAUCC/139-178                 KIDILKKKIAEQKKIQEEKK....QKQLLDDFLNGDDKFE.......WTAE
+A7THT1_VANPO/133-176                 KLELLKKKIDEQKTIYKKHQHEEEQKQLLSDFLNGDDKFS.......WDDE
+G8BVL2_TETPH/221-264                 KLALLKKKIEEQKNIYKDIKHKKEQKQLLNDFLNNDDAFK.......WDDE
+A0A1X7R8Y6_9SACH/153-196             KLDIIKKRIAEQQSIFKVTKHKEQQKQLLDDFLNGDDEIN.......WEDE
+I2H1R5_TETBL/157-200                 KLEELKKRIEEQKKFLKVTKHKEEQKKLLEDFLNNDSKFD.......WVND
+Q6FS90_CANGA/190-233                 KMELLKKKIEEQKKLLNERTHKEKQKELLAAFLEGDEQFA.......WDDE
+Q6CVX1_KLULA/161-204                 KAQSLKKKIEEQKKLLEENKHKAEQKDLINALLEGDVSFD.......WEED
+#=GC seq_cons                        Kh-lLKKKIEEQ++IhccpcHKppQcpLLpDFLNsDsshs.......W-D-

@@ -1,0 +1,38 @@
+# STOCKHOLM 1.0
+#=GF ID   STAT1_TAZ2bind
+#=GF AC   PF12162.12
+#=GF DE   STAT1 TAZ2 binding domain
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2ka6
+#=GF GA   21.60 21.60;
+#=GF TC   21.90 21.80;
+#=GF NC   21.50 21.20;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Motif
+#=GF RN   [1]
+#=GF RM   19214187
+#=GF RT   Structural basis for recruitment of CBP/p300 coactivators by
+#=GF RT   STAT1 and STAT2 transactivation domains.
+#=GF RA   Wojciak JM, Martinez-Yamout MA, Dyson HJ, Wright PE;
+#=GF RL   EMBO J. 2009;28:948-958.
+#=GF DR   INTERPRO; IPR022752;
+#=GF DR   SO; 0001067; polypeptide_motif;
+#=GF CC   This domain family is found in eukaryotes, and is approximately
+#=GF CC   20 amino acids in length, and the family is found in association
+#=GF CC   with Pfam:PF02865, Pfam:PF00017, Pfam:PF01017, Pfam:PF02864.
+#=GF CC   This domain is the C terminal domain of STAT1. This domain binds
+#=GF CC   selectively to the TAZ2 domain of CRB (CREB-binding protein). In
+#=GF CC   this process it becomes a transcriptional activator and can
+#=GF CC   initiate transcription of certain genes.
+#=GF SQ   4
+#=GS G1N4C3_MELGA/705-729  AC G1N4C3.3
+#=GS W5MV00_LEPOC/713-737  AC W5MV00.1
+#=GS I3K2L6_ORENI/742-764  AC I3K2L6.2
+#=GS H3C088_TETNG/712-734  AC H3C088.1
+G1N4C3_MELGA/705-729             SRLQSPENLLPMSPEEFDEVSRMVD
+W5MV00_LEPOC/713-737             SRLQSTETMLPLSPEDFGELTRIIN
+I3K2L6_ORENI/742-764             SRLQ..DNMMPMSPDDYKALEQYVS
+H3C088_TETNG/712-734             SKLQ..DNMMPMSPDDYNALRQLVT
+#=GC seq_cons                    SRLQ..-NMhPMSP-DastLpphVs

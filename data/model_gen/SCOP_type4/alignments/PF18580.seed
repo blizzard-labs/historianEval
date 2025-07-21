@@ -1,0 +1,74 @@
+# STOCKHOLM 1.0
+#=GF ID   HTH_SUN2
+#=GF AC   PF18580.5
+#=GF DE   SUN2 helix-turn-helix domain
+#=GF PI   Sun2_CC2;
+#=GF AU   El-Gebali S;0000-0003-1378-5495
+#=GF SE   ECOD:EUF07923
+#=GF GA   30.40 30.40;
+#=GF TC   30.40 30.50;
+#=GF NC   30.30 30.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Domain
+#=GF CL   CL0123
+#=GF RN   [1]
+#=GF RM   26688217
+#=GF RT   Coiled-Coil Domains of SUN Proteins as Intrinsic Dynamic
+#=GF RT   Regulators.
+#=GF RA   Nie S, Ke H, Gao F, Ren J, Wang M, Huo L, Gong W, Feng W;
+#=GF RL   Structure. 2016;24:80-91.
+#=GF RN   [2]
+#=GF RM   22170055
+#=GF RT   Structure of Sad1-UNC84 homology (SUN) domain defines features
+#=GF RT   of molecular bridge in nuclear envelope.
+#=GF RA   Zhou Z, Du X, Cai Z, Song X, Zhang H, Mizuno T, Suzuki E, Yee
+#=GF RA   MR, Berezov A, Murali R, Wu SL, Karger BL, Greene MI, Wang Q;
+#=GF RL   J Biol Chem. 2012;287:5317-5326.
+#=GF DR   INTERPRO; IPR040994;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   LINC complexes are formed by coupling of KASH (Klarsicht, ANC-1,
+#=GF CC   and Syne/Nesprin Homology) and SUN (Sad1 and UNC-84) proteins
+#=GF CC   from the inner and outer nuclear membranes (INM and ONM,
+#=GF CC   respectively). the formation of LINC complexes by KASH and SUN
+#=GF CC   proteins at the nuclear envelope (NE) establishes the physical
+#=GF CC   linkage between the cytoskeleton and nuclear lamina, which is
+#=GF CC   instrumental for the mechanical force transmission from the
+#=GF CC   cytoplasm to the nuclear interior, and is essential for cellular
+#=GF CC   processes such as nuclear positioning and migration,
+#=GF CC   centrosome-nucleus anchorage, and chromosome dynamics. This
+#=GF CC   entry represents an HTH domain found in SUN2 that forms a
+#=GF CC   three-helix bundle to lock the SUN domain in an inactive
+#=GF CC   conformation acting as an inhibitory component. 
+#=GF SQ   15
+#=GS G1THH7_RABIT/383-440       AC G1THH7.3
+#=GS A0A091E028_FUKDA/491-548   AC A0A091E028.1
+#=GS F6RQM4_MONDO/436-493       AC F6RQM4.2
+#=GS F6SF78_ORNAN/496-553       AC F6SF78.2
+#=GS W5M0J4_LEPOC/693-751       AC W5M0J4.1
+#=GS W5LYM1_LEPOC/128-183       AC W5LYM1.1
+#=GS A0A0P7TFP1_SCLFO/305-362   AC A0A0P7TFP1.1
+#=GS A0A8M1QKC1_DANRE/343-399   AC A0A8M1QKC1.1
+#=GS G1KHB8_ANOCA/482-535       AC G1KHB8.2
+#=GS A0A151NHP2_ALLMI/976-1033  AC A0A151NHP2.1
+#=GS K7F9C1_PELSI/481-538       AC K7F9C1.1
+#=GS A0A087QLR5_APTFO/448-505   AC A0A087QLR5.1
+#=GS A0A091GH79_9AVES/463-516   AC A0A091GH79.1
+#=GS G3T5D1_LOXAF/503-560       AC G3T5D1.1
+#=GS W5Q366_SHEEP/568-625       AC W5Q366.1
+G1THH7_RABIT/383-440                  LQAQLRELESKILAQVAETQGTSARE.AAAALSLTLQREGVIGVTEEQVHRIVKQALQR
+A0A091E028_FUKDA/491-548              VQAQLQELESKILTHVTEMQGKSARE.AAALLGRTLQKEGVVGVTEEQVQRIVKQALQR
+F6RQM4_MONDO/436-493                  VQAQLRDLEHRILTQMAEEQGKFVRE.TAARVEQTLDKEGEVGITEEKVHRIVNQALKR
+F6SF78_ORNAN/496-553                  LHDQLQKLEHKILAHLAQERGKSAQE.AAAGLGVVLRKEGVTGVTEEQVHHIVSQALKR
+W5M0J4_LEPOC/693-751                  LQGRLASLEQRVFKNITSYTSQTKQMPTAQVVTSAVNGAGVTGITEEQVHAIVNNALRL
+W5LYM1_LEPOC/128-183                  LQEELQDLEQKILARLVQGEGQEW...AWHSVDKILESEDITAVTLQDVHAITERALKE
+A0A0P7TFP1_SCLFO/305-362              LQQALGDLERRLLQKLAEEREKEQPD.MWRSVGETLQREGAGAVTVEDIQQIVHRALRL
+A0A8M1QKC1_DANRE/343-399              LQRALQDLEKQILEKLAHEKG.SSRD.VWRTVGETLQQEGAGAATIQDVKEIVHRAISL
+G1KHB8_ANOCA/482-535                  LQEHLLALEKKILARISEDQEFSVQN.....VRVALQREGVIGVTQEDVHRIVNQALNR
+A0A151NHP2_ALLMI/976-1033             LQDQLQEMEHRILAKISEDQQMSAQD.ARASVRVALQQGGVMAVTEEEVHLIVNRALKR
+K7F9C1_PELSI/481-538                  LQDKLRELEHRILASVSEGQRLSARD.AKASIGVALQQEGVTGVTEEQVHVIVNRALQR
+A0A087QLR5_APTFO/448-505              LQAELQALERKILAKVLEDRRLSARD.AQAGIGVALRQGGTTGVTEEQVHLIVGQALKR
+A0A091GH79_9AVES/463-516              LQTELQSLEQKILAKVLEDQALLVQD.VQAGTGVAVRE....GVTEEQVHHIVSQALQR
+G3T5D1_LOXAF/503-560                  IEARLQELESRILAHMAETQGKSVKE.AAASLGLMLQKEGMIGVTEEQVHHIVSQALKR
+W5Q366_SHEEP/568-625                  MEAQLRDLESKILTHVAEMQGKSARE.AVASLGLTLQREGVIGVTEEQVHRIVSQALKR
+#=GC seq_cons                         LQspLp-LEp+ILA+luEpQupSsp-.AtAulGlsLQcEGlsGVTEEQVHcIVsQAL+R

@@ -1,0 +1,39 @@
+# STOCKHOLM 1.0
+#=GF ID   AIMP2_LysRS_bd
+#=GF AC   PF16780.9
+#=GF DE   AIMP2 lysyl-tRNA synthetase binding domain
+#=GF AU   Eberhardt R;0000-0001-6152-1369
+#=GF SE   PDB:4dpg
+#=GF GA   27.00 27.00;
+#=GF TC   27.00 27.00;
+#=GF NC   26.20 26.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   23159739
+#=GF RT   Structural switch of lysyl-tRNA synthetase between translation
+#=GF RT   and transcription.
+#=GF RA   Ofir-Birin Y, Fang P, Bennett SP, Zhang HM, Wang J, Rachmin I,
+#=GF RA   Shapiro R, Song J, Dagan A, Pozo J, Kim S, Marshall AG, Schimmel
+#=GF RA   P, Yang XL, Nechushtan H, Razin E, Guo M;
+#=GF RL   Mol Cell. 2013;49:30-42.
+#=GF DR   INTERPRO; IPR031889;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This is the lysyl-tRNA synthetase binding domain of aminoacyl
+#=GF CC   tRNA synthase complex-interacting multifunctional protein 2
+#=GF CC   (AIMP2) [1].
+#=GF SQ   6
+#=GS A0A803SN75_ANOCA/50-98  AC A0A803SN75.1
+#=GS G1P100_MYOLU/1-44       AC G1P100.1
+#=GS A0A8C0KUG3_CANLU/1-44   AC A0A8C0KUG3.1
+#=GS F7ELU9_MONDO/1-47       AC F7ELU9.1
+#=GS M4AJN5_XIPMA/1-46       AC M4AJN5.1
+#=GS A0A674NTG6_TAKRU/1-46   AC A0A674NTG6.1
+A0A803SN75_ANOCA/50-98             MPMYKVRPFQGGPGSAVPPEHLPTCMYRLGSVHRE..PKAGPSPPAEQDEV
+G1P100_MYOLU/1-44                  MPMYQVKPYHEGGSSLCV..ELPTCMYRLPNVHRP.....TSSPAQNAGHV
+A0A8C0KUG3_CANLU/1-44              MPMYQVKPYHGGSASLRV..ELPTCMYRLPNVHGR.....TGSPAPDAGHV
+F7ELU9_MONDO/1-47                  MPMYQVKPYHGVSGSLCV..ELPTCMYRVPNIHGK..NRGSAFTVGPAGHV
+M4AJN5_XIPMA/1-46                  MSMYQVKPV...SPDIKI..DLPTCMYKLSNIHTRQENSCSLDHVLQNGDV
+A0A674NTG6_TAKRU/1-46              MPMYQVKPI..VDRHIAI..DLPTCMYSY.QIHAQHGDSCTAEHALQNGEV
+#=GC seq_cons                      MPMYQVKPaptsuuSlsl..-LPTCMYRLsNlHsc..spsoussshpsGcV

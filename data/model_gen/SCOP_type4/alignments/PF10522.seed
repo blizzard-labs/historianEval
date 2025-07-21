@@ -1,0 +1,38 @@
+# STOCKHOLM 1.0
+#=GF ID   RII_binding_1
+#=GF AC   PF10522.13
+#=GF DE   RII binding domain
+#=GF AU   Bateman A;0000-0002-6982-4660
+#=GF SE   Vijayaraghavan et al. Mol Endocrinology 13(5):705-717 (1999)
+#=GF GA   18.80 18.80;
+#=GF TC   18.80 18.80;
+#=GF NC   18.70 18.70;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Motif
+#=GF RN   [1]
+#=GF RM   10319321
+#=GF RT   Isolation and molecular characterization of AKAP110, a novel,
+#=GF RT   sperm-specific protein kinase A-anchoring protein. 
+#=GF RA   Vijayaraghavan S, Liberty GA, Mohan J, Winfrey VP, Olson GE,
+#=GF RA   Carr DW; 
+#=GF RL   Mol Endocrinol 1999;13:705-717.
+#=GF DR   INTERPRO; IPR018459;
+#=GF DR   SO; 0001067; polypeptide_motif;
+#=GF CC   This domain is found is a wide variety of AKAPs (A kinase
+#=GF CC   anchoring proteins) [1]. The domain is also found on
+#=GF CC   micro-tubule-associated proteins.
+#=GF SQ   6
+#=GS A8MZ31_HUMAN/85-103     AC A8MZ31.1
+#=GS H0YMW2_HUMAN/1246-1264  AC H0YMW2.1
+#=GS G3S512_GORGO/342-360    AC G3S512.2
+#=GS D4A9M6_RAT/301-319      AC D4A9M6.3
+#=GS F6URQ8_ORNAN/191-209    AC F6URQ8.2
+#=GS L9LCI4_TUPCH/1591-1609  AC L9LCI4.1
+A8MZ31_HUMAN/85-103                ETAEEVSARIVQVVTAEAV
+H0YMW2_HUMAN/1246-1264             DLIEEAASRIVDAVIEQVK
+G3S512_GORGO/342-360               EEIERAAFQIISQVISEAT
+D4A9M6_RAT/301-319                 DQIEQTAFQIISQVILEAT
+F6URQ8_ORNAN/191-209               DDLSFYVNRLSSLVIQMAR
+L9LCI4_TUPCH/1591-1609             LELETKSNKLVQNIIQTAV
+#=GC seq_cons                      -plEpsus+IlstVIppAs

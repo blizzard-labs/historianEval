@@ -1,0 +1,43 @@
+# STOCKHOLM 1.0
+#=GF ID   BCL9
+#=GF AC   PF11502.12
+#=GF DE   B-cell lymphoma 9 protein
+#=GF AU   Pollington J;0000-0002-8158-8998
+#=GF SE   pdb_2gl7
+#=GF GA   25.00 25.00;
+#=GF TC   25.90 25.20;
+#=GF NC   24.90 24.60;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 --cpu 4 -E 1000 HMM pfamseq
+#=GF TP   Family
+#=GF RN   [1]
+#=GF RM   17052462
+#=GF RT   Crystal structure of a beta-catenin/BCL9/Tcf4 complex. 
+#=GF RA   Sampietro J, Dahlberg CL, Cho US, Hinds TR, Kimelman D, Xu W; 
+#=GF RL   Mol Cell. 2006;24:293-300.
+#=GF DR   INTERPRO; IPR024670;
+#=GF DR   SO; 0100021; polypeptide_conserved_region;
+#=GF CC   The Wnt pathway plays a role in embryonic development, stem cell
+#=GF CC   growth and tumorigenesis. BCL9 associates with beta-catenin and
+#=GF CC   Tcf in the nucleus when the Wnt pathway is stimulated leading to
+#=GF CC   the transactivation of Wnt target genes [1].
+#=GF SQ   9
+#=GS D6W7S1_TRICA/298-336      AC D6W7S1.1
+#=GS B4NHX0_DROWI/551-589      AC B4NHX0.2
+#=GS B4R2F2_DROSI/446-484      AC B4R2F2.1
+#=GS F1R405_DANRE/502-540      AC F1R405.1
+#=GS G1MYB3_MELGA/385-423      AC G1MYB3.3
+#=GS H2LAY2_ORYLA/350-388      AC H2LAY2.2
+#=GS H3D8V3_TETNG/340-378      AC H3D8V3.1
+#=GS E2ADR5_CAMFO/313-351      AC E2ADR5.1
+#=GS A0A8R2FDD6_ACYPI/569-607  AC A0A8R2FDD6.1
+D6W7S1_TRICA/298-336                 NLTPQQRQHREEQLATIRKMQQMLFPENQAMDGQPPPGN
+B4NHX0_DROWI/551-589                 NLTPQQRQHREEQLAKLKKMNQFLFPEHDSGVGGQMIGM
+B4R2F2_DROSI/446-484                 NLTPQQRQHREEQLAKIKKMNQFLFPENENSVGANVSSQ
+F1R405_DANRE/502-540                 GLSQEQLEHRERSLQTLRDIQRMLFPDDKDMAAMGQGNM
+G1MYB3_MELGA/385-423                 GLSKEQLEHRERSLQTLRDIERLLLRSGEAEPFMKSSQS
+H2LAY2_ORYLA/350-388                 GLSKEQLEHRERSLQTLRDIERLFLRSGTAGGPGDAGGP
+H3D8V3_TETNG/340-378                 GLSQEQLEHRQRSLQTLRDIQRMLFPDDRDAPPPGPPQP
+E2ADR5_CAMFO/313-351                 NLTPRQRQHREVQLATLRKMQLMLFKDEQSGNALADTTQ
+A0A8R2FDD6_ACYPI/569-607             NLTPQQRQHREEQQATLRKLQLVLFPENSNSGGGPSQQQ
+#=GC seq_cons                        sLo.pQhpHREcpLtTLRchpphLFP-spsusuhssss.

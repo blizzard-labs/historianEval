@@ -1,0 +1,51 @@
+# STOCKHOLM 1.0
+#=GF ID   AKAP7_RIRII_bdg
+#=GF AC   PF10470.13
+#=GF DE   PKA-RI-RII subunit binding domain of A-kinase anchor protein
+#=GF AU   Buljan M;0000-0001-8101-8197
+#=GF AU   Coggill P;0000-0001-5731-1588
+#=GF SE   TreeFam_TF105406
+#=GF GA   22.70 22.70;
+#=GF TC   22.70 22.70;
+#=GF NC   22.60 22.50;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch --cpu 4 -Z 75585367 -E 1000 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   12804576
+#=GF RT   AKAP7gamma is a nuclear RI-binding AKAP. 
+#=GF RA   Brown RL, August SL, Williams CJ, Moss SB; 
+#=GF RL   Biochem Biophys Res Commun. 2003;306:394-401.
+#=GF RN   [2]
+#=GF RM   16483255
+#=GF RT   High-affinity AKAP7delta-protein kinase A interaction yields
+#=GF RT   novel protein kinase A-anchoring disruptor peptides. 
+#=GF RA   Hundsrucker C, Krause G, Beyermann M, Prinz A, Zimmermann B,
+#=GF RA   Diekmann O, Lorenz D, Stefan E, Nedvetsky P, Dathe M, Christian
+#=GF RA   F, McSorley T, Krause E, McConnachie G, Herberg FW, Scott JD,
+#=GF RA   Rosenthal W, Klussmann E; 
+#=GF RL   Biochem J. 2006;396:297-306.
+#=GF DR   INTERPRO; IPR019511;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   AKAP7_RIRII_bdg is the C-terminal domain of the cyclic
+#=GF CC   AMP-dependent protein kinase A, PKA, anchor protein AKAP7. This
+#=GF CC   protein anchors PKA, for its role in regulating PKA-mediated
+#=GF CC   gene transcription in both somatic cells and oocytes, by binding
+#=GF CC   to its regulatory subunits, RI and RII, hence being known as a
+#=GF CC   dual-specific AKAP [1]. The 25 crucial amino acids of
+#=GF CC   RII-binding domains in general form structurally conserved
+#=GF CC   amphipathic helices with unrelated sequences; hydrophobic amino
+#=GF CC   acid residues form the backbone of the interaction and hydrogen
+#=GF CC   bond- and salt-bridge-forming amino acid residues increase the
+#=GF CC   affinity of the interaction [2]. The N-terminus, of family
+#=GF CC   AKAP7_NLS, carries the nuclear localisation signal.
+#=GF SQ   4
+#=GS A0A2K5C7A5_AOTNA/22-78  AC A0A2K5C7A5.1
+#=GS AKA7A_MOUSE/22-78       AC O55074.4
+#=GS G1KYP3_ANOCA/256-312    AC G1KYP3.2
+#=GS G1NKF9_MELGA/25-82      AC G1NKF9.2
+A0A2K5C7A5_AOTNA/22-78             GEPDDAELVRLSKRLVENAVLKAVQQYLEETQNKNKPGE.GSSVKTEAADRNG.NDNEN
+AKA7A_MOUSE/22-78                  REPEDAELVRLSKRLVENAVLKAVQQYLEETQNKKQPGE.GNSTKAEEGDRNG.DGSDN
+G1KYP3_ANOCA/256-312               AEPDDAELLSLSKRLVENAVLKAVQQYLEETQNKNRQLDFGAPVKTEEPTLG..NNMEN
+G1NKF9_MELGA/25-82                 AEPDDAELVSLSKRLVENAVLKAVQQYLEETQNKARQTD.GSPLKAEEAASGTKNESNN
+#=GC seq_cons                      uEPDDAELVpLSKRLVENAVLKAVQQYLEETQNKs+.s-.GuslKsEEuspss.Nss-N

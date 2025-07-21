@@ -1,0 +1,37 @@
+# STOCKHOLM 1.0
+#=GF ID   INSC_LBD
+#=GF AC   PF16748.9
+#=GF DE   Inscuteable LGN-binding domain
+#=GF AU   Eberhardt R;0000-0001-6152-1369
+#=GF SE   PDB:3sf4
+#=GF GA   27.00 27.00;
+#=GF TC   27.20 27.40;
+#=GF NC   26.90 26.30;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -E 1000 --cpu 4 -Z 75585367 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   22074847
+#=GF RT   Structural basis for interaction between the conserved cell
+#=GF RT   polarity proteins Inscuteable and Leu-Gly-Asn repeat-enriched
+#=GF RT   protein (LGN).
+#=GF RA   Yuzawa S, Kamakura S, Iwakiri Y, Hayase J, Sumimoto H;
+#=GF RL   Proc Natl Acad Sci U S A. 2011;108:19210-19215.
+#=GF DR   INTERPRO; IPR031938;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This is the LGN-binding domain (LBD) of the inscuteable
+#=GF CC   homologue protein. It interacts with the TPR motifs of
+#=GF CC   G-protein-signaling modulator 2 (GPSM2) (LGN) and stabilises LGN
+#=GF CC   [1].
+#=GF SQ   5
+#=GS W5LNC4_ASTMX/12-55   AC W5LNC4.2
+#=GS W5M5K0_LEPOC/23-69   AC W5M5K0.1
+#=GS G3NTX1_GASAC/5-52    AC G3NTX1.1
+#=GS G3WN67_SARHA/83-129  AC G3WN67.2
+#=GS D3Z267_MOUSE/23-69   AC D3Z267.2
+W5LNC4_ASTMX/12-55              IQVDSVQRWMEDLRHMTEVECMCVLQSKPIAVDEDS.LGELIVS...A
+W5M5K0_LEPOC/23-69              IQIDSVQRWMEDLRYMTEVECMCILQSKPISVDEDV.HSELIINPEHV
+G3NTX1_GASAC/5-52               LHVDSVQRWMEDLRHMTEVECMCVLQAKPIGVEEDAQQGELIVAVGAG
+G3WN67_SARHA/83-129             IQVDSVQRWMEDLKLMTDCECMCILQSKPISLEDDA.QSELIPSSQHG
+D3Z267_MOUSE/23-69              MQVDSVQRWMEDLKLMTECECMCVLQAKPISLEEDT.QGDLILAGGPG
+#=GC seq_cons                   IQVDSVQRWMEDLRaMTEVECMCVLQSKPISVEEDu.QGELIlusttG

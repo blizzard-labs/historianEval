@@ -1,0 +1,49 @@
+# STOCKHOLM 1.0
+#=GF ID   Proho_convert
+#=GF AC   PF12177.12
+#=GF DE   Prohormone convertase enzyme
+#=GF AU   Mistry J;0000-0003-2479-5322
+#=GF AU   Gavin OL;
+#=GF SE   pdb_2ke3
+#=GF GA   25.00 25.00;
+#=GF TC   25.50 28.20;
+#=GF NC   24.00 17.80;
+#=GF BM   hmmbuild HMM.ann SEED.ann
+#=GF SM   hmmsearch -Z 75585367 -E 1000 --cpu 4 HMM pfamseq
+#=GF TP   Domain
+#=GF RN   [1]
+#=GF RM   19376969
+#=GF RT   Functional and structural characterization of a dense core
+#=GF RT   secretory granule sorting domain from the PC1/3 protease.
+#=GF RA   Dikeakos JD, Di Lello P, Lacombe MJ, Ghirlando R, Legault P,
+#=GF RA   Reudelhuber TL, Omichinski JG;
+#=GF RL   Proc Natl Acad Sci U S A. 2009;106:7408-7413.
+#=GF DR   INTERPRO; IPR022005;
+#=GF DR   SO; 0000417; polypeptide_domain;
+#=GF CC   This domain family is found in eukaryotes, and is approximately
+#=GF CC   40 amino acids in length. The family is found in association
+#=GF CC   with Pfam:PF01483, Pfam:PF00082. There are two completely
+#=GF CC   conserved residues (Y and D) that may be functionally important.
+#=GF CC   This protein is the C terminal domain of a prohormone convertase
+#=GF CC   enzyme which targets hormones in dense core secretory granules.
+#=GF CC   This C terminal tail domain is the domain responsible for
+#=GF CC   targeting these dense core secretory granules. The domain adopts
+#=GF CC   an alpha helical structure. 
+#=GF SQ   8
+#=GS G3P2G0_GASAC/737-775      AC G3P2G0.1
+#=GS H2LXE5_ORYLA/727-765      AC H2LXE5.2
+#=GS M3ZTQ7_XIPMA/733-771      AC M3ZTQ7.1
+#=GS H3AFD1_LATCH/622-660      AC H3AFD1.1
+#=GS A0A2K6B7N8_MACNE/638-676  AC A0A2K6B7N8.1
+#=GS G3VJH4_SARHA/712-750      AC G3VJH4.1
+#=GS W5KGZ8_ASTMX/683-720      AC W5KGZ8.2
+#=GS A0A8M6YV19_DANRE/713-751  AC A0A8M6YV19.1
+G3P2G0_GASAC/737-775                 YQGPEDSVYSDYSDGFYSIKPYRHRDDRLLQALFEMIDG
+H2LXE5_ORYLA/727-765                 YHGAGDNIYSDYSDGFYNIKPYRHRDDRLMQALFQMLDD
+M3ZTQ7_XIPMA/733-771                 FSGPGDSLYSDYSDGFYNIKPYKHRNDRLLQALFEMLDD
+H3AFD1_LATCH/622-660                 QKDSEDDLYNDYSDLFYNVKPYRHRDDRLLQALFELLKK
+A0A2K6B7N8_MACNE/638-676             LKDSEDSLYNDYVDVFYNTKPYKHRDDRLLQALVDILNE
+G3VJH4_SARHA/712-750                 LRNAENSLYSDYVDLFYSTKPYKHRDDRLLQALVDILKE
+W5KGZ8_ASTMX/683-720                 .RNPESSLYNHYRDSFYRNRAYRHRDEQLLQALFDMLDG
+A0A8M6YV19_DANRE/713-751             YRASQNGLFNDYSDNFYRAQPYRHRDDRLLQALFDMLRD
+#=GC seq_cons                        h+suEDSLYsDYSDsFYssKPYRHRDDRLLQALF-MLc-
