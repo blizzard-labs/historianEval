@@ -8,6 +8,8 @@ to a target vector of normalized Colless imbalance metric and gamma statistic.
 """
 
 import dendropy
+import dendropy.simulate
+from dendropy.simulate import treesim
 import numpy as np
 import random
 import math
@@ -19,7 +21,8 @@ import copy
 class BDTreeOptimizer:
     """Birth-Death Tree optimizer using simulated annealing."""
     
-    def __init__(self, birth_rate: float, death_rate: float, bd_model: str,
+    def __init__(self, birth_rate: float, death_rate: float, birth_alpha: float, death_alpha: float, 
+                 bd_model: str, crown_age: float,
                  target_colless: float, target_gamma: float, num_taxa: int = 20):
         """
         Initialize the optimizer.
@@ -34,12 +37,42 @@ class BDTreeOptimizer:
         """
         self.birth_rate = birth_rate
         self.death_rate = death_rate
+        self.birth_alpha = birth_alpha
+        self.death_alpha = death_alpha
+        
         self.bd_model = bd_model
+        self.crown_age = crown_age
+        
         self.target_vector = np.array([target_colless, target_gamma])
         self.num_taxa = num_taxa
         self.best_tree = None
         self.best_distance = float('inf')
-        self.current_tree = None
+        self.current_tree = None  
+
+
+    def generate_rate_strings(self, present_rate, function, max_time, alpha, num_intervals=30):
+        time_points = np.linspace(0, max_time, num_intervals)
+        rates = []
+        
+        if function.lower() == 'cst':
+            rates = [present_rate]*num_intervals
+            
+        elif function.lower() == 'exp':
+            #r(t) = r0 * exp(t * alpha) ==> r0 = r(t) / (exp(t * alpha))
+            r0 = present_rate / (math.exp(max_time * alpha))
+            
+            for t in time_points:
+                rates.append(r0 * math.exp(t * alpha))
+            
+        elif function.lower() == 'lin':
+            #r(t) = r0 + alpha * t ==> r0 = r(t) - alpha * t
+            r0 = present_rate - alpha * max_time
+            
+            for t in time_points:
+                rates.append(r0 + alpha * t)
+        
+        return rates
+            
         
     def generate_bd_tree(self) -> dendropy.Tree:
         """
@@ -53,6 +86,25 @@ class BDTreeOptimizer:
         # based on the specific BD model requirements
         
         taxon_namespace = dendropy.TaxonNamespace([f"T{i+1}" for i in range(self.num_taxa)])
+        
+        birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[:4], self.crown_age, 
+                                                 self.birth_alpha)
+        death_rates = self.generate_rate_strings(self.death_ratem self.bd_model[5:], self.crown_age,
+                                                 self.death_alpha)
+        
+        assert len(birth_rates) == len(death_rates)
+        tree = dendropy.Tree()
+        
+        for i, br in enumerate(birth_rates):
+            tree = treesim.birth_death_tree(birth_rates[i],
+                                            death_rates[i],
+                                            max_time=self.crown_age,
+                                            tree=tree, 
+                                            assign_taxa=False,
+                                            repeat_until_success=True)
+            
+        
+        
         
         if 'CST' in self.bd_model:
             # Constant rate model

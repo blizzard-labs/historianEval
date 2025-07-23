@@ -93,6 +93,12 @@ def clean_protein_evolution_data(input_file, output_file=None):
     for col in numeric_columns:
         if col in cleaned_df.columns:
             cleaned_df[col] = pd.to_numeric(cleaned_df[col], errors='coerce')
+        
+    if 'best_BD_speciation_rate' in cleaned_df.columns:
+        cleaned_df['best_BD_speciation_rate'] = cleaned_df['best_BD_speciation_rate'].abs()
+    
+    if 'best_BD_extinction_rate' in cleaned_df.columns:
+        cleaned_df['best_BD_extinction_rate'] = cleaned_df['best_BD_extinction_rate'].abs()
     
     # Round numeric values to reasonable precision
     '''

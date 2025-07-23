@@ -67,7 +67,8 @@ class PhylogeneticParameterFitter:
         '''
         
         return {
-            'key_parameters' : ['n_sequences_tips', 'alignment_length', 'gamma_shape', 'prop_invariant',
+            'key_parameters' : ['n_sequences_tips', 'alignment_length', 'crown_age',
+                                'gamma_shape', 'prop_invariant',
                                 'insertion_rate', 'deletion_rate',
                                 'mean_insertion_length', 'mean_deletion_length',
                                 'normalized_colless_index', 'gamma',
