@@ -232,28 +232,43 @@ class PhylogeneticParameterFitter:
         print(f"Multivariate normal fitted successfully for {param_group}")
         return self.joint_model
     
-    def sample_parameters(self, n_samples=100, param_group='key_parameters'):
-        """Sample new parameter sets from fitted distributions"""
+    def sample_parameters(self, n_samples=100, param_group='key_parameters', min_n_sequences_tips=20):
+        """Sample new parameter sets from fitted distributions, with constraint on n_sequences_tips"""
         if self.joint_model is None:
             print("No joint model fitted. Please fit a joint distribution first.")
             return None
-        
-        if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
-            # Sample from copula
-            samples = self.joint_model.sample(n_samples)
-        else:
-            # Sample from multivariate normal
-            if self.joint_model['type'] == 'multivariate_normal':
-                samples_scaled = np.random.multivariate_normal(
-                    self.joint_model['mean'], 
-                    self.joint_model['cov'], 
-                    n_samples
-                )
-                # Inverse transform
-                samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
-                samples = pd.DataFrame(samples, columns=self.joint_model['param_names'])
-        
-        return samples
+
+        samples = pd.DataFrame()
+        attempts = 0
+        max_attempts = 10
+
+        while len(samples) < n_samples and attempts < max_attempts:
+            if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
+                # Sample from copula
+                new_samples = self.joint_model.sample(n_samples)
+            else:
+                # Sample from multivariate normal
+                if self.joint_model['type'] == 'multivariate_normal':
+                    samples_scaled = np.random.multivariate_normal(
+                        self.joint_model['mean'], 
+                        self.joint_model['cov'], 
+                        n_samples
+                    )
+                    # Inverse transform
+                    new_samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
+                    new_samples = pd.DataFrame(new_samples, columns=self.joint_model['param_names'])
+
+            # Filter samples where n_sequences_tips > min_n_sequences_tips
+            if 'n_sequences_tips' in new_samples.columns:
+                new_samples = new_samples[new_samples['n_sequences_tips'] > min_n_sequences_tips]
+
+            samples = pd.concat([samples, new_samples], ignore_index=True)
+            attempts += 1
+
+        if len(samples) > n_samples:
+            samples = samples.iloc[:n_samples]
+
+        return samples if not samples.empty else None
     
     def validate_fit(self, output_folder, param_group='key_parameters'):
         """Validate the fitted joint distribution"""
@@ -308,13 +323,28 @@ class PhylogeneticParameterFitter:
                     # Inverse logit: exp(x) / (1 + exp(x))
                     export_data[original_col] = np.exp(export_data[col]) / (1 + np.exp(export_data[col]))
                     export_data = export_data.drop(columns=[col])
-        
-        # Inverse log transform for rates
-        for col in export_data.columns:
+            
+            # Inverse log transform for rates
             if col.endswith('_log'):
                 original_col = col.replace('_log', '')
                 export_data[original_col] = np.exp(export_data[col])
                 export_data = export_data.drop(columns=[col])
+                
+            # Integer values
+            if col in ['n_sequences_tips', 'alignment_length']:
+                export_data[col] = export_data[col].astype(int)
+            
+            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length', 'normalized_colless_index']:
+                export_data[col] = np.maximum(export_data[col], 0)
+            
+        one_hot_cols = [c for c in export_data.columns if c.startswith('best_B') and not c.startswith('best_BD')]
+        max_idx = export_data[one_hot_cols].idxmax(axis=1)
+        export_data[one_hot_cols] = 0
+        
+        for i, colname in enumerate(max_idx):
+            export_data.at[i, colname] = 1
+
+        export_data['indel_rate'] = export_data['insertion_rate'] + export_data['deletion_rate']
         
         return export_data
     
@@ -359,7 +389,7 @@ def main():
         os.makedirs(output_folder)
     
     parameter_group = 'key_parameters'
-    print(model_path)
+    print(f'Loaded model: {model_path}')
     if parameter_file != 'none':
         if not os.path.exists(parameter_file):
             print(f"Error: Parameter file '{parameter_file}' does not exist.")

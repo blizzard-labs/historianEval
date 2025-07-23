@@ -253,7 +253,7 @@ class modelConstructor:
             print(f'Error generating model: {e}')
             raise
     
-    def sample_model(self, n_samples=10):
+    def sample_model(self, n_samples=100):
         #python src/model_gen/modelfit.py <output_folder> [model_path] [n_samples]
         try:
             cmd = [
@@ -308,7 +308,7 @@ def main():
     
     mc.generate_model(mc.params_wc_file)
     print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
-    mc.sample_model(n_samples=15)
+    mc.sample_model(n_samples=100)
     print(f'Sampled from model- ELAPSED TIME: {time.time() - start}============================')
     
     
