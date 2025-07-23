@@ -108,6 +108,22 @@ def clean_protein_evolution_data(input_file, output_file=None):
                 cleaned_df[col] = cleaned_df[col].round(3)
     '''
     
+    for idx, value in enumerate(df['tree_error']):
+        if value != "NA":
+            cleaned_df = cleaned_df.drop(cleaned_df.index[idx])
+    
+    for idx, value in enumerate(df['n_sequences']):
+        if int(value) < 5:
+            cleaned_df = cleaned_df.drop(cleaned_df.index[idx])
+    
+    for idx, value in enumerate(df['insertion_rate']):
+        if int(value) == 1:
+            cleaned_df = cleaned_df.drop(cleaned_df.index[idx])
+    
+    for idx, value in enumerate(df['deletion_rate']):
+        if int(value) == 1:
+            cleaned_df = cleaned_df.drop(cleaned_df.index[idx])
+    
     # Save to file if output path is provided
     if output_file:
         cleaned_df.to_csv(output_file, index=False)
