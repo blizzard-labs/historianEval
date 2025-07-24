@@ -2,10 +2,6 @@ import re
 from typing import Optional, Tuple, List
 import math
 
-#* ===============================================================================================================
-#*  Newick Tree Parsing + Analysis
-#* ===============================================================================================================
-
 class TreeNode:
     """Simple tree node class for Newick parsing"""
     def __init__(self, name: str = "", branch_length: float = 0.0):

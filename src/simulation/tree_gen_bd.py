@@ -22,8 +22,7 @@ class BDTreeOptimizer:
     """Birth-Death Tree optimizer using simulated annealing."""
     
     def __init__(self, birth_rate: float, death_rate: float, birth_alpha: float, death_alpha: float, 
-                 bd_model: str, crown_age: float,
-                 target_colless: float, target_gamma: float, num_taxa: int = 20):
+                 bd_model: str, target_colless: float, target_gamma: float, num_taxa: int = 20, crown_age: float = 1.0):
         """
         Initialize the optimizer.
         
@@ -50,7 +49,7 @@ class BDTreeOptimizer:
         self.current_tree = None  
 
 
-    def generate_rate_strings(self, present_rate, function, max_time, alpha, num_intervals=30):
+    def generate_rate_strings(self, present_rate, function, alpha, max_time=1, num_intervals=30):
         time_points = np.linspace(0, max_time, num_intervals)
         rates = []
         
@@ -73,75 +72,102 @@ class BDTreeOptimizer:
         
         return rates
             
-        
-    def generate_bd_tree(self) -> dendropy.Tree:
+       
+    def generate_bd_tree(self, max_time=1.0):
         """
         Generate a birth-death tree based on the specified model.
         
         Returns:
             DendroPy Tree object
         """
-        # Create a simple birth-death process tree
-        # Note: This is a simplified implementation - you may need to adjust
-        # based on the specific BD model requirements
         
-        taxon_namespace = dendropy.TaxonNamespace([f"T{i+1}" for i in range(self.num_taxa)])
+        birth_rates = self.generate_rate_strings(self.birth_rates, self.bd_model[:4], self.birth_alpha, max_time=max_time)
+        death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
         
-        birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[:4], self.crown_age, 
-                                                 self.birth_alpha)
-        death_rates = self.generate_rate_strings(self.death_ratem self.bd_model[5:], self.crown_age,
-                                                 self.death_alpha)
+        assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
         
-        assert len(birth_rates) == len(death_rates)
+        num_intervals = len(birth_rates)
+        interval_duration = max_time / num_intervals
+        
+        # Start with a single lineage at max_time
         tree = dendropy.Tree()
+        tree.seed_node.edge_length = 0.0
+        tree.seed_node.age = max_time
         
-        for i, br in enumerate(birth_rates):
-            tree = treesim.birth_death_tree(birth_rates[i],
-                                            death_rates[i],
-                                            max_time=self.crown_age,
-                                            tree=tree, 
-                                            assign_taxa=False,
-                                            repeat_until_success=True)
+        active_nodes = [tree.seed_node]
+        current_time = max_time
+        
+        # Simulate each time interval (going forward in time)
+        for i in range(num_intervals): 
+            birth_rate = birth_rates[i]
+            death_rate = death_rates[i]
+            interval_end = current_time - interval_duration
             
-        
-        
-        
-        if 'CST' in self.bd_model:
-            # Constant rate model
-            tree = dendropy.simulate.treesim.birth_death_tree(
-                birth_rate=self.birth_rate,
-                death_rate=self.death_rate,
-                taxon_namespace=taxon_namespace,
-                num_extant_tips=self.num_taxa
-            )
-        elif 'EXP' in self.bd_model:
-            # Exponential model - simulate with varying rates
-            # This is a simplified approach
-            tree = dendropy.simulate.treesim.birth_death_tree(
-                birth_rate=self.birth_rate,
-                death_rate=self.death_rate,
-                taxon_namespace=taxon_namespace,
-                num_extant_tips=self.num_taxa
-            )
-        elif 'LIN' in self.bd_model:
-            # Linear model - another simplified approach
-            tree = dendropy.simulate.treesim.birth_death_tree(
-                birth_rate=self.birth_rate,
-                death_rate=self.death_rate,
-                taxon_namespace=taxon_namespace,
-                num_extant_tips=self.num_taxa
-            )
-        else:
-            # Default to constant rate
-            tree = dendropy.simulate.treesim.birth_death_tree(
-                birth_rate=self.birth_rate,
-                death_rate=self.death_rate,
-                taxon_namespace=taxon_namespace,
-                num_extant_tips=self.num_taxa
-            )
+            new_active_nodes = []
             
+            for node in active_nodes:
+                # Simulate births and deaths in this interval
+                node_time = current_time
+                
+                while node_time > interval_end:
+                    # Time to next event (birth or death)
+                    total_rate = birth_rate + death_rate
+                    if total_rate <= 0:
+                        node_time = interval_end
+                        break
+                        
+                    dt = np.random.exponential(1.0 / total_rate)
+                    node_time -= dt
+                    
+                    if node_time <= interval_end:
+                        break
+                    
+                    # Determine if birth or death
+                    if np.random.random() < birth_rate / total_rate:
+                        # Birth event - create two child nodes
+                        left_child = dendropy.Node()
+                        right_child = dendropy.Node()
+                        
+                        left_child.parent_node = node
+                        right_child.parent_node = node
+                        node.child_nodes().append(left_child)
+                        node.child_nodes().append(right_child)
+                        
+                        # Set edge lengths
+                        edge_len = current_time - node_time
+                        left_child.edge.length = edge_len
+                        right_child.edge.length = edge_len
+                        
+                        # Update active nodes
+                        new_active_nodes.extend([left_child, right_child])
+                        break  # This lineage split
+                    else:
+                        # Death event - lineage goes extinct
+                        break  # This lineage dies
+                else:
+                    # Lineage survives the interval
+                    new_active_nodes.append(node)
+            
+            active_nodes = new_active_nodes
+            current_time = interval_end
+            
+            if not active_nodes:  # All lineages extinct
+                break
+        
+        # Set final edge lengths to present (time 0)
+        for node in active_nodes:
+            if node.edge:
+                node.edge.length += current_time
+        
+        # Only keep trees with surviving lineages
+        if not active_nodes:
+            return None
+        
+        # Assign taxa to tips
+        tree.randomly_assign_taxa(create_required_taxa=True)
+        
         return tree
-    
+
     def calculate_colless_imbalance(self, tree: dendropy.Tree) -> float:
         """
         Calculate the normalized Colless imbalance metric.
@@ -381,10 +407,10 @@ def main():
     parser = argparse.ArgumentParser(description="Birth-Death Tree Simulated Annealing Optimizer")
     parser.add_argument("--birth_rate", type=float, default=1.0, help="Birth rate parameter")
     parser.add_argument("--death_rate", type=float, default=0.5, help="Death rate parameter")
-    parser.add_argument("--bd_model", type=str, default="best_BCSTDCST",
-                       choices=['best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
-                               'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP',
-                               'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN'],
+    parser.add_argument("--bd_model", type=str, default="BCSTDCST",
+                       choices=['BCSTDCST', 'BEXPDCST', 'BLINDCST',
+                               'BCSTDEXP', 'BEXPDEXP', 'BLINDEXP',
+                               'BCSTDLIN', 'BEXPDLIN', 'BLINDLIN'],
                        help="Birth-death model type")
     parser.add_argument("--target_colless", type=float, default=0.5,
                        help="Target normalized Colless imbalance")

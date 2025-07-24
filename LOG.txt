@@ -1,0 +1,12 @@
+********************************************************************************
+INDELible V1.03 by Will Fletcher : Simulation began at: Thu Jul 24 19:56:29 2025
+********************************************************************************
+
+
++-----------------------------------------------------------------+
+| ERROR in CONTROL FILE block                                     |
+| There is no control file. INDELible was looking for file named: |
+| control.txt                                                     |
+| Please enter the correct filename.                              |
++-----------------------------------------------------------------+
+

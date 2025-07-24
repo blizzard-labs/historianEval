@@ -37,12 +37,40 @@ class evolSimulator:
             
         if not os.path.isdir(self.output_folder):
             os.mkdir(self.output_folder)
-        
-        #Extract all parameters from parameters_file into a dictionary and clean.
-        #Class variables: parameters dataframe, indel-seq-gen path, historian path, baliphy-path
-        pass
     
-    def generate_treetop(self):
+    def generate_treetop_with_params(self, max_iterations=1000):
+        for idx, row in self.params.iterrows():
+            seq_folder = os.path.join(self.output_folder, 'seq_' + str(idx + 1))
+            os.mkdir(seq_folder)
+            
+            best_model = None
+            for col in self.params.columns:
+                if (col.startswith('best_B') and not col.startswith('best_BD')) and row[col] == 1:
+                    best_model = col.replace('best_', '')
+                    break
+            
+            try:
+                cmd = [
+                    "python",
+                    "src/simulation/tree_gen_bd.py",
+                    "--birth_rate", row['best_BD_speciation_rate'],
+                    "--death_rate", row['best_BD_extinction_rate'],
+                    "--bd_model", best_model,
+                    "--target_colless", row['normalized_colless_index'],
+                    "--target_gamma", row['gamma'],
+                    "--num_taxa", row['n_sequences_tips'],
+                    "--max_iterations", max_iterations
+                    "--output", os.path.join(seq_folder, 'guide.tree')
+                ]
+                
+                subprocess.run(cmd, check=True)
+                print(f'Guide tree generated for sequence {idx+1}!')
+            except subprocess.CalledProcessError as e:
+                print(f'Error generating topology for sequence {idx+1}: {e}')
+        print('Generated all guide tree topologies!')
+
+    
+    def generate_treetop_with_distance(self):
         try:
             cmd = [
                 "python", 
@@ -281,10 +309,6 @@ class evolSimulator:
         
         return elapsed_h, elapsed_b
     
-    def evaluateResults(self):
-        #MCMC mixing, rfl distance, align metrics, evolutionary parameters, spfn
-        pass
-    
 def main():
     print('Begun script...')
     if len(sys.argv) < 3:
@@ -302,7 +326,7 @@ def main():
     
     es = evolSimulator(parameters, consensus, label)
 
-    #es.generate_treetop()
+    #es.generate_treetop_with_distance()
     es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
     #results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_25')) 
     
