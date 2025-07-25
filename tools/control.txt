@@ -1,0 +1,15 @@
+[TYPE] AMINOACID 1
+
+[MODEL] modelname
+    [submodel] LG
+    [rates] 0.2 0.5 0
+    [insertmodel] NB 0.4 1
+    [deletemodel] NB 0.4 1
+    [insertrate] 0.1
+    [deleterate] 0.2
+
+[TREE] treename (A:0.1,B:0.1);
+[PARTITIONS] partitionname
+  [treename modelname 1000]
+
+[EVOLVE] partitionname 1 outputname

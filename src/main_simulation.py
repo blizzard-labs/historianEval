@@ -158,7 +158,7 @@ class evolSimulator:
     
     def prep_guide_tree(self, tree_file, seq_num, format="indelible"):
         target_folder = os.path.join(self.output_folder, 'seq_' + str(seq_num))
-        n_name = tree_file.replace('.nwk', '.tree')
+        n_name = "control.txt" if format == "indelible" else tree_file.replace('.nwk', '.txt').replace('.tree', '.txt')
         
         os.rename(os.path.join(target_folder, tree_file),
                   os.path.join(target_folder, n_name))
@@ -170,8 +170,8 @@ class evolSimulator:
         mcontent = re.sub(r'\)\d+:', r'):', content)
         #TODO: Add sequence length, indel dist to the tree file
         
-        #seq_length = self.params['alignment_length'].iloc[seq_num - 1]
-        seq_length = random.randint(100, 250) #! Random sequence length for now... (stack overflows for large sequences)
+        seq_length = self.params['alignment_length'].iloc[seq_num - 1]
+        #seq_length = random.randint(100, 250) #! Random sequence length for now... (stack overflows for large sequences)
         
         insert_rate = self.params['insertion_rate'].iloc[seq_num - 1]
         delete_rate = self.params['deletion_rate'].iloc[seq_num - 1]
@@ -183,26 +183,33 @@ class evolSimulator:
                                                     delete_rate, mean_delete_length,
                                                     max_length=max_gap, format=format) 
         
-        #Write the IDL strings to files
-        ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl')) + '.txt'
-        del_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_del_idl')) + '.txt'
-        
-        with open(ins_idl_f, 'w') as f:
-            f.write(ins_idl + '\n')
-        with open(del_idl_f, 'w') as f:
-            f.write(del_idl + '\n')
+        ins_q_val = 1 / (mean_insert_length + 1)
+        del_q_val = 1 / (mean_delete_length + 1)
         
         if format == "indelible":
             with open(os.path.join(target_folder, n_name), 'w') as f:
-                f.write(f'[TYPE] AMINO ACID 2\n[MODEL] {n_name}\n')
+                f.write(f'[TYPE] AMINOACID 1\n\n[MODEL] modelname\n')
                 f.write(f'   [submodel] LG\n')
-                f.write(f'   [insertmodel] USER {ins_idl_f}\n')
-                f.write(f'   [deletemodel] USER {del_idl_f}\n')
+                f.write(f'   [rates] {self.params['prop_invariant'].iloc[seq_num - 1]} {self.params['gamma_shape'].iloc[seq_num - 1]} 0\n')
+                f.write(f'   [insertmodel] NB {ins_q_val} 1\n') #Negative binomial distribution simplifies to a geometric distribution
+                f.write(f'   [deletemodel] NB {del_q_val} 1\n')
                 f.write(f'   [insertrate] {insert_rate}\n')
-                f.write(f'   [deleterate] {delete_rate}\n')
-                f.write(f'[TREE] {n_name} ', mcontent, '\n')
+                f.write(f'   [deleterate] {delete_rate}\n\n')
+                f.write(f'[TREE] treename ', mcontent, '\n')
+                f.write(f'[PARTITIONS] partitionname\n')
+                f.write(f'  [treename modelname {seq_length}]\n\n')
+                f.write(f'[EVOLVE] partitionname 1 simulated')
                 
         else:
+            #Write the IDL strings to files
+            ins_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_ins_idl')) + '.txt'
+            del_idl_f = os.path.join(target_folder, n_name.replace('.tree', '_del_idl')) + '.txt'
+            
+            with open(ins_idl_f, 'w') as f:
+                f.write(ins_idl + '\n')
+            with open(del_idl_f, 'w') as f:
+                f.write(del_idl + '\n')
+            
             with open(os.path.join(target_folder, n_name), 'w') as f:
                 f.write('[' + str(seq_length) + ']')
                 f.write('{' + str(max_gap) + ',' + str(insert_rate) + '/' + str(delete_rate) + 
@@ -253,7 +260,18 @@ class evolSimulator:
                 tree_file = os.listdir(os.path.join(self.output_folder, folder))[0]
                 tree_path = os.path.join(self.output_folder, folder, tree_file)
 
-                #TODO: Add prep_guide_tree_idl function
+                tree_path, tree_file = self.prep_guide_tree(tree_file, idx+1)
+                cmd = [
+                    "../../../../tools/indelible"
+                ]
+                
+                try: 
+                    subprocess.run(cmd, cwd= tree_path.replace(tree_file, ''), check=True)
+                    print(f'Indelible ran successfully on {tree_path}')
+                except subprocess.CalledProcessError as e:
+                    print(f'Error running indelible on {tree_path}: {e}')
+        
+        print(f'Completed running indelible on all sequences')
         
     def runSoftwareSequence(self, sequence_folder, iterations=1000):
         if os.path.exists(os.path.join(sequence_folder, 'sim.seq')):
