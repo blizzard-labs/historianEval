@@ -282,17 +282,6 @@ def main():
     input_folder = sys.argv[3]
     log = sys.argv[4] if len(sys.argv) > 4 else False
     
-    
-    '''
-    mc.cleanup_trees()
-    #mc.extract_substitution_params()
-    #mc.cleanup_modeltest_trees()
-    #mc.estimate_treedist()
-    #mc.extract_top_params()     
-    #mc.generate_model()
-    mc.sample_model(n_samples=15)
-    #mc.cleanup_params(mc.params_file)
-    '''
     mc = modelConstructor(operate, label, input_folder, params_file=input_folder.replace("alignments", "protein_evolution_parameters.csv"), log=log)
     
     start = time.time()
@@ -310,8 +299,6 @@ def main():
     print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
     mc.sample_model(n_samples=100)
     print(f'Sampled from model- ELAPSED TIME: {time.time() - start}============================')
-    
-    
     
     print('COMPLEETTEEEETETETETE!!!!')
 

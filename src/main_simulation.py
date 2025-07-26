@@ -9,7 +9,7 @@ import random
 import time
 
 class evolSimulator:
-    def __init__(self, parameters_file, consensus_tree_file, tag='none'):
+    def __init__(self, parameters_file, consensus_tree_file="none", tag='none'):
         self.parameters_file = parameters_file
         self.consensus_tree_file = consensus_tree_file
         
@@ -56,10 +56,12 @@ class evolSimulator:
                     "--birth_rate", row['best_BD_speciation_rate'],
                     "--death_rate", row['best_BD_extinction_rate'],
                     "--bd_model", best_model,
+                    "--birth_alpha", 
+                    "--death_alpha",
                     "--target_colless", row['normalized_colless_index'],
                     "--target_gamma", row['gamma'],
                     "--num_taxa", row['n_sequences_tips'],
-                    "--max_iterations", max_iterations
+                    "--max_iterations", max_iterations,
                     "--output", os.path.join(seq_folder, 'guide.tree')
                 ]
                 
@@ -253,7 +255,6 @@ class evolSimulator:
                         print(f'Error running indel-seq-gen on {tree_path}: {e}')
         
     def runIndelible(self):
-        #Cleanup output folders and extensions
         for idx, f in enumerate(os.listdir(self.output_folder)):
             folder = 'seq_' + str(idx + 1)
             if os.path.isdir(os.path.join(self.output_folder, folder)):
@@ -330,15 +331,16 @@ class evolSimulator:
 def main():
     print('Begun script...')
     if len(sys.argv) < 3:
-        print('Usage: python src/simulation/main.py <parameters_file> <consensus_tree> [tag] ')
+        print('Usage: python src/simulation/main.py <parameters_file> <tag> [consensus_tree]')
     
     
     #Pipeline: generate guide trees --> run indel-seq-gen --> organize output files --> run historian/baliphy on raw sequences --> evaluate results
     
     parameters = sys.argv[1]
-    consensus = sys.argv[2]
-    label = sys.argv[3] if len(sys.argv) > 3 else 'none'
+    label = sys.argv[2]
+    consensus = sys.argv[3] if len(sys.argv) > 3 else 'none'
     
+    '''
     results_h = {}
     results_b = {}
     
@@ -347,6 +349,16 @@ def main():
     #es.generate_treetop_with_distance()
     es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
     #results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_25')) 
+    '''
+    
+    es = evolSimulator(parameters, tag=label, consensus_tree_file=consensus)
+    
+    start = time.time()
+    #*PFAM SOCP TYPES PIPELINE
+    es.generate_treetop_with_params(max_iterations=1000)
+    print(f'Generated tree topologies- ELAPSED TIME: {time.time() - start}============================')
+    es.runIndelible()
+    print(f'Ran Indelible- ELAPSED TIME: {time.time() - start}============================')
     
 
 if __name__ == '__main__':

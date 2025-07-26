@@ -21,8 +21,8 @@ import copy
 class BDTreeOptimizer:
     """Birth-Death Tree optimizer using simulated annealing."""
     
-    def __init__(self, birth_rate: float, death_rate: float, birth_alpha: float, death_alpha: float, 
-                 bd_model: str, target_colless: float, target_gamma: float, num_taxa: int = 20, crown_age: float = 1.0):
+    def __init__(self, birth_rate: float, death_rate: float, bd_model: str, birth_alpha: float, death_alpha: float,
+                 target_colless: float, target_gamma: float, num_taxa: int = 20, crown_age: float = 1.0):
         """
         Initialize the optimizer.
         
@@ -412,6 +412,8 @@ def main():
                                'BCSTDEXP', 'BEXPDEXP', 'BLINDEXP',
                                'BCSTDLIN', 'BEXPDLIN', 'BLINDLIN'],
                        help="Birth-death model type")
+    parser.add_argument("--birth_alpha", type=float, default=0, help="Birth alpha parameter for model")
+    parser.add_argument("--death_alpha", type=float, default=0, help="Death alpha parameter for model")
     parser.add_argument("--target_colless", type=float, default=0.5,
                        help="Target normalized Colless imbalance")
     parser.add_argument("--target_gamma", type=float, default=0.0,
@@ -429,6 +431,8 @@ def main():
         birth_rate=args.birth_rate,
         death_rate=args.death_rate,
         bd_model=args.bd_model,
+        birth_alpha=args.birth_alpha,
+        death_alpha=args.death_alpha,
         target_colless=args.target_colless,
         target_gamma=args.target_gamma,
         num_taxa=args.num_taxa
