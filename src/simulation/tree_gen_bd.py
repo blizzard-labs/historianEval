@@ -81,7 +81,7 @@ class BDTreeOptimizer:
             DendroPy Tree object
         """
         
-        birth_rates = self.generate_rate_strings(self.birth_rates, self.bd_model[:4], self.birth_alpha, max_time=max_time)
+        birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[1:4], self.birth_alpha, max_time=max_time)
         death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
         
         assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
@@ -90,11 +90,21 @@ class BDTreeOptimizer:
         interval_duration = max_time / num_intervals
         
         # Start with a single lineage at max_time
+        '''
         tree = dendropy.Tree()
+        
         tree.seed_node.edge_length = 0.0
         tree.seed_node.age = max_time
         
         active_nodes = [tree.seed_node]
+        current_time = max_time
+        '''
+        tree = dendropy.Tree()
+        root = dendropy.Node()
+        root.age = max_time
+        tree.seed_node = root
+
+        active_nodes = [root]
         current_time = max_time
         
         # Simulate each time interval (going forward in time)
@@ -129,8 +139,8 @@ class BDTreeOptimizer:
                         right_child = dendropy.Node()
                         
                         left_child.parent_node = node
-                        right_child.parent_node = node
-                        node.child_nodes().append(left_child)
+                        right_child.parent_node = node 
+                        node.child_nodes().append(left_child) #! Review this code
                         node.child_nodes().append(right_child)
                         
                         # Set edge lengths
@@ -161,6 +171,7 @@ class BDTreeOptimizer:
         
         # Only keep trees with surviving lineages
         if not active_nodes:
+            print('No surviving lineages for tree')
             return None
         
         # Assign taxa to tips
@@ -412,8 +423,8 @@ def main():
                                'BCSTDEXP', 'BEXPDEXP', 'BLINDEXP',
                                'BCSTDLIN', 'BEXPDLIN', 'BLINDLIN'],
                        help="Birth-death model type")
-    parser.add_argument("--birth_alpha", type=float, default=0, help="Birth alpha parameter for model")
-    parser.add_argument("--death_alpha", type=float, default=0, help="Death alpha parameter for model")
+    parser.add_argument("--birth_alpha", type=float, default=1, help="Birth alpha parameter for model")
+    parser.add_argument("--death_alpha", type=float, default=1, help="Death alpha parameter for model")
     parser.add_argument("--target_colless", type=float, default=0.5,
                        help="Target normalized Colless imbalance")
     parser.add_argument("--target_gamma", type=float, default=0.0,
