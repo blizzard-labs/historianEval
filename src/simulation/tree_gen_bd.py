@@ -133,6 +133,8 @@ class BDTreeOptimizer:
                             # Birth event - create two child nodes
                             left_child = dendropy.Node()
                             right_child = dendropy.Node()
+                            left_child.age = node_time
+                            right_child.age = node_time
                             
                             node.add_child(left_child)
                             node.add_child(right_child)
@@ -166,13 +168,15 @@ class BDTreeOptimizer:
             
             # Only keep trees with surviving lineages
             if not active_nodes:
-                print('No surviving lineages for tree: Attempt {max_attempts}')
+                print(f'No surviving lineages for tree: Attempt {max_attempts}')
                 max_attempts -= 1
             else:
                 success = True
                 # Assign taxa to tips
                 tree.randomly_assign_taxa(create_required_taxa=True)
-        if success: return tree
+        if success: 
+            print('Treebuilding success!')
+            return tree
     
     def calculate_tree_statistics(self, tree: dendropy.Tree) -> np.ndarray:
         """
@@ -225,6 +229,8 @@ class BDTreeOptimizer:
         prune_node = random.choice(internal_nodes)
         prune_parent = prune_node.parent_node
         
+        pruned_node_age = getattr(prune_node, 'age', None)
+        
         # Remove the subtree
         prune_parent.remove_child(prune_node)
         
@@ -249,8 +255,18 @@ class BDTreeOptimizer:
         # Select random edge to regraft
         regraft_parent, regraft_child = random.choice(possible_edges)
         
+        # Get ages for constraint checking
+        parent_age = getattr(regraft_parent, 'age', float('inf'))
+        child_age = getattr(regraft_child, 'age', 0.0)
+        
         # Create new internal node
         new_internal = dendropy.Node()
+        
+        # Assign age to new internal node
+        new_internal_age = self.assign_internal_node_age(
+            parent_age, child_age, pruned_node_age
+        )
+        new_internal.age = new_internal_age
         
         # Insert new internal node on the selected edge
         regraft_parent.remove_child(regraft_child)
@@ -258,7 +274,30 @@ class BDTreeOptimizer:
         new_internal.add_child(regraft_child)
         new_internal.add_child(prune_node)
         
+        # Update branch lengths if they exist
+        if hasattr(regraft_child, 'edge_length') and regraft_child.edge_length is not None:
+            # Split the original branch length
+            original_length = regraft_child.edge_length
+            # Assign lengths based on age differences
+            new_internal.edge_length = parent_age - new_internal_age
+            regraft_child.edge_length = new_internal_age - child_age
+            
+            # Update pruned node's branch length
+            if hasattr(prune_node, 'age'):
+                prune_node.edge_length = new_internal_age - prune_node.age
+        
         return new_tree
+    
+    def assign_internal_node_age(self, parent_age: float, child_age: float, 
+                            pruned_node_age: float = None) -> float:
+        min_age = max(child_age, pruned_node_age if pruned_node_age else 0.0)
+        max_age = parent_age if parent_age != float('inf') else min_age + 1.0
+        
+        # Ensure valid age range
+        if min_age >= max_age:
+            return min_age + 0.001
+        
+        return (min_age + max_age) / 2.0
     
     def simulated_annealing(self, initial_temp: float = 1.0, cooling_rate: float = 0.95,
                           min_temp: float = 1e-6, max_iterations: int = 10000) -> dendropy.Tree:
