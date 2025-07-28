@@ -290,13 +290,23 @@ class BDTreeOptimizer:
         return new_tree
     
     def collapse_unary_nodes(self, tree):
-        for node in list(tree.postorder_node_iter()):
-            if not node.is_leaf() and len(node.child_nodes()) == 1 and node != tree.seed_node:
-                parent = node.parent_node
-                child = node.child_nodes()[0]
-                if parent:
-                    parent.remove_child(node)
-                    parent.add_child(child)
+        changed = True
+        while changed:
+            changed = False
+            for node in list(tree.postorder_node_iter()):
+                if not node.is_leaf() and len(node.child_nodes()) == 1 and node != tree.seed_node:
+                    parent = node.parent_node
+                    child = node.child_nodes()[0]
+                    if parent:
+                        parent.remove_child(node)
+                        parent.add_child(child)
+                        changed = True
+        # Special case: root with one child
+        root = tree.seed_node
+        while len(root.child_nodes()) == 1:
+            child = root.child_nodes()[0]
+            tree.seed_node = child
+            root = child
     
     def assign_internal_node_age(self, parent_age: float, child_age: float, 
                             pruned_node_age: float = None) -> float:
