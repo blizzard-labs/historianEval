@@ -8,7 +8,8 @@ to a target vector of normalized Colless imbalance metric and gamma statistic.
 """
 
 import dendropy
-import dendropy.simulate
+import dendropy.calculate
+import dendropy.calculate.treemeasure
 from dendropy.simulate import treesim
 import numpy as np
 import random
@@ -16,7 +17,7 @@ import math
 from typing import Tuple, List, Optional
 import argparse
 import copy
-
+import sys
 
 class BDTreeOptimizer:
     """Birth-Death Tree optimizer using simulated annealing."""
@@ -49,7 +50,7 @@ class BDTreeOptimizer:
         self.current_tree = None  
 
 
-    def generate_rate_strings(self, present_rate, function, alpha, max_time=1, num_intervals=30):
+    def generate_rate_strings(self, present_rate, function, alpha, max_time=1, num_intervals=5):
         time_points = np.linspace(0, max_time, num_intervals)
         rates = []
         
@@ -73,7 +74,7 @@ class BDTreeOptimizer:
         return rates
             
        
-    def generate_bd_tree(self, max_time=1.0):
+    def generate_bd_tree(self, max_time=10.0, max_attempts=5):
         """
         Generate a birth-death tree based on the specified model.
         
@@ -81,182 +82,97 @@ class BDTreeOptimizer:
             DendroPy Tree object
         """
         
-        birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[1:4], self.birth_alpha, max_time=max_time)
-        death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
+        success = False
         
-        assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
-        
-        num_intervals = len(birth_rates)
-        interval_duration = max_time / num_intervals
-        
-        # Start with a single lineage at max_time
-        '''
-        tree = dendropy.Tree()
-        
-        tree.seed_node.edge_length = 0.0
-        tree.seed_node.age = max_time
-        
-        active_nodes = [tree.seed_node]
-        current_time = max_time
-        '''
-        tree = dendropy.Tree()
-        root = dendropy.Node()
-        root.age = max_time
-        tree.seed_node = root
+        while not success and (max_attempts > 0):
+            birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[1:4], self.birth_alpha, max_time=max_time)
+            death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
+            
+            assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
+            
+            num_intervals = len(birth_rates)
+            interval_duration = max_time / num_intervals
+            
+            # Start with a single lineage at max_time
 
-        active_nodes = [root]
-        current_time = max_time
-        
-        # Simulate each time interval (going forward in time)
-        for i in range(num_intervals): 
-            birth_rate = birth_rates[i]
-            death_rate = death_rates[i]
-            interval_end = current_time - interval_duration
+            tree = dendropy.Tree()
+            root = dendropy.Node()
+            root.age = max_time
+            tree.seed_node = root
+
+            active_nodes = [root]
+            current_time = max_time
             
-            new_active_nodes = []
-            
-            for node in active_nodes:
-                # Simulate births and deaths in this interval
-                node_time = current_time
+            # Simulate each time interval (going forward in time)
+            for i in range(num_intervals): 
+                birth_rate = birth_rates[i]
+                death_rate = death_rates[i]
+                interval_end = current_time - interval_duration
                 
-                while node_time > interval_end:
-                    # Time to next event (birth or death)
-                    total_rate = birth_rate + death_rate
-                    if total_rate <= 0:
-                        node_time = interval_end
-                        break
-                        
-                    dt = np.random.exponential(1.0 / total_rate)
-                    node_time -= dt
+                new_active_nodes = []
+                
+                for node in active_nodes:
+                    # Simulate births and deaths in this interval
+                    node_time = current_time
                     
-                    if node_time <= interval_end:
-                        break
-                    
-                    # Determine if birth or death
-                    if np.random.random() < birth_rate / total_rate:
-                        # Birth event - create two child nodes
-                        left_child = dendropy.Node()
-                        right_child = dendropy.Node()
+                    while node_time > interval_end:
+                        # Time to next event (birth or death)
+                        total_rate = birth_rate + death_rate
+                        if total_rate <= 0:
+                            node_time = interval_end
+                            break
+                            
+                        dt = np.random.exponential(1.0 / total_rate)
+                        node_time -= dt
                         
-                        left_child.parent_node = node
-                        right_child.parent_node = node 
-                        node.child_nodes().append(left_child) #! Review this code
-                        node.child_nodes().append(right_child)
+                        if node_time <= interval_end:
+                            break
                         
-                        # Set edge lengths
-                        edge_len = current_time - node_time
-                        left_child.edge.length = edge_len
-                        right_child.edge.length = edge_len
-                        
-                        # Update active nodes
-                        new_active_nodes.extend([left_child, right_child])
-                        break  # This lineage split
+                        # Determine if birth or death
+                        if np.random.random() < birth_rate / total_rate:
+                            # Birth event - create two child nodes
+                            left_child = dendropy.Node()
+                            right_child = dendropy.Node()
+                            
+                            node.add_child(left_child)
+                            node.add_child(right_child)
+                            
+                            # Set edge lengths
+                            left_child.edge.length = current_time - node_time
+                            right_child.edge.length = current_time - node_time
+                            
+                            # Update active nodes
+                            new_active_nodes.extend([left_child, right_child])
+                            break  # This lineage split
+                        else:
+                            # Death event - lineage goes extinct
+                            break  # This lineage dies
                     else:
-                        # Death event - lineage goes extinct
-                        break  # This lineage dies
-                else:
-                    # Lineage survives the interval
-                    new_active_nodes.append(node)
+                        # Lineage survives the interval
+                        new_active_nodes.append(node)
+                
+                active_nodes = new_active_nodes
+                current_time = interval_end
+                
+                if not active_nodes:  # All lineages extinct
+                    break
             
-            active_nodes = new_active_nodes
-            current_time = interval_end
+            # Set final edge lengths to present (time 0)
+            for node in active_nodes:
+                if node.edge and node.edge.length is not None:
+                    node.edge.length += current_time
+                elif node.edge:
+                    node.edge.length = current_time
             
-            if not active_nodes:  # All lineages extinct
-                break
-        
-        # Set final edge lengths to present (time 0)
-        for node in active_nodes:
-            if node.edge:
-                node.edge.length += current_time
-        
-        # Only keep trees with surviving lineages
-        if not active_nodes:
-            print('No surviving lineages for tree')
-            return None
-        
-        # Assign taxa to tips
-        tree.randomly_assign_taxa(create_required_taxa=True)
-        
-        return tree
-
-    def calculate_colless_imbalance(self, tree: dendropy.Tree) -> float:
-        """
-        Calculate the normalized Colless imbalance metric.
-        
-        Args:
-            tree: DendroPy Tree object
-            
-        Returns:
-            Normalized Colless imbalance value
-        """
-        def colless_recursive(node):
-            if node.is_leaf():
-                return 0, 1
-            
-            children = node.child_nodes()
-            if len(children) != 2:
-                return 0, sum(1 for _ in node.leaf_iter())
-            
-            left_imbalance, left_leaves = colless_recursive(children[0])
-            right_imbalance, right_leaves = colless_recursive(children[1])
-            
-            imbalance = left_imbalance + right_imbalance + abs(left_leaves - right_leaves)
-            total_leaves = left_leaves + right_leaves
-            
-            return imbalance, total_leaves
-        
-        if tree.seed_node is None:
-            return 0.0
-            
-        imbalance, n_leaves = colless_recursive(tree.seed_node)
-        
-        # Normalize by maximum possible imbalance for n leaves
-        if n_leaves <= 2:
-            return 0.0
-        
-        max_imbalance = (n_leaves - 1) * (n_leaves - 2) / 2
-        return imbalance / max_imbalance if max_imbalance > 0 else 0.0
-    
-    def calculate_gamma_statistic(self, tree: dendropy.Tree) -> float:
-        """
-        Calculate the gamma statistic (Pybus & Harvey 2000).
-        
-        Args:
-            tree: DendroPy Tree object
-            
-        Returns:
-            Gamma statistic value
-        """
-        # Get all internal nodes (excluding root and leaves)
-        internal_nodes = [node for node in tree.internal_nodes() if node != tree.seed_node]
-        
-        if len(internal_nodes) < 2:
-            return 0.0
-        
-        # Calculate node depths (distance from tips)
-        node_depths = []
-        for node in internal_nodes:
-            # Calculate distance to furthest leaf
-            max_depth = max(node.distance_from_tip() for leaf in node.leaf_iter() 
-                           for _ in [node.distance_from_node(leaf)])
-            node_depths.append(max_depth)
-        
-        if len(node_depths) < 2:
-            return 0.0
-            
-        node_depths.sort()
-        n = len(node_depths)
-        
-        # Calculate gamma statistic
-        sum_distances = sum(node_depths[:-1])  # Exclude the root
-        expected_sum = n * (n + 1) / 4
-        variance = n * (n + 1) * (2 * n + 1) / 24
-        
-        if variance <= 0:
-            return 0.0
-            
-        gamma = (sum_distances - expected_sum) / math.sqrt(variance)
-        return gamma
+            # Only keep trees with surviving lineages
+            if not active_nodes:
+                print('No surviving lineages for tree: Attempt {max_attempts}')
+                max_attempts -= 1
+            else:
+                success = True
+                # Assign taxa to tips
+                tree.randomly_assign_taxa(create_required_taxa=True)
+        if success: return tree
     
     def calculate_tree_statistics(self, tree: dendropy.Tree) -> np.ndarray:
         """
@@ -268,8 +184,9 @@ class BDTreeOptimizer:
         Returns:
             NumPy array containing [colless_imbalance, gamma_statistic]
         """
-        colless = self.calculate_colless_imbalance(tree)
-        gamma = self.calculate_gamma_statistic(tree)
+        colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
+        gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
+        
         return np.array([colless, gamma])
     
     def calculate_distance(self, tree_stats: np.ndarray) -> float:
@@ -359,6 +276,10 @@ class BDTreeOptimizer:
         """
         # Generate initial tree
         self.current_tree = self.generate_bd_tree()
+        if self.current_tree is None:
+            print('Simulated annealing failed: Initial tree could not be generated')
+            sys.exit()
+        
         current_stats = self.calculate_tree_statistics(self.current_tree)
         current_distance = self.calculate_distance(current_stats)
         
