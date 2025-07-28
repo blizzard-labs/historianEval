@@ -55,8 +55,8 @@ output_csv <- if (length(args) >= 3) args[3] else gsub("\\.csv$", "_with_rates.c
 # Define all birth-death model combinations
 bd_model_combinations <- list(
   "BCSTDCST" = list(lamb_type = "constant", mu_type = "constant"),     # Birth Constant, Death Constant
-  "BEXPCDST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
-  "BLINCDST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
+  "BEXPDCST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
+  "BLINDCST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
   "BCSTDEXP" = list(lamb_type = "constant", mu_type = "exponential"),  # Birth Constant, Death Exponential
   "BEXPDEXP" = list(lamb_type = "exponential", mu_type = "exponential"), # Birth Exponential, Death Exponential
   "BLINDEXP" = list(lamb_type = "linear", mu_type = "exponential"),    # Birth Linear, Death Exponential
@@ -74,6 +74,36 @@ coalescent_model_combinations <- list(
   "COALLOG" = list(type = "logistic", description = "Logistic population growth")
 )
 
+#Function to calculate gamma statistics with ape
+calculate_gamma_statistic <- function(tree) {
+  tryCatch({
+    # Calculate gamma statistic using ape package
+    gamma_stat <- gammaStat(tree)
+    
+    # Calculate p-value for gamma statistic
+    # Under null hypothesis of constant rates, gamma follows standard normal
+    gamma_pvalue <- 2 * (1 - pnorm(abs(gamma_stat)))
+    
+    # Interpretation
+    gamma_interpretation <- ifelse(gamma_stat < -1.645, "Early burst (significant)", 
+                          ifelse(gamma_stat > 1.645, "Late burst (significant)", 
+                                "Constant rates"))
+    
+    return(list(
+      gamma = gamma_stat,
+      gamma_pvalue = gamma_pvalue,
+      gamma_interpretation = gamma_interpretation
+    ))
+  }, error = function(e) {
+    warning(sprintf("Gamma calculation failed: %s", e$message))
+    return(list(
+      gamma = NA,
+      gamma_pvalue = NA,
+      gamma_interpretation = "Calculation failed"
+    ))
+  })
+}
+
 # Function to estimate diversification rates using RPANDA
 estimate_rates <- function(tree_file) {
   cat(sprintf("Processing tree: %s\n", basename(tree_file)))
@@ -86,12 +116,28 @@ estimate_rates <- function(tree_file) {
     n_tips <- Ntip(tree)
     tree_length <- sum(tree$edge.length)
     
+    gamma_result <- calculate_gamma_statistic(tree)
+    
     if (n_tips < 3) {
       warning(sprintf("Tree has too few tips: %s", tree_file))
-      return(create_empty_result(tree_file, "Too few tips", n_tips, tree_length))
+      result <- create_empty_result(tree_file, "Too few tips", n_tips, tree_length)
+      # Add gamma results to empty result
+      result$gamma <- gamma_result$gamma
+      result$gamma_pvalue <- gamma_result$gamma_pvalue
+      result$gamma_interpretation <- gamma_result$gamma_interpretation
+      return(result)
     }
     
     # RPANDA requires ultrametric trees
+
+    # Get the crown age
+    crown_age <- max(node.depth.edgelength(tree))
+    
+    if (crown_age <= 0) {
+      warning(sprintf("Invalid crown age in tree: %s", tree_file))
+      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
+    }
+    
     if (!is.ultrametric(tree)) {
       cat("  Tree is not ultrametric, attempting to make ultrametric...\n")
       tree <- chronos(tree, quiet = TRUE)
@@ -107,13 +153,6 @@ estimate_rates <- function(tree_file) {
         tree <- midpoint.root(tree)
     }
     
-    # Get the crown age
-    crown_age <- max(node.depth.edgelength(tree))
-    
-    if (crown_age <= 0) {
-      warning(sprintf("Invalid crown age in tree: %s", tree_file))
-      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
-    }
     
     # Store results for different models
     model_results <- list()
@@ -244,6 +283,10 @@ estimate_rates <- function(tree_file) {
       return(list(
         file = basename(tree_file),
         
+        gamma = gamma_result$gamma,
+        gamma_pvalue = gamma_result$gamma_pvalue,
+        gamma_interpretation = gamma_result$gamma_interpretation,
+
         # Best overall model parameters (for backward compatibility)
         speciation_rate = best_overall_result$lambda,
         extinction_rate = best_overall_result$mu,
@@ -302,12 +345,29 @@ estimate_rates <- function(tree_file) {
         best_coal_model = best_coal_model
       ))
     } else {
-      return(create_empty_result(tree_file, "All models failed", n_tips, tree_length))
+      result <- create_empty_result(tree_file, "All models failed", n_tips, tree_length)
+      result$gamma <- gamma_result$gamma
+      result$gamma_pvalue <- gamma_result$gamma_pvalue
+      result$gamma_interpretation <- gamma_result$gamma_interpretation
+      return(result)
     }
     
   }, error = function(e) {
     warning(sprintf("Error processing tree %s: %s", tree_file, e$message))
-    return(create_empty_result(tree_file, as.character(e$message)))
+    result <- create_empty_result(tree_file, as.character(e$message))
+    # Try to calculate gamma even if other analyses fail
+    tryCatch({
+      tree <- read.tree(tree_file)
+      gamma_result <- calculate_gamma_statistic(tree)
+      result$gamma <- gamma_result$gamma
+      result$gamma_pvalue <- gamma_result$gamma_pvalue
+      result$gamma_interpretation <- gamma_result$gamma_interpretation
+    }, error = function(e2) {
+      result$gamma <- NA
+      result$gamma_pvalue <- NA
+      result$gamma_interpretation <- "Calculation failed"
+    })
+    return(result)
   })
 }
 
@@ -747,6 +807,10 @@ create_empty_result <- function(tree_file, error_msg, n_tips = NA, tree_length =
   return(list(
     file = basename(tree_file),
     
+    gamma = NA,
+    gamma_pvalue = NA,
+    gamma_interpretation = "Not calculated",
+
     # Original columns
     speciation_rate = NA,
     extinction_rate = NA,
@@ -913,7 +977,8 @@ for (i in 1:nrow(csv_data)) {
 cat("Merging data...\n")
 
 # Initialize new columns in csv_data
-rate_columns <- c("speciation_rate", "extinction_rate", "net_diversification", 
+rate_columns <- c("gamma", "gamma_pvalue", "gamma_interpretation",
+                 "speciation_rate", "extinction_rate", "net_diversification", 
                  "relative_extinction", "speciation_ci_lower", "speciation_ci_upper",
                  "extinction_ci_lower", "extinction_ci_upper", "tree_loglik", 
                  "tree_aic", "tree_aicc", "diversification_method", "model_type",
@@ -939,7 +1004,11 @@ for (col in rate_columns) {
 for (i in 1:nrow(csv_data)) {
   if (!is.na(csv_data$tree_match[i])) {
     match_idx <- csv_data$tree_match[i]
-    
+
+    csv_data$gamma[i] <- rates_df$gamma[match_idx]
+    csv_data$gamma_pvalue[i] <- rates_df$gamma_pvalue[match_idx]
+    csv_data$gamma_interpretation[i] <- rates_df$gamma_interpretation[match_idx]
+
     # Original columns
     csv_data$speciation_rate[i] <- rates_df$speciation_rate[match_idx]
     csv_data$extinction_rate[i] <- rates_df$extinction_rate[match_idx]
@@ -1056,6 +1125,32 @@ if (matched_count > 0) {
     if (length(coal_growth) > 0) {
       cat(sprintf("Growth rate - Mean: %.4f, Range: %.4f - %.4f\n", 
                   mean(coal_growth), min(coal_growth), max(coal_growth)))
+
+    cat("\n=== GAMMA STATISTIC SUMMARY ===\n")
+    gamma_values <- csv_data$gamma[!is.na(csv_data$gamma)]
+    if (length(gamma_values) > 0) {
+      cat(sprintf("Gamma statistic - Mean: %.4f, Range: %.4f - %.4f\n", 
+                  mean(gamma_values), min(gamma_values), max(gamma_values)))
+      
+      # Count interpretations
+      gamma_interp <- table(csv_data$gamma_interpretation[!is.na(csv_data$gamma_interpretation)])
+      cat("\n=== GAMMA INTERPRETATIONS ===\n")
+      for (i in 1:length(gamma_interp)) {
+        cat(sprintf("%s: %d trees\n", names(gamma_interp)[i], gamma_interp[i]))
+      }
+      
+      # Significant results
+      significant_early <- sum(csv_data$gamma[!is.na(csv_data$gamma)] < -1.645)
+      significant_late <- sum(csv_data$gamma[!is.na(csv_data$gamma)] > 1.645)
+      total_gamma <- length(gamma_values)
+      
+      cat(sprintf("\nSignificant early diversification: %d/%d (%.1f%%)\n", 
+                  significant_early, total_gamma, 100 * significant_early / total_gamma))
+      cat(sprintf("Significant late diversification: %d/%d (%.1f%%)\n", 
+                  significant_late, total_gamma, 100 * significant_late / total_gamma))
+      cat(sprintf("Constant diversification: %d/%d (%.1f%%)\n", 
+                  total_gamma - significant_early - significant_late, total_gamma, 
+                  100 * (total_gamma - significant_early - significant_late) / total_gamma))
     }
   }
   
@@ -1112,3 +1207,5 @@ if (matched_count > 0) {
 
 cat("\nRPANDA analysis with Birth-Death AND Coalescent models complete!\n")
 cat("Enhanced model comparison now includes demographic and diversification processes.\n")
+}
+

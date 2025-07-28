@@ -1,6 +1,9 @@
 import re
 from typing import Optional, Tuple, List
 import math
+import dendropy
+import dendropy.calculate
+import dendropy.calculate.treemeasure
 
 class TreeNode:
     """Simple tree node class for Newick parsing"""
@@ -119,10 +122,6 @@ def parse_newick(newick_string: str) -> TreeNode:
     # Return the root (should be the last node in stack or current_node)
     return node_stack[0] if node_stack else current_node
 
-#* ===============================================================================================================
-#*  Colless Imbalance Metric Calculator for Newick Trees
-#* ===============================================================================================================
-
 """
 Notes...
 The Colless index measures tree balance by summing the absolute differences
@@ -201,7 +200,6 @@ def calculate_normalized_colless_index(root: TreeNode) -> float:
     
     return colless_index / max_colless if max_colless > 0 else 0.0
 
-
 def analyze_tree_balance(newick_string: str) -> dict:
     """
     Comprehensive tree balance analysis
@@ -214,11 +212,14 @@ def analyze_tree_balance(newick_string: str) -> dict:
     """
     # Parse the tree
     root = parse_newick(newick_string)
+    tree = dendropy.Tree.get_from_string(newick_string, schema="newick")
     
     # Calculate metrics
     n_leaves = root.get_leaf_count()
     colless_index = calculate_colless_index(root)
-    normalized_colless = calculate_normalized_colless_index(root)
+    #normalized_colless = calculate_normalized_colless_index(root)
+    normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
+    gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
     
     # Calculate tree depth
     def get_max_depth(node: TreeNode, depth: int = 0) -> int:
@@ -254,6 +255,7 @@ def analyze_tree_balance(newick_string: str) -> dict:
         'colless_index': colless_index,
         'normalized_colless_index': normalized_colless,
         'balance_category': balance_category,
+        'gamma' : gamma,
         'is_binary': all(len(node.children) <= 2 for node in get_all_nodes(root) if node.is_internal())
     }
 

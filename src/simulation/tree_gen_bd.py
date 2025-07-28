@@ -412,7 +412,7 @@ def main():
     parser.add_argument("--num_taxa", type=int, default=20, help="Number of taxa in the tree")
     parser.add_argument("--initial_temp", type=float, default=1.0, help="Initial temperature")
     parser.add_argument("--cooling_rate", type=float, default=0.95, help="Cooling rate")
-    parser.add_argument("--max_iterations", type=int, default=10000, help="Maximum iterations")
+    parser.add_argument("--max_iterations", type=int, default=1000, help="Maximum iterations")
     parser.add_argument("--output", type=str, help="Output file for the best tree (Newick format)")
     
     args = parser.parse_args()
