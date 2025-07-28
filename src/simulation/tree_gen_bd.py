@@ -286,7 +286,17 @@ class BDTreeOptimizer:
             if hasattr(prune_node, 'age'):
                 prune_node.edge_length = new_internal_age - prune_node.age
         
+        self.collapse_unary_nodes(new_tree)
         return new_tree
+    
+    def collapse_unary_nodes(self, tree):
+        for node in list(tree.postorder_node_iter()):
+            if not node.is_leaf() and len(node.child_nodes()) == 1 and node != tree.seed_node:
+                parent = node.parent_node
+                child = node.child_nodes()[0]
+                if parent:
+                    parent.remove_child(node)
+                    parent.add_child(child)
     
     def assign_internal_node_age(self, parent_age: float, child_age: float, 
                             pruned_node_age: float = None) -> float:
