@@ -4,6 +4,7 @@
 # Estimates speciation and extinction rates from phylogenetic trees
 # and adds them to existing parameter CSV files
 # Enhanced to fit all combinations of birth-death AND coalescent models
+# NOW INCLUDES ALPHA PARAMETERS FOR EXPONENTIAL/LINEAR MODELS
 
 # Load required libraries
 if (!require("RPANDA", quietly = TRUE)) {
@@ -55,8 +56,8 @@ output_csv <- if (length(args) >= 3) args[3] else gsub("\\.csv$", "_with_rates.c
 # Define all birth-death model combinations
 bd_model_combinations <- list(
   "BCSTDCST" = list(lamb_type = "constant", mu_type = "constant"),     # Birth Constant, Death Constant
-  "BEXPDCST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
-  "BLINDCST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
+  "BEXPCDST" = list(lamb_type = "exponential", mu_type = "constant"),  # Birth Exponential, Death Constant
+  "BLINCDST" = list(lamb_type = "linear", mu_type = "constant"),       # Birth Linear, Death Constant
   "BCSTDEXP" = list(lamb_type = "constant", mu_type = "exponential"),  # Birth Constant, Death Exponential
   "BEXPDEXP" = list(lamb_type = "exponential", mu_type = "exponential"), # Birth Exponential, Death Exponential
   "BLINDEXP" = list(lamb_type = "linear", mu_type = "exponential"),    # Birth Linear, Death Exponential
@@ -74,36 +75,6 @@ coalescent_model_combinations <- list(
   "COALLOG" = list(type = "logistic", description = "Logistic population growth")
 )
 
-#Function to calculate gamma statistics with ape
-calculate_gamma_statistic <- function(tree) {
-  tryCatch({
-    # Calculate gamma statistic using ape package
-    gamma_stat <- gammaStat(tree)
-    
-    # Calculate p-value for gamma statistic
-    # Under null hypothesis of constant rates, gamma follows standard normal
-    gamma_pvalue <- 2 * (1 - pnorm(abs(gamma_stat)))
-    
-    # Interpretation
-    gamma_interpretation <- ifelse(gamma_stat < -1.645, "Early burst (significant)", 
-                          ifelse(gamma_stat > 1.645, "Late burst (significant)", 
-                                "Constant rates"))
-    
-    return(list(
-      gamma = gamma_stat,
-      gamma_pvalue = gamma_pvalue,
-      gamma_interpretation = gamma_interpretation
-    ))
-  }, error = function(e) {
-    warning(sprintf("Gamma calculation failed: %s", e$message))
-    return(list(
-      gamma = NA,
-      gamma_pvalue = NA,
-      gamma_interpretation = "Calculation failed"
-    ))
-  })
-}
-
 # Function to estimate diversification rates using RPANDA
 estimate_rates <- function(tree_file) {
   cat(sprintf("Processing tree: %s\n", basename(tree_file)))
@@ -116,28 +87,12 @@ estimate_rates <- function(tree_file) {
     n_tips <- Ntip(tree)
     tree_length <- sum(tree$edge.length)
     
-    gamma_result <- calculate_gamma_statistic(tree)
-    
     if (n_tips < 3) {
       warning(sprintf("Tree has too few tips: %s", tree_file))
-      result <- create_empty_result(tree_file, "Too few tips", n_tips, tree_length)
-      # Add gamma results to empty result
-      result$gamma <- gamma_result$gamma
-      result$gamma_pvalue <- gamma_result$gamma_pvalue
-      result$gamma_interpretation <- gamma_result$gamma_interpretation
-      return(result)
+      return(create_empty_result(tree_file, "Too few tips", n_tips, tree_length))
     }
     
     # RPANDA requires ultrametric trees
-
-    # Get the crown age
-    crown_age <- max(node.depth.edgelength(tree))
-    
-    if (crown_age <= 0) {
-      warning(sprintf("Invalid crown age in tree: %s", tree_file))
-      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
-    }
-    
     if (!is.ultrametric(tree)) {
       cat("  Tree is not ultrametric, attempting to make ultrametric...\n")
       tree <- chronos(tree, quiet = TRUE)
@@ -153,6 +108,13 @@ estimate_rates <- function(tree_file) {
         tree <- midpoint.root(tree)
     }
     
+    # Get the crown age
+    crown_age <- max(node.depth.edgelength(tree))
+    
+    if (crown_age <= 0) {
+      warning(sprintf("Invalid crown age in tree: %s", tree_file))
+      return(create_empty_result(tree_file, "Invalid crown age", n_tips, tree_length))
+    }
     
     # Store results for different models
     model_results <- list()
@@ -283,10 +245,6 @@ estimate_rates <- function(tree_file) {
       return(list(
         file = basename(tree_file),
         
-        gamma = gamma_result$gamma,
-        gamma_pvalue = gamma_result$gamma_pvalue,
-        gamma_interpretation = gamma_result$gamma_interpretation,
-
         # Best overall model parameters (for backward compatibility)
         speciation_rate = best_overall_result$lambda,
         extinction_rate = best_overall_result$mu,
@@ -305,6 +263,10 @@ estimate_rates <- function(tree_file) {
         growth_rate = best_overall_result$growth_rate,
         coalescent_params = best_overall_result$coalescent_params,
         
+        # NEW: Alpha parameters for best overall model
+        lambda_alpha = best_overall_result$lambda_alpha,
+        mu_alpha = best_overall_result$mu_alpha,
+        
         # Best BD model parameters
         bd_speciation_rate = if (!is.null(best_bd_result)) best_bd_result$lambda else NA,
         bd_extinction_rate = if (!is.null(best_bd_result)) best_bd_result$mu else NA,
@@ -316,6 +278,10 @@ estimate_rates <- function(tree_file) {
         bd_method = if (!is.null(best_bd_result)) best_bd_result$model_name else NA,
         bd_lamb_type = if (!is.null(best_bd_result)) best_bd_result$lamb_type else NA,
         bd_mu_type = if (!is.null(best_bd_result)) best_bd_result$mu_type else NA,
+        
+        # NEW: Alpha parameters for best BD model
+        bd_lambda_alpha = if (!is.null(best_bd_result)) best_bd_result$lambda_alpha else NA,
+        bd_mu_alpha = if (!is.null(best_bd_result)) best_bd_result$mu_alpha else NA,
         
         # Best coalescent model parameters
         coal_speciation_rate = if (!is.null(best_coal_result)) best_coal_result$lambda else NA,
@@ -345,29 +311,12 @@ estimate_rates <- function(tree_file) {
         best_coal_model = best_coal_model
       ))
     } else {
-      result <- create_empty_result(tree_file, "All models failed", n_tips, tree_length)
-      result$gamma <- gamma_result$gamma
-      result$gamma_pvalue <- gamma_result$gamma_pvalue
-      result$gamma_interpretation <- gamma_result$gamma_interpretation
-      return(result)
+      return(create_empty_result(tree_file, "All models failed", n_tips, tree_length))
     }
     
   }, error = function(e) {
     warning(sprintf("Error processing tree %s: %s", tree_file, e$message))
-    result <- create_empty_result(tree_file, as.character(e$message))
-    # Try to calculate gamma even if other analyses fail
-    tryCatch({
-      tree <- read.tree(tree_file)
-      gamma_result <- calculate_gamma_statistic(tree)
-      result$gamma <- gamma_result$gamma
-      result$gamma_pvalue <- gamma_result$gamma_pvalue
-      result$gamma_interpretation <- gamma_result$gamma_interpretation
-    }, error = function(e2) {
-      result$gamma <- NA
-      result$gamma_pvalue <- NA
-      result$gamma_interpretation <- "Calculation failed"
-    })
-    return(result)
+    return(create_empty_result(tree_file, as.character(e$message)))
   })
 }
 
@@ -439,6 +388,10 @@ fit_bd_model_combination <- function(tree, lamb_type, mu_type, crown_age, model_
   lambda_present <- calculate_present_rate(result$lamb_par, lamb_type, crown_age)
   mu_present <- calculate_present_rate(result$mu_par, mu_type, crown_age)
 
+  # Extract alpha parameters (second parameter for exponential/linear models)
+  lambda_alpha <- extract_alpha_parameter(result$lamb_par, lamb_type)
+  mu_alpha <- extract_alpha_parameter(result$mu_par, mu_type)
+
   # Handle possible fit errors
   if (is.null(result) || is.null(result$mu_par) || is.null(lambda_present)) {
     stop("RPANDA model fit returned incomplete result")
@@ -461,8 +414,27 @@ fit_bd_model_combination <- function(tree, lamb_type, mu_type, crown_age, model_
     mu_type = mu_type,
     effective_pop_size = NA,
     growth_rate = NA,
-    coalescent_params = NA
+    coalescent_params = NA,
+    
+    # NEW: Alpha parameters
+    lambda_alpha = lambda_alpha,
+    mu_alpha = mu_alpha
   ))
+}
+
+# NEW: Helper function to extract alpha parameters
+extract_alpha_parameter <- function(params, rate_type) {
+  if (rate_type == "constant") {
+    return(NA)  # No alpha parameter for constant models
+  } else if (rate_type == "exponential" || rate_type == "linear") {
+    if (length(params) >= 2) {
+      return(params[2])  # The second parameter is alpha (y[2])
+    } else {
+      return(NA)
+    }
+  } else {
+    return(NA)
+  }
 }
 
 # New function to fit coalescent models
@@ -514,7 +486,11 @@ fit_coalescent_model <- function(tree, coal_type, crown_age, model_name) {
     mu_type = "zero",
     effective_pop_size = result$Ne,
     growth_rate = result$growth_rate,
-    coalescent_params = result$params_string
+    coalescent_params = result$params_string,
+    
+    # Alpha parameters not applicable for coalescent models
+    lambda_alpha = NA,
+    mu_alpha = NA
   ))
 }
 
@@ -799,7 +775,10 @@ fit_simple_bd <- function(tree) {
     mu_type = "zero",
     effective_pop_size = NA,
     growth_rate = NA,
-    coalescent_params = NA
+    coalescent_params = NA,
+    # Alpha parameters
+    lambda_alpha = NA,
+    mu_alpha = NA
   ))
 }
 
@@ -807,10 +786,6 @@ create_empty_result <- function(tree_file, error_msg, n_tips = NA, tree_length =
   return(list(
     file = basename(tree_file),
     
-    gamma = NA,
-    gamma_pvalue = NA,
-    gamma_interpretation = "Not calculated",
-
     # Original columns
     speciation_rate = NA,
     extinction_rate = NA,
@@ -829,6 +804,10 @@ create_empty_result <- function(tree_file, error_msg, n_tips = NA, tree_length =
     growth_rate = NA,
     coalescent_params = NA,
     
+    # NEW: Alpha parameters for best overall model
+    lambda_alpha = NA,
+    mu_alpha = NA,
+    
     # Best BD model columns
     bd_speciation_rate = NA,
     bd_extinction_rate = NA,
@@ -840,6 +819,10 @@ create_empty_result <- function(tree_file, error_msg, n_tips = NA, tree_length =
     bd_method = NA,
     bd_lamb_type = NA,
     bd_mu_type = NA,
+    
+    # NEW: Alpha parameters for best BD model
+    bd_lambda_alpha = NA,
+    bd_mu_alpha = NA,
     
     # Best coalescent model columns
     coal_speciation_rate = NA,
@@ -977,16 +960,19 @@ for (i in 1:nrow(csv_data)) {
 cat("Merging data...\n")
 
 # Initialize new columns in csv_data
-rate_columns <- c("gamma", "gamma_pvalue", "gamma_interpretation",
-                 "speciation_rate", "extinction_rate", "net_diversification", 
+rate_columns <- c("speciation_rate", "extinction_rate", "net_diversification", 
                  "relative_extinction", "speciation_ci_lower", "speciation_ci_upper",
                  "extinction_ci_lower", "extinction_ci_upper", "tree_loglik", 
                  "tree_aic", "tree_aicc", "diversification_method", "model_type",
                  "effective_pop_size", "growth_rate", "coalescent_params",
+                 # NEW: Alpha parameters for best overall model
+                 "lambda_alpha", "mu_alpha",
                  # Best BD model columns
                  "bd_speciation_rate", "bd_extinction_rate", "bd_net_diversification", 
                  "bd_relative_extinction", "bd_loglik", "bd_aic", "bd_aicc", 
                  "bd_method", "bd_lamb_type", "bd_mu_type",
+                 # NEW: Alpha parameters for best BD model
+                 "bd_lambda_alpha", "bd_mu_alpha",
                  # Best coalescent model columns
                  "coal_speciation_rate", "coal_extinction_rate", "coal_net_diversification", 
                  "coal_loglik", "coal_aic", "coal_aicc", "coal_method", 
@@ -1004,11 +990,7 @@ for (col in rate_columns) {
 for (i in 1:nrow(csv_data)) {
   if (!is.na(csv_data$tree_match[i])) {
     match_idx <- csv_data$tree_match[i]
-
-    csv_data$gamma[i] <- rates_df$gamma[match_idx]
-    csv_data$gamma_pvalue[i] <- rates_df$gamma_pvalue[match_idx]
-    csv_data$gamma_interpretation[i] <- rates_df$gamma_interpretation[match_idx]
-
+    
     # Original columns
     csv_data$speciation_rate[i] <- rates_df$speciation_rate[match_idx]
     csv_data$extinction_rate[i] <- rates_df$extinction_rate[match_idx]
@@ -1027,6 +1009,10 @@ for (i in 1:nrow(csv_data)) {
     csv_data$growth_rate[i] <- rates_df$growth_rate[match_idx]
     csv_data$coalescent_params[i] <- rates_df$coalescent_params[match_idx]
     
+    # NEW: Alpha parameters for best overall model
+    csv_data$lambda_alpha[i] <- rates_df$lambda_alpha[match_idx]
+    csv_data$mu_alpha[i] <- rates_df$mu_alpha[match_idx]
+    
     # Best BD model columns
     csv_data$bd_speciation_rate[i] <- rates_df$bd_speciation_rate[match_idx]
     csv_data$bd_extinction_rate[i] <- rates_df$bd_extinction_rate[match_idx]
@@ -1038,6 +1024,10 @@ for (i in 1:nrow(csv_data)) {
     csv_data$bd_method[i] <- rates_df$bd_method[match_idx]
     csv_data$bd_lamb_type[i] <- rates_df$bd_lamb_type[match_idx]
     csv_data$bd_mu_type[i] <- rates_df$bd_mu_type[match_idx]
+    
+    # NEW: Alpha parameters for best BD model
+    csv_data$bd_lambda_alpha[i] <- rates_df$bd_lambda_alpha[match_idx]
+    csv_data$bd_mu_alpha[i] <- rates_df$bd_mu_alpha[match_idx]
     
     # Best coalescent model columns
     csv_data$coal_speciation_rate[i] <- rates_df$coal_speciation_rate[match_idx]
@@ -1097,6 +1087,19 @@ if (matched_count > 0) {
   cat(sprintf("Net diversification - Mean: %.4f, Range: %.4f - %.4f\n", 
               mean(net_div), min(net_div), max(net_div)))
   
+  # NEW: Show alpha parameter summaries
+  lambda_alphas <- csv_data$lambda_alpha[!is.na(csv_data$lambda_alpha)]
+  mu_alphas <- csv_data$mu_alpha[!is.na(csv_data$mu_alpha)]
+  
+  if (length(lambda_alphas) > 0) {
+    cat(sprintf("Lambda alpha (speciation time-dependency) - Mean: %.6f, Range: %.6f - %.6f\n", 
+                mean(lambda_alphas), min(lambda_alphas), max(lambda_alphas)))
+  }
+  if (length(mu_alphas) > 0) {
+    cat(sprintf("Mu alpha (extinction time-dependency) - Mean: %.6f, Range: %.6f - %.6f\n", 
+                mean(mu_alphas), min(mu_alphas), max(mu_alphas)))
+  }
+  
   # Show method distribution
   methods <- table(csv_data$diversification_method[!is.na(csv_data$diversification_method)])
   cat("\n=== BEST MODELS SELECTED ===\n")
@@ -1125,32 +1128,6 @@ if (matched_count > 0) {
     if (length(coal_growth) > 0) {
       cat(sprintf("Growth rate - Mean: %.4f, Range: %.4f - %.4f\n", 
                   mean(coal_growth), min(coal_growth), max(coal_growth)))
-
-    cat("\n=== GAMMA STATISTIC SUMMARY ===\n")
-    gamma_values <- csv_data$gamma[!is.na(csv_data$gamma)]
-    if (length(gamma_values) > 0) {
-      cat(sprintf("Gamma statistic - Mean: %.4f, Range: %.4f - %.4f\n", 
-                  mean(gamma_values), min(gamma_values), max(gamma_values)))
-      
-      # Count interpretations
-      gamma_interp <- table(csv_data$gamma_interpretation[!is.na(csv_data$gamma_interpretation)])
-      cat("\n=== GAMMA INTERPRETATIONS ===\n")
-      for (i in 1:length(gamma_interp)) {
-        cat(sprintf("%s: %d trees\n", names(gamma_interp)[i], gamma_interp[i]))
-      }
-      
-      # Significant results
-      significant_early <- sum(csv_data$gamma[!is.na(csv_data$gamma)] < -1.645)
-      significant_late <- sum(csv_data$gamma[!is.na(csv_data$gamma)] > 1.645)
-      total_gamma <- length(gamma_values)
-      
-      cat(sprintf("\nSignificant early diversification: %d/%d (%.1f%%)\n", 
-                  significant_early, total_gamma, 100 * significant_early / total_gamma))
-      cat(sprintf("Significant late diversification: %d/%d (%.1f%%)\n", 
-                  significant_late, total_gamma, 100 * significant_late / total_gamma))
-      cat(sprintf("Constant diversification: %d/%d (%.1f%%)\n", 
-                  total_gamma - significant_early - significant_late, total_gamma, 
-                  100 * (total_gamma - significant_early - significant_late) / total_gamma))
     }
   }
   
@@ -1184,6 +1161,8 @@ if (matched_count > 0) {
   cat("- effective_pop_size: Effective population size (for coalescent models)\n")
   cat("- growth_rate: Population growth rate (for coalescent models)\n")
   cat("- coalescent_params: Detailed coalescent model parameters\n")
+  cat("- lambda_alpha & mu_alpha: Time-dependency parameters for exponential/linear models\n")
+  cat("- bd_lambda_alpha & bd_mu_alpha: Alpha parameters specifically for best BD models\n")
   
   # Summary of model selection
   bd_selected <- sum(csv_data$model_type[!is.na(csv_data$model_type)] == "birth_death")
@@ -1203,9 +1182,19 @@ if (matched_count > 0) {
       cat("birth-death processes (speciation/extinction rates).\n")
     }
   }
+  
+  # NEW: Alpha parameter interpretation
+  cat("\n=== ALPHA PARAMETER INTERPRETATION ===\n")
+  cat("Alpha parameters (y[2]) indicate time-dependency:\n")
+  cat("- For EXPONENTIAL models: Rate(t) = Rate₀ * exp(α * t)\n")
+  cat("  * Positive α: Rate increases exponentially through time\n")
+  cat("  * Negative α: Rate decreases exponentially through time\n")
+  cat("- For LINEAR models: Rate(t) = Rate₀ + α * t\n")
+  cat("  * Positive α: Rate increases linearly through time\n")
+  cat("  * Negative α: Rate decreases linearly through time\n")
+  cat("- For CONSTANT models: α = NA (no time dependency)\n")
 }
 
 cat("\nRPANDA analysis with Birth-Death AND Coalescent models complete!\n")
 cat("Enhanced model comparison now includes demographic and diversification processes.\n")
-}
-
+cat("Alpha parameters for time-dependent models are now saved to CSV!\n")

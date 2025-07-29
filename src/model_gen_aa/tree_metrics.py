@@ -273,12 +273,10 @@ def analyze_tree_balance(newick_string: str) -> dict:
     
     if is_strictly_bifurcating(tree):
         normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
-        gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
     else:
         tree_copy = dendropy.Tree(tree)
         resolve_polytomies(tree_copy)
         normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
-        gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
     
     # Calculate tree depth
     def get_max_depth(node: TreeNode, depth: int = 0) -> int:
@@ -314,7 +312,6 @@ def analyze_tree_balance(newick_string: str) -> dict:
         'colless_index': colless_index,
         'normalized_colless_index': normalized_colless,
         'balance_category': balance_category,
-        'gamma' : gamma,
         'is_binary': all(len(node.children) <= 2 for node in get_all_nodes(root) if node.is_internal())
     }
 
