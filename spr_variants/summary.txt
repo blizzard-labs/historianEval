@@ -1,9 +1,0 @@
-SPR Tree Variant Generation Summary
-========================================
-
-Consensus tree: data/model_gen/mamX10k/consensus.tree
-Thresholds: 1
-Replicates per threshold: data/simulation/experiment_4
-
-Results:
---------------------

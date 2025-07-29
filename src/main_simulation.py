@@ -230,7 +230,7 @@ class evolSimulator:
                 tree_path = os.path.join(self.output_folder, folder, tree_file)
                 
                 tree_path, tree_file = self.prep_guide_tree(tree_file, idx + 1, "isg")
-                ''' #? Useless code, but useful for future reference
+                ''' #? Useless code
                 self.generate_random_sequence('data/custom_gtr/GTR_equilibriums.tsv',
                                             int(self.params['n_sequences'].iloc[seq_num - 1]),
                                             os.path.join(target_folder, 'rootseq.root'))
