@@ -276,7 +276,7 @@ def analyze_tree_balance(newick_string: str) -> dict:
     else:
         tree_copy = dendropy.Tree(tree)
         resolve_polytomies(tree_copy)
-        normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
+        normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree_copy)
     
     # Calculate tree depth
     def get_max_depth(node: TreeNode, depth: int = 0) -> int:
