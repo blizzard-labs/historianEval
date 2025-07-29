@@ -220,6 +220,37 @@ def collapse_unary_nodes(tree):
         tree.seed_node = child
         root = child
 
+def resolve_polytomies(tree):
+    """Resolve polytomies in dendropy tree to make it strictly bifurcating"""
+    for node in tree.postorder_node_iter():
+        if not node.is_leaf() and len(node.child_nodes()) > 2:
+            # Convert polytomy to series of binary splits
+            children = list(node.child_nodes())
+            # Remove all children from the node
+            for child in children:
+                node.remove_child(child)
+            
+            # Add children back in binary fashion
+            current_node = node
+            for i in range(len(children) - 2):
+                # Create new internal node
+                new_internal = tree.node_factory()
+                current_node.add_child(new_internal)
+                current_node.add_child(children[i])
+                current_node = new_internal
+            
+            # Add the last two children
+            current_node.add_child(children[-2])
+            current_node.add_child(children[-1])
+
+def is_strictly_bifurcating(tree):
+    """Check if tree is strictly bifurcating (all internal nodes have exactly 2 children)"""
+    for node in tree.preorder_node_iter():
+        if not node.is_leaf():
+            if len(node.child_nodes()) != 2:
+                return False
+    return True
+
 def analyze_tree_balance(newick_string: str) -> dict:
     """
     Comprehensive tree balance analysis
@@ -239,8 +270,15 @@ def analyze_tree_balance(newick_string: str) -> dict:
     n_leaves = root.get_leaf_count()
     colless_index = calculate_colless_index(root)
     #normalized_colless = calculate_normalized_colless_index(root)
-    normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
-    gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
+    
+    if is_strictly_bifurcating(tree):
+        normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
+        gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
+    else:
+        tree_copy = dendropy.Tree(tree)
+        resolve_polytomies(tree_copy)
+        normalized_colless = dendropy.calculate.treemeasure.colless_tree_imbalance(tree)
+        gamma = dendropy.calculate.treemeasure.pybus_harvey_gamma(tree)
     
     # Calculate tree depth
     def get_max_depth(node: TreeNode, depth: int = 0) -> int:
