@@ -200,6 +200,26 @@ def calculate_normalized_colless_index(root: TreeNode) -> float:
     
     return colless_index / max_colless if max_colless > 0 else 0.0
 
+def collapse_unary_nodes(tree):
+    #For dendropy trees
+    changed = True
+    while changed:
+        changed = False
+        for node in list(tree.postorder_node_iter()):
+            if not node.is_leaf() and len(node.child_nodes()) == 1 and node != tree.seed_node:
+                parent = node.parent_node
+                child = node.child_nodes()[0]
+                if parent:
+                    parent.remove_child(node)
+                    parent.add_child(child)
+                    changed = True
+    # Special case: root with one child
+    root = tree.seed_node
+    while len(root.child_nodes()) == 1:
+        child = root.child_nodes()[0]
+        tree.seed_node = child
+        root = child
+
 def analyze_tree_balance(newick_string: str) -> dict:
     """
     Comprehensive tree balance analysis
@@ -213,6 +233,7 @@ def analyze_tree_balance(newick_string: str) -> dict:
     # Parse the tree
     root = parse_newick(newick_string)
     tree = dendropy.Tree.get_from_string(newick_string, schema="newick")
+    collapse_unary_nodes(tree)
     
     # Calculate metrics
     n_leaves = root.get_leaf_count()
