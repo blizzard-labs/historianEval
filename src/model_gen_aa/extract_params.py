@@ -657,8 +657,7 @@ class ProteinParameterExtractor:
             'n_internal_nodes': tree_params['n_internal_nodes'],
             'max_depth' : tree_params['max_depth'],
             'colless_index': tree_params['colless_index'],
-            'normalized_colless_index' : tree_params['normalized_colless_index'],
-            'gamma' : tree_params['gamma']
+            'normalized_colless_index' : tree_params['normalized_colless_index']
         })
         
         return result
