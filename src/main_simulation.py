@@ -53,15 +53,15 @@ class evolSimulator:
                 cmd = [
                     "python",
                     "src/simulation/tree_gen_bd.py",
-                    "--birth_rate", row['best_BD_speciation_rate'],
-                    "--death_rate", row['best_BD_extinction_rate'],
+                    "--birth_rate", str(row['best_BD_speciation_rate']),
+                    "--death_rate", str(row['best_BD_extinction_rate']),
                     "--bd_model", best_model,
                     "--birth_alpha", 
                     "--death_alpha",
-                    "--target_colless", row['normalized_colless_index'],
-                    "--target_gamma", row['gamma'],
-                    "--num_taxa", row['n_sequences_tips'],
-                    "--max_iterations", max_iterations,
+                    "--target_colless", str(row['normalized_colless_index']),
+                    "--target_gamma", str(row['gamma']),
+                    "--num_taxa", str(row['n_sequences_tips']),
+                    "--max_iterations", str(max_iterations),
                     "--output", os.path.join(seq_folder, 'guide.tree')
                 ]
                 
@@ -192,7 +192,7 @@ class evolSimulator:
             with open(os.path.join(target_folder, n_name), 'w') as f:
                 f.write(f'[TYPE] AMINOACID 1\n\n[MODEL] modelname\n')
                 f.write(f'   [submodel] LG\n')
-                f.write(f'   [rates] {self.params['prop_invariant'].iloc[seq_num - 1]} {self.params['gamma_shape'].iloc[seq_num - 1]} 0\n')
+                f.write(f"   [rates] {self.params['prop_invariant'].iloc[seq_num - 1]} {self.params['gamma_shape'].iloc[seq_num - 1]} 0\n")
                 f.write(f'   [insertmodel] NB {ins_q_val} 1\n') #Negative binomial distribution simplifies to a geometric distribution
                 f.write(f'   [deletemodel] NB {del_q_val} 1\n')
                 f.write(f'   [insertrate] {insert_rate}\n')
