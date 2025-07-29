@@ -73,6 +73,7 @@ class PhylogeneticParameterFitter:
                                 'mean_insertion_length', 'mean_deletion_length',
                                 'normalized_colless_index', 'gamma',
                                 'best_BD_speciation_rate', 'best_BD_extinction_rate',
+                                'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
                                 'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
                                 'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
         }
