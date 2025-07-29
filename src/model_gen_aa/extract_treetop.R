@@ -1022,12 +1022,12 @@ rate_columns <- c("gamma", "gamma_pvalue", "gamma_interpretation",
                  "extinction_ci_lower", "extinction_ci_upper", "tree_loglik", 
                  "tree_aic", "tree_aicc", "diversification_method", "model_type",
                  "effective_pop_size", "growth_rate", "coalescent_params",
-                 "lambda_alpha", "mu_alpha"
+                 "lambda_alpha", "mu_alpha",
                  # Best BD model columns
                  "bd_speciation_rate", "bd_extinction_rate", "bd_net_diversification", 
                  "bd_relative_extinction", "bd_loglik", "bd_aic", "bd_aicc", 
                  "bd_method", "bd_lamb_type", "bd_mu_type",
-                 "bd_lambda_alpha", "bd_mu_alpha"
+                 "bd_lambda_alpha", "bd_mu_alpha",
                  # Best coalescent model columns
                  "coal_speciation_rate", "coal_extinction_rate", "coal_net_diversification", 
                  "coal_loglik", "coal_aic", "coal_aicc", "coal_method", 
