@@ -40,6 +40,9 @@ def clean_protein_evolution_data(input_file, output_file=None):
     cleaned_data['best_BD_speciation_rate'] = df['bd_speciation_rate']
     cleaned_data['best_BD_extinction_rate'] = df['bd_extinction_rate']
     
+    cleaned_data['best_BD_speciation_alpha'] = df['bd_lambda_alpha']
+    cleaned_data['best_BD_extinction_alpha'] = df['bd_mu_alpha']
+    
     # Best Coalescent model parameters
     cleaned_data['best_coal_growth_rate'] = df['coal_growth_rate']
     cleaned_data['best_coal_eff_pop_size'] = df['coal_effective_pop_size']
@@ -83,7 +86,8 @@ def clean_protein_evolution_data(input_file, output_file=None):
         'gamma_shape', 'prop_invariant', 'insertion_rate', 'deletion_rate',
         'mean_insertion_length', 'mean_deletion_length', 'best_BD_speciation_rate',
         'best_BD_extinction_rate', 'best_coal_growth_rate', 'best_coal_eff_pop_size',
-        'bd_weight', 'tree_length', 'crown_age', 'gamma', 'normalized_colless_index'
+        'bd_weight', 'tree_length', 'crown_age', 'gamma', 'normalized_colless_index',
+        'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
     ]
     
     # Add model indicator columns (these should remain as integers)
