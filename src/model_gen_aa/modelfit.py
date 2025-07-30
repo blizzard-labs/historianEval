@@ -234,7 +234,7 @@ class PhylogeneticParameterFitter:
         print(f"Multivariate normal fitted successfully for {param_group}")
         return self.joint_model
     
-    def sample_parameters_rejection_with_replacement(self, n_samples=100, param_group='key_parameters', 
+    def sample_parameters(self, n_samples=100, param_group='key_parameters', 
                                                min_n_sequences_tips=20, n_std=1.5):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
