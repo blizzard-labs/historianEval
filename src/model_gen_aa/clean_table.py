@@ -90,8 +90,8 @@ def clean_protein_evolution_data(input_file, output_file=None):
     model_columns = [col for col in cleaned_df.columns if col.startswith('best_') and 
                     any(model in col for model in bd_models + coal_models)]
     
-    cleaned_df['best_BD_speciation_alpha'] = cleaned_df['best_BD_speciation_alpha'].fillna(0).replace('', 0)
-    cleaned_df['best_BD_extinction_alpha'] = cleaned_df['best_BD_extinction_alpha'].fillna(0).replace('', 0)
+    cleaned_df['best_BD_speciation_alpha'] = cleaned_df['best_BD_speciation_alpha'].fillna(0).replace('', 0).clip(lower=0)
+    cleaned_df['best_BD_extinction_alpha'] = cleaned_df['best_BD_extinction_alpha'].fillna(0).replace('', 0).clip(lower=0)
     
     for col in numeric_columns:
         if col in cleaned_df.columns:
