@@ -234,43 +234,105 @@ class PhylogeneticParameterFitter:
         print(f"Multivariate normal fitted successfully for {param_group}")
         return self.joint_model
     
-    def sample_parameters(self, n_samples=100, param_group='key_parameters', min_n_sequences_tips=20):
-        """Sample new parameter sets from fitted distributions, with constraint on n_sequences_tips"""
+    def sample_parameters_rejection_with_replacement(self, n_samples=100, param_group='key_parameters', 
+                                               min_n_sequences_tips=20, n_std=1.5):
+        """
+        Enhanced rejection sampling with parameter-specific bounds and replacement strategy
+        Excludes certain parameters from bounds constraints (best_B* model selection parameters)
+        
+        Parameters:
+        - n_std: Number of standard deviations to use as bounds (default 1.5)
+        """
         if self.joint_model is None:
             print("No joint model fitted. Please fit a joint distribution first.")
             return None
-
-        samples = pd.DataFrame()
-        attempts = 0
-        max_attempts = 10
-
-        while len(samples) < n_samples and attempts < max_attempts:
+        
+        params = self.parameter_groups[param_group]
+        available_params = [p for p in params if p in self.numeric_data.columns]
+        
+        # Define parameters to exclude from bounds constraints (model selection indicators)
+        unrestricted_params = {
+            'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
+            'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
+            'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN'
+        }
+        
+        # Calculate bounds for each parameter (excluding unrestricted ones)
+        param_bounds = {}
+        restricted_params = []
+        
+        for param in available_params:
+            if param in unrestricted_params:
+                continue  # Skip bounds calculation for unrestricted parameters
+                
+            data = self.numeric_data[param].dropna()
+            mean = np.mean(data)
+            std = np.std(data)
+            param_bounds[param] = {
+                'mean': mean,
+                'std': std,
+                'lower': mean - n_std * std,
+                'upper': mean + n_std * std
+            }
+            restricted_params.append(param)
+        
+        print(f"Applying {n_std}-std bounds to {len(restricted_params)} parameters")
+        print(f"Unrestricted parameters: {[p for p in available_params if p in unrestricted_params]}")
+        
+        # Generate samples in batches with rejection sampling
+        accepted_samples = []
+        total_attempts = 0
+        batch_size = max(100, n_samples * 2)
+        
+        while len(accepted_samples) < n_samples and total_attempts < 100000:
+            # Generate a batch of samples
             if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
-                # Sample from copula
-                new_samples = self.joint_model.sample(n_samples)
+                batch_samples = self.joint_model.sample(batch_size)
             else:
-                # Sample from multivariate normal
                 if self.joint_model['type'] == 'multivariate_normal':
                     samples_scaled = np.random.multivariate_normal(
                         self.joint_model['mean'], 
                         self.joint_model['cov'], 
-                        n_samples
+                        batch_size
                     )
-                    # Inverse transform
-                    new_samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
-                    new_samples = pd.DataFrame(new_samples, columns=self.joint_model['param_names'])
-
-            # Filter samples where n_sequences_tips > min_n_sequences_tips
-            if 'n_sequences_tips' in new_samples.columns:
-                new_samples = new_samples[new_samples['n_sequences_tips'] > min_n_sequences_tips]
-
-            samples = pd.concat([samples, new_samples], ignore_index=True)
-            attempts += 1
-
-        if len(samples) > n_samples:
-            samples = samples.iloc[:n_samples]
-
-        return samples if not samples.empty else None
+                    batch_samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
+                    batch_samples = pd.DataFrame(batch_samples, columns=self.joint_model['param_names'])
+            
+            # Apply rejection criteria
+            for idx in range(len(batch_samples)):
+                sample = batch_samples.iloc[idx]
+                accept_sample = True
+                
+                # Check bounds only for restricted parameters
+                for param in restricted_params:
+                    if param in sample.index:
+                        value = sample[param]
+                        if not (param_bounds[param]['lower'] <= value <= param_bounds[param]['upper']):
+                            accept_sample = False
+                            break
+                
+                # Additional constraint for n_sequences_tips
+                if (accept_sample and 'n_sequences_tips' in sample.index and 
+                    sample['n_sequences_tips'] <= min_n_sequences_tips):
+                    accept_sample = False
+                
+                if accept_sample:
+                    accepted_samples.append(sample)
+                    if len(accepted_samples) >= n_samples:
+                        break
+            
+            total_attempts += batch_size
+        
+        if accepted_samples:
+            result = pd.DataFrame(accepted_samples)
+            acceptance_rate = len(accepted_samples) / total_attempts * 100
+            print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
+            print(f"Samples constrained to within {n_std} standard deviation(s) for {len(restricted_params)} parameters")
+            print(f"{len(unrestricted_params & set(available_params))} parameters left unrestricted")
+            return result.iloc[:n_samples]  # Return exactly n_samples
+        else:
+            print(f"Failed to generate sufficient samples within {n_std}-std bounds")
+            return None
     
     def validate_fit(self, output_folder, param_group='key_parameters'):
         """Validate the fitted joint distribution with organized subplots"""
