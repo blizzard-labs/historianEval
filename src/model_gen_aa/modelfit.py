@@ -73,7 +73,7 @@ class PhylogeneticParameterFitter:
                                 'mean_insertion_length', 'mean_deletion_length',
                                 'normalized_colless_index', 'gamma',
                                 'best_BD_speciation_rate', 'best_BD_extinction_rate',
-                                'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
+                                'best_BD_speciation_alpha', 'best_BD_extinction_alpha',
                                 'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
                                 'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
         }
@@ -273,7 +273,7 @@ class PhylogeneticParameterFitter:
         return samples if not samples.empty else None
     
     def validate_fit(self, output_folder, param_group='key_parameters'):
-        """Validate the fitted joint distribution"""
+        """Validate the fitted joint distribution with organized subplots"""
         if self.joint_model is None:
             print("No joint model to validate")
             return
@@ -286,26 +286,237 @@ class PhylogeneticParameterFitter:
         
         # Compare distributions
         params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
+        available_params = [p for p in params if p in self.numeric_data.columns and p in samples.columns]
         
+        # Group parameters by category for better organization
+        param_categories = self._categorize_parameters(available_params)
+        
+        # Create separate plots for each category or one large organized plot
+        if len(available_params) > 12:
+            self._create_categorized_plots(output_folder, param_categories, samples)
+        else:
+            self._create_single_organized_plot(output_folder, available_params, samples)
+        
+        # Create summary statistics plot
+        self._create_summary_stats_plot(output_folder, available_params, samples)
+
+    def _categorize_parameters(self, available_params):
+        """Categorize parameters for better organization"""
+        categories = {
+            'Tree Structure': [p for p in available_params if any(keyword in p.lower() for keyword in 
+                            ['n_sequences', 'crown_age', 'colless', 'gamma'])],
+            'Sequence Evolution': [p for p in available_params if any(keyword in p.lower() for keyword in 
+                                ['alignment_length', 'gamma_shape', 'prop_invariant'])],
+            'Indel Parameters': [p for p in available_params if any(keyword in p.lower() for keyword in 
+                                ['insertion', 'deletion'])],
+            'Birth-Death Models': [p for p in available_params if p.startswith('best_B')]
+        }
+        
+        # Add any uncategorized parameters to a general category
+        categorized = set()
+        for cat_params in categories.values():
+            categorized.update(cat_params)
+        
+        uncategorized = [p for p in available_params if p not in categorized]
+        if uncategorized:
+            categories['Other'] = uncategorized
+        
+        # Remove empty categories
+        categories = {k: v for k, v in categories.items() if v}
+        
+        return categories
+
+    def _create_single_organized_plot(self, output_folder, available_params, samples):
+        """Create a single well-organized plot for all parameters"""
         n_params = len(available_params)
-        fig, axes = plt.subplots(2, (n_params + 1) // 2, figsize=(15, 8))
+        n_cols = min(4, n_params)
+        n_rows = (n_params + n_cols - 1) // n_cols
+        
+        # Dynamic figure size
+        fig_width = n_cols * 5
+        fig_height = n_rows * 4
+        
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(fig_width, fig_height))
+        
+        # Handle different subplot configurations
         if n_params == 1:
             axes = [axes]
-        axes = axes.flatten()
+        elif n_rows == 1:
+            axes = axes.reshape(1, -1) if n_cols > 1 else [axes]
+        elif n_cols == 1:
+            axes = axes.reshape(-1, 1)
+        
+        axes_flat = axes.flatten() if n_params > 1 else axes
         
         for i, param in enumerate(available_params):
-            if param in samples.columns:
-                axes[i].hist(self.numeric_data[param], bins=20, alpha=0.7, 
-                           label='Original', density=True)
-                axes[i].hist(samples[param], bins=20, alpha=0.7, 
-                           label='Sampled', density=True)
-                axes[i].set_title(param)
-                axes[i].legend()
+            ax = axes_flat[i]
+            self._plot_parameter_comparison(ax, param, samples)
+        
+        # Hide unused subplots
+        for i in range(n_params, len(axes_flat)):
+            axes_flat[i].set_visible(False)
+        
+        plt.tight_layout(pad=2.0)
+        plt.savefig(os.path.join(output_folder, 'param_fits.png'), 
+                dpi=300, bbox_inches='tight')
+        plt.close()
+
+    def _create_categorized_plots(self, output_folder, param_categories, samples):
+        """Create separate plots for each parameter category"""
+        for category, params in param_categories.items():
+            if not params:
+                continue
+                
+            n_params = len(params)
+            n_cols = min(3, n_params)
+            n_rows = (n_params + n_cols - 1) // n_cols
+            
+            fig_width = n_cols * 5
+            fig_height = n_rows * 4
+            
+            fig, axes = plt.subplots(n_rows, n_cols, figsize=(fig_width, fig_height))
+            fig.suptitle(f'{category} Parameters', fontsize=16, fontweight='bold')
+            
+            if n_params == 1:
+                axes = [axes]
+            elif n_rows == 1:
+                axes = axes.reshape(1, -1) if n_cols > 1 else [axes]
+            elif n_cols == 1:
+                axes = axes.reshape(-1, 1)
+            
+            axes_flat = axes.flatten() if n_params > 1 else axes
+            
+            for i, param in enumerate(params):
+                ax = axes_flat[i]
+                self._plot_parameter_comparison(ax, param, samples)
+            
+            # Hide unused subplots
+            for i in range(n_params, len(axes_flat)):
+                axes_flat[i].set_visible(False)
+            
+            plt.tight_layout(pad=2.0)
+            
+            # Save with category name
+            safe_category = category.replace(' ', '_').lower()
+            plt.savefig(os.path.join(output_folder, f'param_fits_{safe_category}.png'), 
+                    dpi=300, bbox_inches='tight')
+            plt.close()
+
+    def _plot_parameter_comparison(self, ax, param, samples):
+        """Plot comparison for a single parameter"""
+        orig_data = self.numeric_data[param].dropna()
+        samp_data = samples[param].dropna()
+        
+        # Determine appropriate number of bins
+        n_bins = min(30, max(10, int(np.sqrt(len(orig_data)))))
+        
+        # Create histograms with better styling
+        ax.hist(orig_data, bins=n_bins, alpha=0.6, 
+            label='Original', density=True, color='skyblue', edgecolor='black')
+        ax.hist(samp_data, bins=n_bins, alpha=0.6, 
+            label='Sampled', density=True, color='orange', edgecolor='black')
+        
+        # Improve titles and labels
+        clean_param_name = param.replace('_', ' ').title()
+        ax.set_title(clean_param_name, fontsize=12, fontweight='bold')
+        ax.set_xlabel('Value', fontsize=10)
+        ax.set_ylabel('Density', fontsize=10)
+        ax.legend(fontsize=9)
+        ax.grid(True, alpha=0.3)
+        
+        # Add statistics text
+        orig_mean, orig_std = np.mean(orig_data), np.std(orig_data)
+        samp_mean, samp_std = np.mean(samp_data), np.std(samp_data)
+        
+        stats_text = f'Orig: μ={orig_mean:.3f}, σ={orig_std:.3f}\nSamp: μ={samp_mean:.3f}, σ={samp_std:.3f}'
+        ax.text(0.02, 0.98, stats_text, transform=ax.transAxes, 
+            verticalalignment='top', fontsize=8, 
+            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+    def _create_summary_stats_plot(self, output_folder, available_params, samples):
+        """Create a summary statistics comparison plot"""
+        
+        # Calculate summary statistics
+        stats_data = []
+        for param in available_params:
+            orig_data = self.numeric_data[param].dropna()
+            samp_data = samples[param].dropna()
+            
+            # KS test for distribution comparison
+            ks_stat, ks_pvalue = kstest(samp_data, lambda x: stats.percentileofscore(orig_data, x)/100)
+            
+            stats_data.append({
+                'Parameter': param.replace('_', ' ').title(),
+                'Original_Mean': np.mean(orig_data),
+                'Sampled_Mean': np.mean(samp_data),
+                'Original_Std': np.std(orig_data),
+                'Sampled_Std': np.std(samp_data),
+                'KS_Statistic': ks_stat,
+                'KS_P_Value': ks_pvalue
+            })
+        
+        stats_df = pd.DataFrame(stats_data)
+        
+        # Create comparison plots
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
+        
+        # Mean comparison
+        ax1.scatter(stats_df['Original_Mean'], stats_df['Sampled_Mean'], alpha=0.7)
+        ax1.plot([stats_df['Original_Mean'].min(), stats_df['Original_Mean'].max()], 
+                [stats_df['Original_Mean'].min(), stats_df['Original_Mean'].max()], 
+                'r--', alpha=0.8)
+        ax1.set_xlabel('Original Mean')
+        ax1.set_ylabel('Sampled Mean')
+        ax1.set_title('Mean Comparison')
+        ax1.grid(True, alpha=0.3)
+        
+        # Std comparison
+        ax2.scatter(stats_df['Original_Std'], stats_df['Sampled_Std'], alpha=0.7)
+        ax2.plot([stats_df['Original_Std'].min(), stats_df['Original_Std'].max()], 
+                [stats_df['Original_Std'].min(), stats_df['Original_Std'].max()], 
+                'r--', alpha=0.8)
+        ax2.set_xlabel('Original Std')
+        ax2.set_ylabel('Sampled Std')
+        ax2.set_title('Standard Deviation Comparison')
+        ax2.grid(True, alpha=0.3)
+        
+        # KS statistics
+        bars = ax3.bar(range(len(stats_df)), stats_df['KS_Statistic'])
+        ax3.set_xlabel('Parameter Index')
+        ax3.set_ylabel('KS Statistic')
+        ax3.set_title('Kolmogorov-Smirnov Test Statistics')
+        ax3.set_xticks(range(len(stats_df)))
+        ax3.set_xticklabels([p[:10] + '...' if len(p) > 10 else p 
+                            for p in stats_df['Parameter']], rotation=45)
+        
+        # Color bars by p-value
+        for i, (bar, pval) in enumerate(zip(bars, stats_df['KS_P_Value'])):
+            if pval < 0.01:
+                bar.set_color('red')
+            elif pval < 0.05:
+                bar.set_color('orange')
+            else:
+                bar.set_color('green')
+        
+        # P-values
+        ax4.bar(range(len(stats_df)), -np.log10(stats_df['KS_P_Value'] + 1e-10))
+        ax4.set_xlabel('Parameter Index')
+        ax4.set_ylabel('-log10(p-value)')
+        ax4.set_title('KS Test P-Values (-log10 scale)')
+        ax4.axhline(y=-np.log10(0.05), color='r', linestyle='--', alpha=0.7, label='p=0.05')
+        ax4.set_xticks(range(len(stats_df)))
+        ax4.set_xticklabels([p[:10] + '...' if len(p) > 10 else p 
+                            for p in stats_df['Parameter']], rotation=45)
+        ax4.legend()
         
         plt.tight_layout()
-        plt.savefig(os.path.join(output_folder, 'param_fits.png'), dpi=300)
+        plt.savefig(os.path.join(output_folder, 'param_fits_summary.png'), 
+                dpi=300, bbox_inches='tight')
         plt.close()
+        
+        # Save statistics to CSV
+        stats_df.to_csv(os.path.join(output_folder, 'fit_validation_stats.csv'), index=False)
+        print(f"Validation statistics saved to {output_folder}/fit_validation_stats.csv")
     
     def export_for_simulation(self, param_group='key_parameters', n_samples=100):
         """Export parameters in format suitable for indel-seq-gen"""

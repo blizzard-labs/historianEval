@@ -297,7 +297,7 @@ def main():
     
     mc.generate_model(mc.params_wc_file)
     print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
-    mc.sample_model(n_samples=100)
+    mc.sample_model(n_samples=10000)
     print(f'Sampled from model- ELAPSED TIME: {time.time() - start}============================')
     
     print('COMPLEETTEEEETETETETE!!!!')
