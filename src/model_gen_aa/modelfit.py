@@ -609,7 +609,7 @@ class PhylogeneticParameterFitter:
             if col in ['n_sequences_tips', 'alignment_length']:
                 export_data[col] = export_data[col].astype(int)
             
-            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length', 'normalized_colless_index']:
+            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length', 'normalized_colless_index', 'best_BD_speciation_alpha', 'best_BD_extinction_alpha']:
                 export_data[col] = np.maximum(export_data[col], 0)
             
         one_hot_cols = [c for c in export_data.columns if c.startswith('best_B') and not c.startswith('best_BD')]
