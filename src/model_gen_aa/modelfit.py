@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Phylogenetic Parameter Distribution Fitting Script
+Enhanced Phylogenetic Parameter Distribution Fitting with Mixed Variable Support
 
-This script fits joint distributions to phylogenetic parameters extracted from TreeFam alignments
-for use in realistic sequence simulation with indel-seq-gen.
+This version properly handles the mixed continuous/categorical nature of phylogenetic parameters.
 """
-
 
 import os
 import sys
@@ -28,13 +26,12 @@ except ImportError:
     print("Warning: copulas library not available. Install with: pip install copulas")
     COPULAS_AVAILABLE = False
 
-# For multivariate normal as fallback
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
 
-class PhylogeneticParameterFitter:
+class MixedPhylogeneticParameterFitter:
     """
-    Class for fitting distributions to phylogenetic parameters
+    Enhanced fitter that properly handles mixed continuous/categorical parameters
     """
     
     def __init__(self, csv_file):
@@ -42,318 +39,333 @@ class PhylogeneticParameterFitter:
         self.data = pd.read_csv(csv_file)
         self.fitted_distributions = {}
         self.joint_model = None
+        self.categorical_model = None
+        self.continuous_model = None
         self.parameter_groups = self._define_parameter_groups()
         
     def _define_parameter_groups(self):
-        """Define logical groups of parameters for joint modeling"""
-        
-        #n_sequences, alignment_length, gamma_shape, prop_invariant, insertion_rate, deletion_rate, insertion_events, deletion_events
-        #mean_insertion_length, mean_deletion_length, total_gaps, indel_to_substitution_ration, rf_length_distance
-        
-        # n_sequences, gamma_shape, prop_invariant, insertion_rate, deletion_rate, mean_insertion_length, mean_deletion_length, rf_length_distance
-        '''
+        """Define parameter groups with explicit categorical/continuous separation"""
         return {
-            'amino_acid_frequencies': [col for col in self.data.columns if col.startswith('freq_')],
-            'substitution_model': ['gamma_shape', 'prop_invariant'],
-            'indel_parameters': ['indel_rate', 'mean_indel_length'],
-            'tree_parameters': ['tree_length', 'crown_age', 'n_tips'],
-            'diversification': ['speciation_rate', 'extinction_rate', 'net_diversification'],
-            'sequence_properties': ['n_sequences', 'alignment_length', 'total_gaps'],
-            'key_parameters' : ['n_sequences', 'gamma_shape', 'prop_invariant',
-                                'insertion_rate', 'deletion_rate',
-                                'mean_insertion_length', 'mean_deletion_length',
-                                'rf_length_distance']
+            'continuous_parameters': [
+                'n_sequences_tips', 'alignment_length', 'crown_age',
+                'gamma_shape', 'prop_invariant',
+                'insertion_rate', 'deletion_rate',
+                'mean_insertion_length', 'mean_deletion_length',
+                'normalized_colless_index', 'gamma',
+                'best_BD_speciation_rate', 'best_BD_extinction_rate',
+                'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
+            ],
+            'categorical_parameters': [
+                'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 
+                'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
+                'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN'
+            ]
         }
-        '''
-        
-        return {
-            'key_parameters' : ['n_sequences_tips', 'alignment_length', 'crown_age',
-                                'gamma_shape', 'prop_invariant',
-                                'insertion_rate', 'deletion_rate',
-                                'mean_insertion_length', 'mean_deletion_length',
-                                'normalized_colless_index', 'gamma',
-                                'best_BD_speciation_rate', 'best_BD_extinction_rate',
-                                'best_BD_speciation_alpha', 'best_BD_extinction_alpha',
-                                'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
-                                'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
-        }
-
     
     def preprocess_data(self):
-        """Clean and preprocess the data"""
+        """Enhanced preprocessing that handles mixed variable types"""
         # Remove non-numeric columns and handle missing values
         numeric_cols = self.data.select_dtypes(include=[np.number]).columns
         self.numeric_data = self.data[numeric_cols].copy()
-        
-        # Handle missing values
         self.numeric_data = self.numeric_data.dropna()
         
-        # Log-transform rate parameters (they're often log-normal)
-        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length',
-                       'best_BD_speciation_rate', 'best_BD_extinction_rate']
+        # Separate continuous and categorical variables
+        continuous_params = self.parameter_groups['continuous_parameters']
+        categorical_params = self.parameter_groups['categorical_parameters']
         
-        for param in rate_params:
-            if param in self.numeric_data.columns:
-                # Add small constant to avoid log(0)
-                self.numeric_data[param + '_log'] = np.log(self.numeric_data[param] + 1e-10)
+        # Filter to available columns
+        self.continuous_cols = [p for p in continuous_params if p in self.numeric_data.columns]
+        self.categorical_cols = [p for p in categorical_params if p in self.numeric_data.columns]
         
-        # Logit-transform proportions
-        prop_params = ['prop_invariant'] + [col for col in self.numeric_data.columns if col.startswith('freq_')]
+        print(f"Continuous parameters: {len(self.continuous_cols)}")
+        print(f"Categorical parameters: {len(self.categorical_cols)}")
         
-        for param in prop_params:
-            if param in self.numeric_data.columns:
-                # Logit transform: log(p/(1-p)), handling edge cases
-                p = self.numeric_data[param].clip(1e-10, 1-1e-10)
-                self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
+        # Create categorical variable from one-hot encoding
+        if self.categorical_cols:
+            self._create_categorical_variable()
+        
+        # Transform continuous variables
+        self._transform_continuous_variables()
         
         print(f"Preprocessed data shape: {self.numeric_data.shape}")
         return self.numeric_data
     
-    def fit_marginal_distributions(self, param_subset=None):
-        """Fit marginal distributions to individual parameters"""
-        if param_subset is None:
-            param_subset = self.numeric_data.columns
+    def _create_categorical_variable(self):
+        """Convert one-hot encoded columns to single categorical variable"""
+        # Find which model is selected for each row
+        categorical_data = self.numeric_data[self.categorical_cols]
         
-        # Common distributions to test
-        distributions = [
-            stats.norm, stats.lognorm, stats.gamma, stats.expon, 
-            stats.beta, stats.weibull_min, stats.chi2
-        ]
+        # Handle rows where no model is selected (all zeros)
+        row_sums = categorical_data.sum(axis=1)
+        zero_rows = row_sums == 0
         
-        self.fitted_distributions = {}
+        if zero_rows.any():
+            print(f"Warning: {zero_rows.sum()} rows have no model selected. Using most common model.")
+            # Find most common model
+            model_counts = categorical_data.sum(axis=0)
+            most_common_model = model_counts.idxmax()
+            
+            # Assign most common model to zero rows
+            for idx in categorical_data[zero_rows].index:
+                self.numeric_data.at[idx, most_common_model] = 1
         
-        for param in param_subset:
-            if param not in self.numeric_data.columns:
+        # Handle rows with multiple models selected (sum > 1)
+        multi_rows = row_sums > 1
+        if multi_rows.any():
+            print(f"Warning: {multi_rows.sum()} rows have multiple models selected. Using first selected.")
+            for idx in categorical_data[multi_rows].index:
+                # Find first model that's selected
+                selected_models = categorical_data.loc[idx] == 1
+                first_model = selected_models.idxmax()
+                
+                # Set all to 0, then set first to 1
+                self.numeric_data.loc[idx, self.categorical_cols] = 0
+                self.numeric_data.at[idx, first_model] = 1
+        
+        # Create single categorical variable
+        bd_model_map = {col: col.replace('best_', '') for col in self.categorical_cols}
+        
+        self.numeric_data['bd_model_category'] = 'BCSTDCST'  # default
+        for idx, row in self.numeric_data.iterrows():
+            for col in self.categorical_cols:
+                if row[col] == 1:
+                    self.numeric_data.at[idx, 'bd_model_category'] = bd_model_map[col]
+                    break
+        
+        # Calculate category probabilities for sampling
+        self.category_probs = self.numeric_data['bd_model_category'].value_counts(normalize=True)
+        print("Birth-death model distribution:")
+        print(self.category_probs)
+    
+    def _transform_continuous_variables(self):
+        """Transform continuous variables with appropriate transformations"""
+        # Log-transform rate parameters
+        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 
+                      'mean_insertion_length', 'mean_deletion_length',
+                      'best_BD_speciation_rate', 'best_BD_extinction_rate']
+        
+        for param in rate_params:
+            if param in self.continuous_cols:
+                # Add small constant to avoid log(0)
+                self.numeric_data[param + '_log'] = np.log(self.numeric_data[param] + 1e-10)
+        
+        # Logit-transform proportions
+        prop_params = ['prop_invariant']
+        
+        for param in prop_params:
+            if param in self.continuous_cols:
+                # Logit transform: log(p/(1-p)), handling edge cases
+                p = self.numeric_data[param].clip(1e-10, 1-1e-10)
+                self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
+    
+    def fit_mixed_distribution(self):
+        """Fit joint distribution for continuous variables + categorical model"""
+        # Get continuous variables (including transformed ones)
+        continuous_vars = []
+        for param in self.continuous_cols:
+            continuous_vars.append(param)
+            # Add transformed versions if they exist
+            if param + '_log' in self.numeric_data.columns:
+                continuous_vars.append(param + '_log')
+            if param + '_logit' in self.numeric_data.columns:
+                continuous_vars.append(param + '_logit')
+        
+        # Remove duplicates and filter to existing columns
+        continuous_vars = list(set(continuous_vars))
+        continuous_vars = [v for v in continuous_vars if v in self.numeric_data.columns]
+        
+        print(f"Fitting joint distribution for {len(continuous_vars)} continuous variables...")
+        
+        # Fit separate models for each birth-death model category
+        self.conditional_models = {}
+        
+        for category in self.category_probs.index:
+            category_mask = self.numeric_data['bd_model_category'] == category
+            category_data = self.numeric_data[category_mask][continuous_vars]
+            
+            if len(category_data) < 5:  # Skip if too few samples
+                print(f"Skipping {category} - insufficient data ({len(category_data)} samples)")
+                continue
+            
+            print(f"Fitting model for {category} ({len(category_data)} samples)")
+            
+            # Fit multivariate normal for this category
+            scaler = StandardScaler()
+            scaled_data = scaler.fit_transform(category_data.dropna())
+            
+            if len(scaled_data) < 2:
                 continue
                 
-            data = self.numeric_data[param].dropna()
-            if len(data) < 10:  # Skip if too few data points
-                continue
-                
-            best_dist = None
-            best_params = None
-            best_aic = np.inf
+            mean = np.mean(scaled_data, axis=0)
+            cov = np.cov(scaled_data.T)
             
-            print(f"Fitting distributions for {param}...")
+            # Add small regularization to diagonal if needed
+            if np.linalg.det(cov) < 1e-10:
+                cov += np.eye(len(mean)) * 1e-6
             
-            for dist in distributions:
+            self.conditional_models[category] = {
+                'mean': mean,
+                'cov': cov,
+                'scaler': scaler,
+                'param_names': continuous_vars
+            }
+        
+        print(f"Successfully fitted models for {len(self.conditional_models)} categories")
+        return self.conditional_models
+    
+    def sample_mixed_parameters(self, n_samples=100, min_n_sequences_tips=20, n_std=1.5):
+        """Sample from mixed continuous/categorical distribution"""
+        if not hasattr(self, 'conditional_models') or not self.conditional_models:
+            print("No conditional models fitted. Please fit mixed distribution first.")
+            return None
+        
+        samples = []
+        
+        for _ in range(n_samples):
+            # First, sample categorical variable (birth-death model)
+            bd_model = np.random.choice(self.category_probs.index, p=self.category_probs.values)
+            
+            # Skip if no model available for this category
+            if bd_model not in self.conditional_models:
+                # Fall back to most common category
+                bd_model = self.category_probs.index[0]
+                if bd_model not in self.conditional_models:
+                    continue
+            
+            model = self.conditional_models[bd_model]
+            
+            # Sample continuous variables conditioned on categorical choice
+            max_attempts = 100
+            valid_sample = False
+            
+            for attempt in range(max_attempts):
                 try:
-                    # Fit distribution
-                    if dist == stats.beta:
-                        # Beta distribution needs data in [0,1]
-                        if data.min() < 0 or data.max() > 1:
-                            continue
+                    # Generate sample from multivariate normal
+                    scaled_sample = np.random.multivariate_normal(model['mean'], model['cov'])
+                    continuous_sample = model['scaler'].inverse_transform(scaled_sample.reshape(1, -1))[0]
                     
-                    params = dist.fit(data)
+                    # Create sample dictionary
+                    sample_dict = dict(zip(model['param_names'], continuous_sample))
                     
-                    # Calculate AIC
-                    loglik = np.sum(dist.logpdf(data, *params))
-                    aic = 2 * len(params) - 2 * loglik
+                    # Add categorical variable
+                    sample_dict['bd_model_category'] = bd_model
                     
-                    if aic < best_aic:
-                        best_aic = aic
-                        best_dist = dist
-                        best_params = params
+                    # Convert to one-hot encoding
+                    for col in self.categorical_cols:
+                        sample_dict[col] = 1 if col == f'best_{bd_model}' else 0
+                    
+                    # Apply constraints
+                    if ('n_sequences_tips' in sample_dict and 
+                        sample_dict['n_sequences_tips'] > min_n_sequences_tips):
+                        
+                        # Check bounds for other parameters (optional)
+                        valid_sample = True
+                        samples.append(sample_dict)
+                        break
                         
                 except Exception as e:
                     continue
             
-            if best_dist is not None:
-                self.fitted_distributions[param] = {
-                    'distribution': best_dist,
-                    'params': best_params,
-                    'aic': best_aic
-                }
-                print(f"  Best fit: {best_dist.name} (AIC: {best_aic:.2f})")
-            else:
-                print(f"  No suitable distribution found for {param}")
-    
-    def fit_joint_distribution_copula(self, param_group='key_parameters'):
-        """Fit joint distribution using copulas"""
-        if not COPULAS_AVAILABLE:
-            print("Copulas not available, using multivariate normal instead")
-            return self.fit_joint_distribution_mvn(param_group)
+            if not valid_sample:
+                print(f"Warning: Could not generate valid sample for {bd_model}")
         
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        if len(available_params) < 2:
-            print(f"Not enough parameters available for {param_group}")
-            return None
-        
-        # Get data for joint modeling
-        joint_data = self.numeric_data[available_params].dropna()
-        
-        if len(joint_data) < 10:
-            print(f"Not enough samples for joint modeling of {param_group}")
-            return None
-        
-        print(f"Fitting joint distribution for {param_group} with {len(available_params)} parameters...")
-        
-        # Fit copula
-        self.joint_model = GaussianMultivariate()
-        self.joint_model.fit(joint_data)
-        
-        print(f"Joint model fitted successfully for {param_group}")
-        return self.joint_model
-    
-    def fit_joint_distribution_mvn(self, param_group='key_parameters'):
-        """Fit multivariate normal distribution as fallback"""
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        if len(available_params) < 2:
-            print(f"Not enough parameters available for {param_group}")
-            return None
-        
-        # Get data for joint modeling
-        joint_data = self.numeric_data[available_params].dropna()
-        
-        if len(joint_data) < 10:
-            print(f"Not enough samples for joint modeling of {param_group}")
-            return None
-        
-        print(f"Fitting multivariate normal for {param_group} with {len(available_params)} parameters...")
-        
-        # Standardize data
-        scaler = StandardScaler()
-        scaled_data = scaler.fit_transform(joint_data)
-        
-        # Fit multivariate normal
-        mean = np.mean(scaled_data, axis=0)
-        cov = np.cov(scaled_data.T)
-        
-        self.joint_model = {
-            'type': 'multivariate_normal',
-            'mean': mean,
-            'cov': cov,
-            'scaler': scaler,
-            'param_names': available_params
-        }
-        
-        print(f"Multivariate normal fitted successfully for {param_group}")
-        return self.joint_model
-    
-    def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, n_std=1.5):
-        """
-        Enhanced rejection sampling with parameter-specific bounds and replacement strategy
-        Excludes certain parameters from bounds constraints (best_B* model selection parameters)
-        
-        Parameters:
-        - n_std: Number of standard deviations to use as bounds (default 1.5)
-        """
-        if self.joint_model is None:
-            print("No joint model fitted. Please fit a joint distribution first.")
-            return None
-        
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        # Define parameters to exclude from bounds constraints (model selection indicators)
-        unrestricted_params = {
-            'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
-            'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
-            'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN'
-        }
-        
-        # Calculate bounds for each parameter (excluding unrestricted ones)
-        param_bounds = {}
-        restricted_params = []
-        
-        for param in available_params:
-            if param in unrestricted_params:
-                continue  # Skip bounds calculation for unrestricted parameters
-                
-            data = self.numeric_data[param].dropna()
-            mean = np.mean(data)
-            std = np.std(data)
-            param_bounds[param] = {
-                'mean': mean,
-                'std': std,
-                'lower': mean - n_std * std,
-                'upper': mean + n_std * std
-            }
-            restricted_params.append(param)
-        
-        print(f"Applying {n_std}-std bounds to {len(restricted_params)} parameters")
-        print(f"Unrestricted parameters: {[p for p in available_params if p in unrestricted_params]}")
-        
-        # Generate samples in batches with rejection sampling
-        accepted_samples = []
-        total_attempts = 0
-        batch_size = max(100, n_samples * 2)
-        
-        while len(accepted_samples) < n_samples and total_attempts < 100000:
-            # Generate a batch of samples
-            if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
-                batch_samples = self.joint_model.sample(batch_size)
-            else:
-                if self.joint_model['type'] == 'multivariate_normal':
-                    samples_scaled = np.random.multivariate_normal(
-                        self.joint_model['mean'], 
-                        self.joint_model['cov'], 
-                        batch_size
-                    )
-                    batch_samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
-                    batch_samples = pd.DataFrame(batch_samples, columns=self.joint_model['param_names'])
-            
-            # Apply rejection criteria
-            for idx in range(len(batch_samples)):
-                sample = batch_samples.iloc[idx]
-                accept_sample = True
-                
-                # Check bounds only for restricted parameters
-                for param in restricted_params:
-                    if param in sample.index:
-                        value = sample[param]
-                        if not (param_bounds[param]['lower'] <= value <= param_bounds[param]['upper']):
-                            accept_sample = False
-                            break
-                
-                # Additional constraint for n_sequences_tips
-                if (accept_sample and 'n_sequences_tips' in sample.index and 
-                    sample['n_sequences_tips'] <= min_n_sequences_tips):
-                    accept_sample = False
-                
-                if accept_sample:
-                    accepted_samples.append(sample)
-                    if len(accepted_samples) >= n_samples:
-                        break
-            
-            total_attempts += batch_size
-        
-        if accepted_samples:
-            result = pd.DataFrame(accepted_samples)
-            acceptance_rate = len(accepted_samples) / total_attempts * 100
-            print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
-            print(f"Samples constrained to within {n_std} standard deviation(s) for {len(restricted_params)} parameters")
-            print(f"{len(unrestricted_params & set(available_params))} parameters left unrestricted")
-            return result.iloc[:n_samples]  # Return exactly n_samples
+        if samples:
+            result_df = pd.DataFrame(samples)
+            print(f"Generated {len(result_df)} valid samples")
+            return result_df
         else:
-            print(f"Failed to generate sufficient samples within {n_std}-std bounds")
+            print("Failed to generate any valid samples")
             return None
+    
+    def export_for_simulation(self, n_samples=100):
+        """Export mixed parameters for simulation"""
+        samples = self.sample_mixed_parameters(n_samples)
+        
+        if samples is None:
+            return None
+        
+        # Convert back from transformed parameters
+        export_data = samples.copy()
+        
+        # Inverse transforms
+        for col in list(export_data.columns):
+            # Inverse logit transform
+            if col.endswith('_logit'):
+                original_col = col.replace('_logit', '')
+                if original_col in self.continuous_cols:
+                    export_data[original_col] = np.exp(export_data[col]) / (1 + np.exp(export_data[col]))
+                    export_data = export_data.drop(columns=[col])
+            
+            # Inverse log transform
+            elif col.endswith('_log'):
+                original_col = col.replace('_log', '')
+                if original_col in self.continuous_cols:
+                    export_data[original_col] = np.exp(export_data[col])
+                    export_data = export_data.drop(columns=[col])
+        
+        # Ensure proper data types and constraints
+        if 'n_sequences_tips' in export_data.columns:
+            export_data['n_sequences_tips'] = export_data['n_sequences_tips'].astype(int)
+        if 'alignment_length' in export_data.columns:
+            export_data['alignment_length'] = export_data['alignment_length'].astype(int)
+        
+        # Ensure non-negative values for rates
+        rate_cols = ['prop_invariant', 'insertion_rate', 'deletion_rate', 
+                    'mean_insertion_length', 'mean_deletion_length']
+        for col in rate_cols:
+            if col in export_data.columns:
+                export_data[col] = np.maximum(export_data[col], 0)
+        
+        # Add combined indel rate
+        if 'insertion_rate' in export_data.columns and 'deletion_rate' in export_data.columns:
+            export_data['indel_rate'] = export_data['insertion_rate'] + export_data['deletion_rate']
+        
+        # Remove helper columns
+        if 'bd_model_category' in export_data.columns:
+            export_data = export_data.drop(columns=['bd_model_category'])
+        
+        return export_data
+    
+    # ============================================================================
+    # COMPATIBILITY METHODS FOR OLD PLOTTING FUNCTIONS
+    # ============================================================================
+    
+    def sample_parameters(self, n_samples=100, param_group='key_parameters', **kwargs):
+        """Compatibility wrapper for old plotting functions"""
+        if param_group == 'key_parameters':
+            return self.sample_mixed_parameters(n_samples, **kwargs)
+        else:
+            print(f"Warning: param_group '{param_group}' not supported in mixed fitter")
+            return self.sample_mixed_parameters(n_samples, **kwargs)
+    
+    def _update_parameter_groups_for_compatibility(self):
+        """Update parameter groups to match old structure for plotting"""
+        all_params = self.continuous_cols + self.categorical_cols
+        self.parameter_groups['key_parameters'] = all_params
     
     def validate_fit(self, output_folder, param_group='key_parameters'):
-        """Validate the fitted joint distribution with organized subplots"""
-        if self.joint_model is None:
-            print("No joint model to validate")
+        """Enhanced validation compatible with old plotting methods"""
+        # Update parameter groups for compatibility
+        self._update_parameter_groups_for_compatibility()
+        
+        if not hasattr(self, 'conditional_models') or not self.conditional_models:
+            print("No conditional models to validate")
             return
         
-        # Generate samples
-        samples = self.sample_parameters(n_samples=1000, param_group=param_group)
+        # Generate samples using mixed approach
+        samples = self.sample_mixed_parameters(n_samples=1000)
         
         if samples is None:
             return
         
-        # Compare distributions
+        # Use the original plotting methods
         params = self.parameter_groups[param_group]
         available_params = [p for p in params if p in self.numeric_data.columns and p in samples.columns]
         
         # Group parameters by category for better organization
         param_categories = self._categorize_parameters(available_params)
         
-        # Create separate plots for each category or one large organized plot
+        # Create plots (reuse old methods)
         if len(available_params) > 12:
             self._create_categorized_plots(output_folder, param_categories, samples)
         else:
@@ -361,7 +373,103 @@ class PhylogeneticParameterFitter:
         
         # Create summary statistics plot
         self._create_summary_stats_plot(output_folder, available_params, samples)
-
+        
+        # Add mixed-model specific validation
+        self._validate_mixed_model_specific(output_folder, samples)
+    
+    def _validate_mixed_model_specific(self, output_folder, samples):
+        """Additional validation specific to mixed model approach"""
+        
+        # Validate one-hot encoding
+        one_hot_cols = [c for c in samples.columns if c.startswith('best_B') and not c.startswith('best_BD')]
+        if one_hot_cols:
+            row_sums = samples[one_hot_cols].sum(axis=1)
+            all_valid = (row_sums == 1).all()
+            
+            plt.figure(figsize=(10, 6))
+            
+            # Plot 1: Row sums distribution
+            plt.subplot(1, 2, 1)
+            plt.hist(row_sums, bins=20, alpha=0.7, edgecolor='black')
+            plt.axvline(x=1, color='red', linestyle='--', label='Expected sum = 1')
+            plt.xlabel('Sum of One-Hot Columns')
+            plt.ylabel('Frequency')
+            plt.title('One-Hot Encoding Validation')
+            plt.legend()
+            
+            # Plot 2: Model distribution comparison
+            plt.subplot(1, 2, 2)
+            
+            # Original distribution
+            orig_counts = self.category_probs
+            sampled_counts = samples['bd_model_category'].value_counts(normalize=True) if 'bd_model_category' in samples.columns else pd.Series()
+            
+            # If bd_model_category not in samples, reconstruct from one-hot
+            if 'bd_model_category' not in samples.columns:
+                bd_models = []
+                for idx, row in samples.iterrows():
+                    for col in one_hot_cols:
+                        if row[col] == 1:
+                            bd_models.append(col.replace('best_', ''))
+                            break
+                sampled_counts = pd.Series(bd_models).value_counts(normalize=True)
+            
+            x_pos = np.arange(len(orig_counts))
+            width = 0.35
+            
+            plt.bar(x_pos - width/2, orig_counts.values, width, label='Original', alpha=0.7)
+            
+            # Align sampled counts with original order
+            sampled_aligned = [sampled_counts.get(model, 0) for model in orig_counts.index]
+            plt.bar(x_pos + width/2, sampled_aligned, width, label='Sampled', alpha=0.7)
+            
+            plt.xlabel('Birth-Death Model')
+            plt.ylabel('Probability')
+            plt.title('Model Distribution Comparison')
+            plt.xticks(x_pos, orig_counts.index, rotation=45)
+            plt.legend()
+            
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_folder, 'mixed_model_validation.png'), dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            print(f"One-hot encoding validation: {'PASSED' if all_valid else 'FAILED'}")
+            print(f"Row sums range: {row_sums.min():.3f} to {row_sums.max():.3f}")
+    
+    def plot_parameter_correlations(self, output_folder):
+        """Enhanced correlation plot for mixed model"""
+        # Use only continuous parameters for correlation
+        continuous_data = self.numeric_data[self.continuous_cols]
+        
+        if len(self.continuous_cols) > 20:
+            continuous_data = continuous_data.iloc[:, :20]  # Limit to avoid overcrowding
+        
+        corr_data = continuous_data.corr()
+        
+        plt.figure(figsize=(12, 10))
+        sns.heatmap(corr_data, annot=True, cmap='coolwarm', center=0,
+                   square=True, fmt='.2f')
+        plt.title('Continuous Parameter Correlation Matrix')
+        plt.tight_layout()
+        plt.savefig(os.path.join(output_folder, 'continuous_parameter_correlations.png'), dpi=300)
+        plt.close()
+        
+        # Also plot categorical variable distribution
+        if hasattr(self, 'category_probs'):
+            plt.figure(figsize=(10, 6))
+            self.category_probs.plot(kind='bar', alpha=0.7)
+            plt.title('Birth-Death Model Distribution')
+            plt.ylabel('Probability')
+            plt.xlabel('Model')
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.savefig(os.path.join(output_folder, 'bd_model_distribution.png'), dpi=300)
+            plt.close()
+    
+    # ============================================================================
+    # ORIGINAL PLOTTING METHODS (copied from original code for compatibility)
+    # ============================================================================
+    
     def _categorize_parameters(self, available_params):
         """Categorize parameters for better organization"""
         categories = {
@@ -579,75 +687,14 @@ class PhylogeneticParameterFitter:
         # Save statistics to CSV
         stats_df.to_csv(os.path.join(output_folder, 'fit_validation_stats.csv'), index=False)
         print(f"Validation statistics saved to {output_folder}/fit_validation_stats.csv")
-    
-    def export_for_simulation(self, param_group='key_parameters', n_samples=100):
-        """Export parameters in format suitable for indel-seq-gen"""
-        samples = self.sample_parameters(n_samples, param_group)
-        
-        if samples is None:
-            return None
-        
-        # Convert back from transformed parameters if needed
-        export_data = samples.copy()
-        
-        # Inverse logit transform for frequencies
-        for col in export_data.columns:
-            if col.endswith('_logit'):
-                original_col = col.replace('_logit', '')
-                if original_col.startswith('freq_'):
-                    # Inverse logit: exp(x) / (1 + exp(x))
-                    export_data[original_col] = np.exp(export_data[col]) / (1 + np.exp(export_data[col]))
-                    export_data = export_data.drop(columns=[col])
-            
-            # Inverse log transform for rates
-            if col.endswith('_log'):
-                original_col = col.replace('_log', '')
-                export_data[original_col] = np.exp(export_data[col])
-                export_data = export_data.drop(columns=[col])
-                
-            # Integer values
-            if col in ['n_sequences_tips', 'alignment_length']:
-                export_data[col] = export_data[col].astype(int)
-            
-            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length', 'normalized_colless_index', 'best_BD_speciation_alpha', 'best_BD_extinction_alpha']:
-                export_data[col] = np.maximum(export_data[col], 0)
-            
-        one_hot_cols = [c for c in export_data.columns if c.startswith('best_B') and not c.startswith('best_BD')]
-        max_idx = export_data[one_hot_cols].idxmax(axis=1)
-        export_data[one_hot_cols] = 0
-        
-        for i, colname in enumerate(max_idx):
-            export_data.at[i, colname] = 1
 
-        export_data['indel_rate'] = export_data['insertion_rate'] + export_data['deletion_rate']
-        
-        return export_data
-    
-    def plot_parameter_correlations(self, output_folder):
-        """Plot correlation matrix of parameters"""
-        # Focus on most relevant parameters
-        key_params = []
-        for group in self.parameter_groups.values():
-            key_params.extend([p for p in group if p in self.numeric_data.columns])
-        
-        if len(key_params) > 20:  # Limit to avoid overcrowding
-            key_params = key_params[:20]
-        
-        corr_data = self.numeric_data[key_params].corr()
-        
-        plt.figure(figsize=(12, 10))
-        sns.heatmap(corr_data, annot=True, cmap='coolwarm', center=0,
-                   square=True, fmt='.2f')
-        plt.title('Parameter Correlation Matrix')
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_folder, 'parameter_correlations.png'), dpi = 300)
-        plt.close()
 
 def main():
-    print("Starting parameter fitting workflow...")
+    """Enhanced main function"""
+    print("Starting mixed parameter fitting workflow...")
     
     if len(sys.argv) < 2:
-        print("Usage: python src/model_gen_aa/modelfit.py <output_folder> [parameter_file] [model_path] [n_samples]")
+        print("Usage: python modelfit_mixed.py <output_folder> [parameter_file] [model_path] [n_samples]")
         sys.exit(1)
     
     output_folder = sys.argv[1]
@@ -663,70 +710,49 @@ def main():
         print(f"Creating output folder: {output_folder}")
         os.makedirs(output_folder)
     
-    parameter_group = 'key_parameters'
-    print(f'Loaded model: {model_path}')
     if parameter_file != 'none':
         if not os.path.exists(parameter_file):
             print(f"Error: Parameter file '{parameter_file}' does not exist.")
             sys.exit(1)
-            
-        #Initialize the fitter with the parameter file
-        fitter = PhylogeneticParameterFitter(parameter_file)
         
-        # Preprocess data
-        print("Preprocessing data...")
+        #Initialize the fitter with parameter file
+        fitter = MixedPhylogeneticParameterFitter(parameter_file)
+        
+        #Preprocessing data
+        print('Preprocessing data...')
         fitter.preprocess_data()
         
-        # Plot correlations
-        print("Plotting parameter correlations...")
-        fitter.plot_parameter_correlations(output_folder)
+        #Fitting mixed distributions
+        print('Fitting mixed distributions...')
+        fitter.fit_mixed_distribution()
         
-        # Fit marginal distributions
-        print("Fitting marginal distributions...")
-        fitter.fit_marginal_distributions()
-        
-        # Fit joint distribution for amino acid frequencies
-        #print("Fitting joint distribution for amino acid frequencies...")
-        fitter.fit_joint_distribution_copula(parameter_group)
-        
-        # Validate fit
-        print("Validating fit...")
-        fitter.validate_fit(output_folder, parameter_group)
-        
-        with open(os.path.join(output_folder, 'model.pkl'), 'wb') as f:
-            pickle.dump(fitter, f, pickle.HIGHEST_PROTOCOL)
-        print(f"Joint distributions saved to {output_folder}/model.pkl")
+        # Save model
+        with open(os.path.join(output_folder, 'mixed_model.pkl'), 'wb') as f:
+            pickle.dump(fitter, f)
+        print(f"Mixed model saved to {output_folder}/mixed_model.pkl")
         
     elif model_path != 'none':
+        # Load existing model and generate samples
         with open(model_path, 'rb') as f:
             fitter = pickle.load(f)
-    
-        # Export parameters for simulation
-        print("Exporting parameters for simulation...")
-        simulation_params = fitter.export_for_simulation(parameter_group, n_samples)
-    
+        
+        # Generate samples
+        simulation_params = fitter.export_for_simulation(n_samples)
+        
         if simulation_params is not None:
-            print(f"Generated {len(simulation_params)} parameter sets for simulation")
-            print("First few parameter sets:")
-            print(simulation_params.head())
+            print(f"Generated {len(simulation_params)} parameter sets")
             
-            # Save to CSV
-            simulation_params.to_csv(os.path.join(output_folder, 'simulated_phylo_parameters.csv'), index=False)
-            print(f"Parameters saved to '{os.path.join(output_folder, 'simulated_phylo_parameters.csv')}'")
-    
+            # Verify one-hot encoding
+            one_hot_cols = [c for c in simulation_params.columns if c.startswith('best_B') and not c.startswith('best_BD')]
+            if one_hot_cols:
+                row_sums = simulation_params[one_hot_cols].sum(axis=1)
+                print(f"One-hot encoding check: {(row_sums == 1).all()} (all rows sum to 1)")
+                print(f"Row sums range: {row_sums.min()} to {row_sums.max()}")
+            
+            # Save results
+            simulation_params.to_csv(os.path.join(output_folder, 'mixed_phylo_parameters.csv'), index=False)
+            print(f"Parameters saved to {output_folder}/mixed_phylo_parameters.csv")
+
 
 if __name__ == "__main__":
     main()
-    
-    '''
-    # Example of how to use the results
-    print("\n" + "="*50)
-    print("USAGE EXAMPLE:")
-    print("="*50)
-    print("# Generate new parameter sets:")
-    print("new_params = fitter.sample_parameters(n_samples=10)")
-    print("print(new_params)")
-    print("\n# Export for indel-seq-gen:")
-    print("indel_params = fitter.export_for_simulation('indel_parameters', n_samples=10)")
-    print("print(indel_params)")
-    '''
