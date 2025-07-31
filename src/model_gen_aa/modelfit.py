@@ -722,14 +722,22 @@ def main():
         print('Preprocessing data...')
         fitter.preprocess_data()
         
+        # Plot correlations 
+        print("Plotting parameter correlations...")
+        fitter.plot_parameter_correlations(output_folder)
+
         #Fitting mixed distributions
         print('Fitting mixed distributions...')
         fitter.fit_mixed_distribution()
         
+        # Validate fit with plots (like original script) 
+        print("Validating fit...")
+        fitter.validate_fit(output_folder)
+        
         # Save model
-        with open(os.path.join(output_folder, 'mixed_model.pkl'), 'wb') as f:
+        with open(os.path.join(output_folder, 'model.pkl'), 'wb') as f:
             pickle.dump(fitter, f)
-        print(f"Mixed model saved to {output_folder}/mixed_model.pkl")
+        print(f"Mixed model saved to {output_folder}/model.pkl")
         
     elif model_path != 'none':
         # Load existing model and generate samples
