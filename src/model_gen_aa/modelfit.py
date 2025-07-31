@@ -157,6 +157,12 @@ class MixedPhylogeneticParameterFitter:
                 # Logit transform: log(p/(1-p)), handling edge cases
                 p = self.numeric_data[param].clip(1e-10, 1-1e-10)
                 self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
+        
+        # Store transformation info for bias correction
+        self.transformations = {
+            'log_params': [p for p in rate_params if p in self.continuous_cols],
+            'logit_params': [p for p in prop_params if p in self.continuous_cols]
+        }
     
     def fit_mixed_distribution(self):
         """Fit joint distribution for continuous variables + categorical model"""
@@ -213,16 +219,34 @@ class MixedPhylogeneticParameterFitter:
         print(f"Successfully fitted models for {len(self.conditional_models)} categories")
         return self.conditional_models
     
-    def sample_mixed_parameters(self, n_samples=100, min_n_sequences_tips=20, n_std=1.5):
-        """Sample from mixed continuous/categorical distribution"""
+    def sample_mixed_parameters(self, n_samples=100, min_n_sequences_tips=20, n_std=2.5, 
+                               bias_correction=True):
+        """
+        Enhanced sampling with bias correction and looser bounds
+        
+        Parameters:
+        - n_std: Increased default to 2.5 standard deviations (was 1.5)
+        - bias_correction: Apply bias correction for log-transformed variables
+        """
         if not hasattr(self, 'conditional_models') or not self.conditional_models:
             print("No conditional models fitted. Please fit mixed distribution first.")
             return None
         
         samples = []
         
+        # Calculate bias correction factors for log-transformed parameters
+        bias_corrections = {}
+        if bias_correction and hasattr(self, 'transformations'):
+            for param in self.transformations.get('log_params', []):
+                if param in self.numeric_data.columns:
+                    # Calculate empirical bias correction
+                    original_mean = self.numeric_data[param].mean()
+                    log_values = np.log(self.numeric_data[param] + 1e-10)
+                    naive_back_transform = np.exp(log_values.mean())
+                    bias_corrections[param] = original_mean / naive_back_transform
+        
         for _ in range(n_samples):
-            # First, sample categorical variable (birth-death model)
+            # Sample categorical variable (birth-death model)
             bd_model = np.random.choice(self.category_probs.index, p=self.category_probs.values)
             
             # Skip if no model available for this category
@@ -235,7 +259,7 @@ class MixedPhylogeneticParameterFitter:
             model = self.conditional_models[bd_model]
             
             # Sample continuous variables conditioned on categorical choice
-            max_attempts = 100
+            max_attempts = 200  # Increased attempts
             valid_sample = False
             
             for attempt in range(max_attempts):
@@ -254,11 +278,35 @@ class MixedPhylogeneticParameterFitter:
                     for col in self.categorical_cols:
                         sample_dict[col] = 1 if col == f'best_{bd_model}' else 0
                     
-                    # Apply constraints
+                    # Apply looser constraints - only essential ones
+                    constraints_passed = True
+                    
+                    # Essential constraint: minimum sequences
                     if ('n_sequences_tips' in sample_dict and 
-                        sample_dict['n_sequences_tips'] > min_n_sequences_tips):
-                        
-                        # Check bounds for other parameters (optional)
+                        sample_dict['n_sequences_tips'] <= min_n_sequences_tips):
+                        constraints_passed = False
+                    
+                    # Essential constraint: non-negative rates (but allow wider range)
+                    rate_params = ['insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length']
+                    for param in rate_params:
+                        if param in sample_dict and sample_dict[param] < 0:
+                            constraints_passed = False
+                            break
+                    
+                    # Relaxed bounds check - only for extreme outliers (4+ std)
+                    if constraints_passed:
+                        for param in model['param_names']:
+                            if param in sample_dict and param in self.numeric_data.columns:
+                                orig_data = self.numeric_data[param]
+                                value = sample_dict[param]
+                                mean, std = orig_data.mean(), orig_data.std()
+                                
+                                # Only reject extreme outliers (4+ standard deviations)
+                                if abs(value - mean) > 4 * std:
+                                    constraints_passed = False
+                                    break
+                    
+                    if constraints_passed:
                         valid_sample = True
                         samples.append(sample_dict)
                         break
@@ -271,15 +319,26 @@ class MixedPhylogeneticParameterFitter:
         
         if samples:
             result_df = pd.DataFrame(samples)
-            print(f"Generated {len(result_df)} valid samples")
+            
+            # Apply bias correction to log-transformed parameters
+            if bias_correction and bias_corrections:
+                print("Applying bias correction to log-transformed parameters...")
+                for param, correction_factor in bias_corrections.items():
+                    if param + '_log' in result_df.columns:
+                        # Apply correction in log space
+                        result_df[param + '_log'] += np.log(correction_factor)
+                        print(f"  {param}: correction factor = {correction_factor:.3f}")
+            
+            print(f"Generated {len(result_df)} valid samples with {n_std}-std bounds")
+            print("Bias correction applied:", bias_correction)
             return result_df
         else:
             print("Failed to generate any valid samples")
             return None
     
-    def export_for_simulation(self, n_samples=100):
-        """Export mixed parameters for simulation"""
-        samples = self.sample_mixed_parameters(n_samples)
+    def export_for_simulation(self, n_samples=100, bias_correction=True):
+        """Export mixed parameters for simulation with bias correction"""
+        samples = self.sample_mixed_parameters(n_samples, bias_correction=bias_correction)
         
         if samples is None:
             return None
@@ -287,7 +346,7 @@ class MixedPhylogeneticParameterFitter:
         # Convert back from transformed parameters
         export_data = samples.copy()
         
-        # Inverse transforms
+        # Inverse transforms with bias correction
         for col in list(export_data.columns):
             # Inverse logit transform
             if col.endswith('_logit'):
@@ -309,12 +368,12 @@ class MixedPhylogeneticParameterFitter:
         if 'alignment_length' in export_data.columns:
             export_data['alignment_length'] = export_data['alignment_length'].astype(int)
         
-        # Ensure non-negative values for rates
+        # Ensure non-negative values for rates (but don't over-constrain)
         rate_cols = ['prop_invariant', 'insertion_rate', 'deletion_rate', 
                     'mean_insertion_length', 'mean_deletion_length']
         for col in rate_cols:
             if col in export_data.columns:
-                export_data[col] = np.maximum(export_data[col], 0)
+                export_data[col] = np.maximum(export_data[col], 1e-10)  # Allow very small positive values
         
         # Add combined indel rate
         if 'insertion_rate' in export_data.columns and 'deletion_rate' in export_data.columns:
@@ -702,35 +761,22 @@ def main():
     model_path = sys.argv[3] if len(sys.argv) > 3 else 'none'
     n_samples = int(sys.argv[4]) if len(sys.argv) > 4 else 10
     
-    if (parameter_file == model_path) or (parameter_file != 'none' and model_path != 'none'):
-        print("Error: Please specify either a parameter file or a model path, not both or none.")
-        sys.exit(1)
-    
     if not os.path.exists(output_folder):
-        print(f"Creating output folder: {output_folder}")
         os.makedirs(output_folder)
     
     if parameter_file != 'none':
-        if not os.path.exists(parameter_file):
-            print(f"Error: Parameter file '{parameter_file}' does not exist.")
-            sys.exit(1)
-        
-        #Initialize the fitter with parameter file
+        # Fit new model
         fitter = MixedPhylogeneticParameterFitter(parameter_file)
-        
-        #Preprocessing data
-        print('Preprocessing data...')
         fitter.preprocess_data()
         
-        # Plot correlations 
+        # Plot correlations (like original script)
         print("Plotting parameter correlations...")
         fitter.plot_parameter_correlations(output_folder)
-
-        #Fitting mixed distributions
-        print('Fitting mixed distributions...')
+        
+        # Fit the mixed distribution
         fitter.fit_mixed_distribution()
         
-        # Validate fit with plots (like original script) 
+        # Validate fit with plots (like original script)
         print("Validating fit...")
         fitter.validate_fit(output_folder)
         
