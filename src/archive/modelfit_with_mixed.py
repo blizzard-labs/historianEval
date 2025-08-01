@@ -501,9 +501,6 @@ class MixedPhylogeneticParameterFitter:
         # Use only continuous parameters for correlation
         continuous_data = self.numeric_data[self.continuous_cols]
         
-        if len(self.continuous_cols) > 20:
-            continuous_data = continuous_data.iloc[:, :20]  # Limit to avoid overcrowding
-        
         corr_data = continuous_data.corr()
         
         plt.figure(figsize=(12, 10))
@@ -511,7 +508,7 @@ class MixedPhylogeneticParameterFitter:
                    square=True, fmt='.2f')
         plt.title('Continuous Parameter Correlation Matrix')
         plt.tight_layout()
-        plt.savefig(os.path.join(output_folder, 'continuous_parameter_correlations.png'), dpi=300)
+        plt.savefig(os.path.join(output_folder, 'parameter_correlations.png'), dpi=300)
         plt.close()
         
         # Also plot categorical variable distribution
