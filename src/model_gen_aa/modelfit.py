@@ -199,7 +199,7 @@ class MixedPhylogeneticParameterFitter:
         numeric_cols = self.data.select_dtypes(include=[np.number]).columns
         self.numeric_data = self.data[numeric_cols].copy()
         self.numeric_data = self.numeric_data.dropna()
-        
+                
         # Separate continuous and categorical variables
         continuous_params = self.parameter_groups['continuous_parameters']
         categorical_params = self.parameter_groups['categorical_parameters']
@@ -280,8 +280,33 @@ class MixedPhylogeneticParameterFitter:
                     print(f"Skipping {param} - insufficient data ({len(data)} points)")
                     continue
                 
+                heavy_tail_params = [
+                    'insertion_rate', 'deletion_rate',
+                    'best_BD_speciation_rate', 'best_BD_extinction_rate',
+                    'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
+                ]
+                
+                log_transform = False
+                if param in heavy_tail_params:
+                    if (data > 0).all():
+                        data = np.log1p(data)
+                        log_transform = True
+                
+                bounded_params = ['prop_invariant']
+                logit_transform = False
+                if param in bounded_params:
+                    if (data > 0).all() and (data < 1).all():
+                        eps = 1e-6  # avoid infinite logit
+                        data = np.clip(data, eps, 1-eps)
+                        data = np.log(data/(1-data))  # logit transform
+                        logit_transform = True
+
                 # Fit best marginal distribution
                 fit_result = self.marginal_fitter.fit_best_distribution(data, param)
+                
+                # Store transform flag for later inverse
+                fit_result['log_transform'] = log_transform
+                fit_result['logit_transform'] = logit_transform
                 self.marginal_fits[param] = fit_result
         
         print(f"\nSuccessfully fitted marginal distributions for {len(self.marginal_fits)} parameters")
@@ -323,7 +348,7 @@ class MixedPhylogeneticParameterFitter:
                     uniform_data[:, i] = distribution.cdf(category_data[param].values, *params)
                     
                     # Clip to avoid numerical issues
-                    uniform_data[:, i] = np.clip(uniform_data[:, i], 1e-6, 1-1e-6)
+                    uniform_data[:, i] = np.clip(uniform_data[:, i], 1e-12, 1-1e-12)
                 
                 # Convert to DataFrame for copulas library
                 uniform_df = pd.DataFrame(uniform_data, columns=available_params)
@@ -424,7 +449,7 @@ class MixedPhylogeneticParameterFitter:
         return self.copula_models
     
     def sample_mixed_parameters(self, n_samples=100, min_n_sequences_tips=20, 
-                               n_std=2.5, bias_correction=True):
+                               n_std=4, bias_correction=True):
         """
         Enhanced sampling using marginal distributions and copulas
         """
@@ -476,8 +501,19 @@ class MixedPhylogeneticParameterFitter:
                             marginal_fit = self.marginal_fits[param]
                             distribution = marginal_fit['distribution']
                             params = marginal_fit['params']
-                            sample_dict[param] = distribution.ppf(uniform_sample[i], *params)
-                    
+                            
+                            value = distribution.ppf(uniform_value, *params)
+
+                            # Reverse log-transform if applied
+                            if self.marginal_fits[param].get('log_transform', False):
+                                value = np.expm1(value)
+
+                            # Reverse logit transform if applied
+                            if self.marginal_fits[param].get('logit_transform', False):
+                                value = 1 / (1 + np.exp(-value))
+                            
+                            sample_dict[param] = value
+                                                
                     else:
                         # Full copula model
                         copula_sample = model['copula'].sample(1)
@@ -491,7 +527,17 @@ class MixedPhylogeneticParameterFitter:
                                 marginal_fit = self.marginal_fits[param]
                                 distribution = marginal_fit['distribution']
                                 params = marginal_fit['params']
-                                sample_dict[param] = distribution.ppf(uniform_value, *params)
+                                value = distribution.ppf(uniform_value, *params)
+
+                                # Reverse log-transform if applied
+                                if self.marginal_fits[param].get('log_transform', False):
+                                    value = np.expm1(value)
+                                
+                                # Reverse logit transform if applied
+                                if self.marginal_fits[param].get('logit_transform', False):
+                                    value = 1 / (1 + np.exp(-value))
+                                
+                                sample_dict[param] = value
                     
                     # Add categorical variables (one-hot encoding)
                     for col in self.categorical_cols:
@@ -560,7 +606,7 @@ class MixedPhylogeneticParameterFitter:
                     'mean_insertion_length', 'mean_deletion_length']
         for col in rate_cols:
             if col in export_data.columns:
-                export_data[col] = np.maximum(export_data[col], 1e-10)
+                export_data[col] = np.maximum(export_data[col], 0)
         
         # Add combined indel rate
         if 'insertion_rate' in export_data.columns and 'deletion_rate' in export_data.columns:
@@ -1241,7 +1287,7 @@ def main():
     output_folder = sys.argv[1]
     parameter_file = sys.argv[2] if len(sys.argv) > 2 else 'none'
     model_path = sys.argv[3] if len(sys.argv) > 3 else 'none'
-    n_samples = int(sys.argv[4]) if len(sys.argv) > 4 else 10
+    n_samples = int(sys.argv[4]) if len(sys.argv) > 4 else 100
     
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
