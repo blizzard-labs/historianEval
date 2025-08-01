@@ -327,7 +327,7 @@ class MixedPhylogeneticParameterFitter:
             category_mask = self.numeric_data['bd_model_category'] == category
             category_data = self.numeric_data[category_mask][available_params]
             
-            if len(category_data) < 5:
+            if len(category_data) < 10:
                 print(f"Skipping {category} - insufficient data ({len(category_data)} samples)")
                 continue
             
@@ -548,7 +548,7 @@ class MixedPhylogeneticParameterFitter:
                     # Essential constraints
                     if ('n_sequences_tips' in sample_dict and 
                         sample_dict['n_sequences_tips'] <= min_n_sequences_tips):
-                        print('too few tips')
+                        #print('too few tips')
                         constraints_passed = False
                     
                     # Check for reasonable bounds (looser than before)
@@ -561,6 +561,7 @@ class MixedPhylogeneticParameterFitter:
                                     print('not finite vals')
                                     break
                                 
+                                '''
                                 # Very loose bounds check
                                 orig_data = self.numeric_data[param]
                                 mean, std = orig_data.mean(), orig_data.std()
@@ -568,6 +569,8 @@ class MixedPhylogeneticParameterFitter:
                                     print('outside stdevs')
                                     constraints_passed = False
                                     break
+                                '''
+                                
                     
                     if constraints_passed:
                         valid_sample = True
