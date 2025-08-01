@@ -105,7 +105,7 @@ class MarginalDistributionFitter:
                 
                 # Combined score (lower is better for AIC, higher for others)
                 # Prioritize KS test p-value and log-likelihood
-                combined_score = ks_p * 0.4 + (log_likelihood / n) * 0.4 + ad_score * 0.2
+                combined_score = ks_p * 0.5 + (log_likelihood / n) * 0.5 # + ad_score * 0.2
                 
                 results.append({
                     'distribution': distribution,
