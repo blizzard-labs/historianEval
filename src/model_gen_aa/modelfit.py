@@ -521,7 +521,7 @@ class MixedPhylogeneticParameterFitter:
                         for param in model['param_names']:
                             if param in copula_sample.columns:
                                 uniform_value = copula_sample[param].iloc[0]
-                                uniform_value = np.clip(uniform_value, 1e-6, 1-1e-6)
+                                uniform_value = np.clip(uniform_value, 1e-12, 1-1e-12)
                                 
                                 marginal_fit = self.marginal_fits[param]
                                 distribution = marginal_fit['distribution']
@@ -530,7 +530,7 @@ class MixedPhylogeneticParameterFitter:
 
                                 # Reverse log-transform if applied
                                 if self.marginal_fits[param].get('log_transform', False):
-                                    value = np.expm1(value)
+                                    value = np.exp(value)
                                 
                                 # Reverse logit transform if applied
                                 if self.marginal_fits[param].get('logit_transform', False):
@@ -548,6 +548,7 @@ class MixedPhylogeneticParameterFitter:
                     # Essential constraints
                     if ('n_sequences_tips' in sample_dict and 
                         sample_dict['n_sequences_tips'] <= min_n_sequences_tips):
+                        print('too few tips')
                         constraints_passed = False
                     
                     # Check for reasonable bounds (looser than before)
@@ -557,12 +558,14 @@ class MixedPhylogeneticParameterFitter:
                                 value = sample_dict[param]
                                 if not np.isfinite(value):
                                     constraints_passed = False
+                                    print('not finite vals')
                                     break
                                 
                                 # Very loose bounds check
                                 orig_data = self.numeric_data[param]
                                 mean, std = orig_data.mean(), orig_data.std()
                                 if abs(value - mean) > n_std * std:
+                                    print('outside stdevs')
                                     constraints_passed = False
                                     break
                     
