@@ -105,7 +105,7 @@ class MarginalDistributionFitter:
                 
                 # Combined score (lower is better for AIC, higher for others)
                 # Prioritize KS test p-value and log-likelihood
-                combined_score = ks_p * 0.5 + (log_likelihood / n) * 0.5 # + ad_score * 0.2
+                combined_score = aic #ks_p * 0.5 + (log_likelihood / n) * 0.5 # + ad_score * 0.2
                 #asdf
                 results.append({
                     'distribution': distribution,
@@ -266,50 +266,85 @@ class MixedPhylogeneticParameterFitter:
         print(self.category_probs)
     
     def fit_marginal_distributions(self):
-        """Fit marginal distributions to each continuous parameter"""
+        """Fit marginal distributions to each continuous parameter - CORRECTED VERSION"""
         print("Fitting marginal distributions to continuous parameters...")
         
         self.marginal_fits = {}
         
         for param in self.continuous_cols:
             if param in self.numeric_data.columns:
-                print(f"\nFitting marginal distribution for {param}...")
-                data = self.numeric_data[param].dropna()
+                print(f"\\nFitting marginal distribution for {param}...")
+                original_data = self.numeric_data[param].dropna()
                 
-                if len(data) < 10:
-                    print(f"Skipping {param} - insufficient data ({len(data)} points)")
+                if len(original_data) < 10:
+                    print(f"Skipping {param} - insufficient data ({len(original_data)} points)")
                     continue
+                
+                # Store original data info
+                data_for_fitting = original_data.copy()
                 
                 heavy_tail_params = [
                     'insertion_rate', 'deletion_rate',
+                    'mean_insertion_length', 'mean_deletion_length'
                     'best_BD_speciation_rate', 'best_BD_extinction_rate',
                     'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
                 ]
                 
+                # Apply transforms - BUT FIT TO ORIGINAL DATA FIRST
                 log_transform = False
-                if param in heavy_tail_params:
-                    if (data > 0).all():
-                        data = np.log1p(data)
-                        log_transform = True
-                
-                bounded_params = ['prop_invariant']
                 logit_transform = False
-                if param in bounded_params:
-                    if (data > 0).all() and (data < 1).all():
-                        eps = 1e-6  # avoid infinite logit
-                        data = np.clip(data, eps, 1-eps)
-                        data = np.log(data/(1-data))  # logit transform
-                        logit_transform = True
-
-                # Fit best marginal distribution
-                fit_result = self.marginal_fitter.fit_best_distribution(data, param)
                 
-                # Store transform flag for later inverse
+                # Check if we should try log transform for heavy-tailed params
+                if param in heavy_tail_params and (original_data > 0).all():
+                    # Try both original and log-transformed, pick better fit
+                    
+                    # Fit to original data
+                    fit_original = self.marginal_fitter.fit_best_distribution(original_data, f"{param}_original")
+                    
+                    # Try log-transformed data
+                    log_data = np.log1p(original_data)
+                    fit_log = self.marginal_fitter.fit_best_distribution(log_data, f"{param}_log")
+                    
+                    # Compare fits (higher KS p-value is better)
+                    if fit_log.get('ks_p', 0) > fit_original.get('ks_p', 0) and fit_log.get('ks_p', 0) > 0.05:
+                        print(f"  Using log-transformed data for {param}")
+                        data_for_fitting = log_data
+                        log_transform = True
+                        fit_result = fit_log
+                    else:
+                        print(f"  Using original data for {param}")
+                        fit_result = fit_original
+                else:
+                    # Standard fitting to original data
+                    fit_result = self.marginal_fitter.fit_best_distribution(original_data, param)
+                
+                # Handle bounded parameters (0,1) with logit transform if needed
+                bounded_params = ['prop_invariant']
+                if param in bounded_params and not log_transform:
+                    if (original_data > 0).all() and (original_data < 1).all():
+                        eps = 1e-6
+                        clipped_data = np.clip(original_data, eps, 1-eps)
+                        logit_data = np.log(clipped_data/(1-clipped_data))
+                        
+                        fit_logit = self.marginal_fitter.fit_best_distribution(logit_data, f"{param}_logit")
+                        
+                        # Compare with original fit
+                        if fit_logit.get('ks_p', 0) > fit_result.get('ks_p', 0) and fit_logit.get('ks_p', 0) > 0.05:
+                            print(f"  Using logit-transformed data for {param}")
+                            data_for_fitting = logit_data
+                            logit_transform = True
+                            fit_result = fit_logit
+                
+                # Store complete information
                 fit_result['log_transform'] = log_transform
                 fit_result['logit_transform'] = logit_transform
+                fit_result['original_data'] = original_data
+                fit_result['fitted_data'] = data_for_fitting
+                fit_result['param_name'] = param
+                
                 self.marginal_fits[param] = fit_result
         
-        print(f"\nSuccessfully fitted marginal distributions for {len(self.marginal_fits)} parameters")
+        print(f"\\nSuccessfully fitted marginal distributions for {len(self.marginal_fits)} parameters")
         return self.marginal_fits
     
     def fit_copula_models(self):
@@ -484,6 +519,7 @@ class MixedPhylogeneticParameterFitter:
                     # Sample from copula model
                     if model.get('type') == 'multivariate_normal':
                         # Fallback multivariate normal
+                        print('fallback multivariate')
                         scaled_sample = np.random.multivariate_normal(model['mean'], model['cov'])
                         continuous_sample = model['scaler'].inverse_transform(scaled_sample.reshape(1, -1))[0]
                         
@@ -502,18 +538,22 @@ class MixedPhylogeneticParameterFitter:
                             distribution = marginal_fit['distribution']
                             params = marginal_fit['params']
                             
+                            # Get uniform value
+                            uniform_value = uniform_sample[i]
+                            uniform_value = np.clip(uniform_value, 1e-12, 1-1e-12)
+                            
+                            # Transform to parameter space using fitted distribution
                             value = distribution.ppf(uniform_value, *params)
-
-                            # Reverse log-transform if applied
-                            if self.marginal_fits[param].get('log_transform', False):
-                                value = np.expm1(value)
-
-                            # Reverse logit transform if applied
-                            if self.marginal_fits[param].get('logit_transform', False):
-                                value = 1 / (1 + np.exp(-value))
+                            
+                            # Apply inverse transforms if they were used during fitting
+                            if marginal_fit.get('log_transform', False):
+                                value = np.expm1(value)  # Inverse of log1p
+                            
+                            if marginal_fit.get('logit_transform', False):
+                                value = 1 / (1 + np.exp(-value))  # Inverse logit
                             
                             sample_dict[param] = value
-                                                
+                    
                     else:
                         # Full copula model
                         copula_sample = model['copula'].sample(1)
@@ -522,19 +562,20 @@ class MixedPhylogeneticParameterFitter:
                         for param in model['param_names']:
                             if param in copula_sample.columns:
                                 uniform_value = copula_sample[param].iloc[0]
-                                uniform_value = np.clip(uniform_value, 1e-6, 1-1e-6)
+                                uniform_value = np.clip(uniform_value, 1e-12, 1-1e-12)
                                 
                                 marginal_fit = self.marginal_fits[param]
                                 distribution = marginal_fit['distribution']
                                 params = marginal_fit['params']
+                                
+                                # Transform to parameter space
                                 value = distribution.ppf(uniform_value, *params)
-
-                                # Reverse log-transform if applied
-                                if self.marginal_fits[param].get('log_transform', False):
+                                
+                                # Apply inverse transforms
+                                if marginal_fit.get('log_transform', False):
                                     value = np.expm1(value)
                                 
-                                # Reverse logit transform if applied
-                                if self.marginal_fits[param].get('logit_transform', False):
+                                if marginal_fit.get('logit_transform', False):
                                     value = 1 / (1 + np.exp(-value))
                                 
                                 sample_dict[param] = value
@@ -1140,27 +1181,59 @@ class MixedPhylogeneticParameterFitter:
             plt.close()
 
     def _plot_parameter_comparison(self, ax, param, samples):
-        """Plot comparison for a single parameter with marginal distribution overlay"""
+        """Plot comparison for a single parameter with CORRECTED marginal distribution overlay"""
         orig_data = self.numeric_data[param].dropna()
         samp_data = samples[param].dropna()
         
         # Determine appropriate number of bins
         n_bins = min(30, max(10, int(np.sqrt(len(orig_data)))))
         
-        # Create histograms with better styling
+        # Create histograms
         ax.hist(orig_data, bins=n_bins, alpha=0.6, 
             label='Original', density=True, color='skyblue', edgecolor='black')
         ax.hist(samp_data, bins=n_bins, alpha=0.6, 
             label='Sampled', density=True, color='orange', edgecolor='black')
         
-        # Overlay fitted marginal distribution if available
+        # Overlay fitted marginal distribution if available - CORRECTED VERSION
         if hasattr(self, 'marginal_fits') and param in self.marginal_fits:
             fit = self.marginal_fits[param]
-            x_range = np.linspace(orig_data.min(), orig_data.max(), 100)
-            fitted_pdf = fit['distribution'].pdf(x_range, *fit['params'])
-            ax.plot(x_range, fitted_pdf, 'r-', linewidth=2, alpha=0.8,
-                   label=f'Fitted {fit["distribution"].name}')
-        
+            
+            if 'distribution' in fit and fit['distribution'] is not None:
+                distribution = fit['distribution']
+                params = fit['params']
+                
+                # CRITICAL FIX: Plot on the ORIGINAL data scale
+                x_range = np.linspace(orig_data.min(), orig_data.max(), 200)
+                
+                if fit.get('log_transform', False):
+                    # Distribution was fitted to log-transformed data
+                    # Transform x_range to log scale, get PDF, then transform back
+                    log_x_range = np.log1p(x_range)
+                    log_pdf = distribution.pdf(log_x_range, *params)
+                    # Apply Jacobian for transformation: d/dx log(1+x) = 1/(1+x)
+                    fitted_pdf = log_pdf / (1 + x_range)
+                    
+                elif fit.get('logit_transform', False):
+                    # Distribution was fitted to logit-transformed data
+                    eps = 1e-6
+                    clipped_x = np.clip(x_range, eps, 1-eps)
+                    logit_x_range = np.log(clipped_x/(1-clipped_x))
+                    logit_pdf = distribution.pdf(logit_x_range, *params)
+                    # Apply Jacobian for logit: d/dx logit(x) = 1/(x(1-x))
+                    fitted_pdf = logit_pdf / (clipped_x * (1 - clipped_x))
+                    
+                else:
+                    # No transform, direct PDF
+                    fitted_pdf = distribution.pdf(x_range, *params)
+                
+                # Only plot if PDF is valid
+                if np.all(np.isfinite(fitted_pdf)) and np.any(fitted_pdf > 0):
+                    ax.plot(x_range, fitted_pdf, 'r-', linewidth=2, alpha=0.8,
+                        label=f'Fitted {distribution.name}')
+                else:
+                    ax.text(0.7, 0.5, 'Fit failed', transform=ax.transAxes, 
+                        bbox=dict(boxstyle='round', facecolor='red', alpha=0.5))
+                    
         # Improve titles and labels
         clean_param_name = param.replace('_', ' ').title()
         ax.set_title(clean_param_name, fontsize=12, fontweight='bold')
