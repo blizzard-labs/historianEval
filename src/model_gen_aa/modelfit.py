@@ -447,7 +447,7 @@ class MixedPhylogeneticParameterFitter:
         return self.copula_models
     
     def sample_mixed_parameters(self, n_samples=100, min_n_sequences_tips=20, 
-                               n_std=4, bias_correction=True):
+                               n_std=5, bias_correction=True):
         """
         Enhanced sampling using marginal distributions and copulas
         """
