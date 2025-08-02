@@ -373,7 +373,7 @@ class PhylogeneticParameterFitter:
                 restricted_params.append(param)
             
             # Generate samples with rejection sampling
-            max_attempts = 100000
+            max_attempts = 1000
             attempts = 0
             
             while attempts < max_attempts:
@@ -443,6 +443,10 @@ class PhylogeneticParameterFitter:
             print("No BD models to validate")
             return
         
+        # Create validation plots folder
+        validation_folder = os.path.join(output_folder, 'validation_plots')
+        os.makedirs(validation_folder, exist_ok=True)
+        
         # Generate samples for each BD model separately
         all_validation_results = {}
         
@@ -476,10 +480,10 @@ class PhylogeneticParameterFitter:
         
         # Create validation plots for each BD model
         for bd_model, samples in all_validation_results.items():
-            self._create_bd_model_validation_plot(output_folder, bd_model, samples)
+            self._create_bd_model_validation_plot(validation_folder, bd_model, samples)
         
         # Create summary comparison across all BD models
-        self._create_bd_models_summary_plot(output_folder, all_validation_results)
+        self._create_bd_models_summary_plot(validation_folder, all_validation_results)
 
     def _create_bd_model_validation_plot(self, output_folder, bd_model, samples):
         """Create validation plot for a specific BD model"""
@@ -674,6 +678,10 @@ class PhylogeneticParameterFitter:
     
     def plot_parameter_correlations(self, output_folder):
         """Plot correlation matrix of parameters for each BD model"""
+        # Create correlations plots folder
+        correlations_folder = os.path.join(output_folder, 'correlation_plots')
+        os.makedirs(correlations_folder, exist_ok=True)
+        
         for bd_model, numeric_data in self.bd_numeric_data.items():
             # Focus on most relevant parameters
             key_params = []
@@ -695,7 +703,7 @@ class PhylogeneticParameterFitter:
             plt.tight_layout()
             
             safe_bd_model = bd_model.replace('_', '-').lower()
-            plt.savefig(os.path.join(output_folder, f'correlations_{safe_bd_model}.png'), dpi=300)
+            plt.savefig(os.path.join(correlations_folder, f'correlations_{safe_bd_model}.png'), dpi=300)
             plt.close()
 
 def main():
@@ -756,14 +764,35 @@ def main():
         print(f"BD models saved to {output_folder}/bd_models.pkl")
         
     elif model_path != 'none':
-        if not os.path.exists(model_path):
-            print(f"Error: Model file '{model_path}' does not exist.")
+        # Handle both old and new model file names
+        possible_paths = [
+            model_path,
+            os.path.join(os.path.dirname(model_path), 'bd_models.pkl'),
+            model_path.replace('model.pkl', 'bd_models.pkl')
+        ]
+        
+        model_file = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                model_file = path
+                break
+        
+        if model_file is None:
+            print(f"Error: Model file not found. Tried:")
+            for path in possible_paths:
+                print(f"  - {path}")
+            print("\nPlease ensure you have trained a model first using the parameter file option.")
             sys.exit(1)
             
-        print(f'Loading model: {model_path}')
+        print(f'Loading model: {model_file}')
         
-        with open(model_path, 'rb') as f:
-            fitter = pickle.load(f)
+        try:
+            with open(model_file, 'rb') as f:
+                fitter = pickle.load(f)
+        except Exception as e:
+            print(f"Error loading model file: {e}")
+            print("The model file may be corrupted or from an incompatible version.")
+            sys.exit(1)
     
         # Export parameters for simulation
         print("Exporting parameters for simulation...")
@@ -791,6 +820,8 @@ def main():
             summary_stats = simulation_params.describe()
             summary_stats.to_csv(os.path.join(output_folder, 'parameter_summary_stats.csv'))
             print(f"Parameter summary statistics saved to '{os.path.join(output_folder, 'parameter_summary_stats.csv')}'")
+        else:
+            print("Failed to generate simulation parameters.")
 
 
 if __name__ == "__main__":
