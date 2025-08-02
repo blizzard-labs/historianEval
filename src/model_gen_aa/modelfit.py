@@ -336,9 +336,8 @@ class PhylogeneticParameterFitter:
             
             # Define parameters to exclude from bounds constraints
             unrestricted_params = {
-                'n_sequences_tips',
-                'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
-            }
+                'n_sequences_tips'
+             }
             
             # Calculate bounds for this BD model
             param_bounds = {}
@@ -373,7 +372,7 @@ class PhylogeneticParameterFitter:
                 restricted_params.append(param)
             
             # Generate samples with rejection sampling
-            max_attempts = 1000
+            max_attempts = 100000
             attempts = 0
             
             while attempts < max_attempts:
