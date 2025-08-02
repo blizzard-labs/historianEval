@@ -241,7 +241,7 @@ class PhylogeneticParameterFitter:
         return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, q_scale=70,
+                                               min_n_sequences_tips=20, q_scale=95,
                                                bias_correction=True):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
@@ -361,11 +361,11 @@ class PhylogeneticParameterFitter:
             
             acceptance_rate = len(accepted_samples) / total_attempts * 100
             print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
-            print(f"Samples constrained to within {n_std} standard deviation(s) for {len(restricted_params)} parameters")
+            print(f"Samples constrained to within {q_scale} standard deviation(s) for {len(restricted_params)} parameters")
             print(f"{len(unrestricted_params & set(available_params))} parameters left unrestricted")
             return result.iloc[:n_samples]  # Return exactly n_samples
         else:
-            print(f"Failed to generate sufficient samples within {n_std}-std bounds")
+            print(f"Failed to generate sufficient samples within {q_scale}-std bounds")
             return None
     
     def validate_fit(self, output_folder, param_group='key_parameters'):
