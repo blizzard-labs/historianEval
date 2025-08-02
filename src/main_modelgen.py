@@ -286,7 +286,7 @@ def main():
     
     start = time.time()
     #*PFAM SOCP TYPES PIPELINE
-    '''
+    
     mc.cleanup_pfam_data()
     print(f'Cleaned data- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_substitution_params()
@@ -296,7 +296,7 @@ def main():
     
     mc.cleanup_params(mc.params_wr_file)
     print(f'Cleaned up tables- ELAPSED TIME: {time.time() - start}============================')
-    '''
+    
     mc.generate_model(mc.params_wc_file)
     print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
     mc.sample_model(n_samples=500)
