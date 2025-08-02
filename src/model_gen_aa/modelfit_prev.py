@@ -106,6 +106,12 @@ class PhylogeneticParameterFitter:
                 p = self.numeric_data[param].clip(1e-10, 1-1e-10)
                 self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
         
+        #Store transformation info for bias correction
+        self.transformations = {
+            'log_params' : [p for p in rate_params if p in self.numeric_data.columns],
+            'logit_params' : [p for p in prop_params if p in self.numeric_data.columns]
+        }
+        
         print(f"Preprocessed data shape: {self.numeric_data.shape}")
         return self.numeric_data
     
@@ -116,8 +122,10 @@ class PhylogeneticParameterFitter:
         
         # Common distributions to test
         distributions = [
-            stats.norm, stats.lognorm, stats.gamma, stats.expon, 
-            stats.beta, stats.weibull_min, stats.chi2
+            stats.norm, stats.lognorm, stats.gamma, stats.beta, stats.expon,
+            stats.weibull_min, stats.uniform, stats.chi2, stats.invgamma,
+            stats.pareto, stats.genextreme, stats.gumbel_r, stats.gumbel_l,
+            stats.logistic, stats.laplace, stats.t, stats.genpareto
         ]
         
         self.fitted_distributions = {}
@@ -235,13 +243,15 @@ class PhylogeneticParameterFitter:
         return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, n_std=1.5):
+                                               min_n_sequences_tips=20, max_n_sequences_tips=100,
+                                               q_scale=100, bias_correction=True):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
         Excludes certain parameters from bounds constraints (best_B* model selection parameters)
         
         Parameters:
         - n_std: Number of standard deviations to use as bounds (default 1.5)
+        - q_scale: Range of intermediate values (i.e. middle 60% of data)
         """
         if self.joint_model is None:
             print("No joint model fitted. Please fit a joint distribution first.")
@@ -250,8 +260,18 @@ class PhylogeneticParameterFitter:
         params = self.parameter_groups[param_group]
         available_params = [p for p in params if p in self.numeric_data.columns]
         
+        bias_corrections = {}
+        if bias_correction and hasattr(self, 'transformations'):
+            for param in self.transformations.get('log_params', []):
+                if param in self.numeric_data.columns:
+                    original_mean = self.numeric_data[param].mean()
+                    log_values = np.log(self.numeric_data[param] + 1e-10)
+                    naive_back_transform = np.exp(log_values.mean())
+                    bias_corrections[param] = original_mean / naive_back_transform
+        
         # Define parameters to exclude from bounds constraints (model selection indicators)
         unrestricted_params = {
+            'n_sequence_tips',
             'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
             'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
             'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN',
@@ -267,17 +287,25 @@ class PhylogeneticParameterFitter:
                 continue  # Skip bounds calculation for unrestricted parameters
                 
             data = self.numeric_data[param].dropna()
-            mean = np.mean(data)
-            std = np.std(data)
+            
+            #Remove outliers
+            q1 = np.percentile(data, 25)
+            q3 = np.percentile(data, 75)
+            lower_bound = q1 - 1.5 * (q3 - q1)
+            upper_bound = q3 + 1.5 * (q3 - q1)
+            
+            filtered_data = data[(data >= lower_bound) & (data <= upper_bound)]
+            
+            median = np.percentile(filtered_data, 50), 
+            
             param_bounds[param] = {
-                'mean': mean,
-                'std': std,
-                'lower': mean - n_std * std,
-                'upper': mean + n_std * std
+                'median': median,
+                'lower': np.percentile(filtered_data, 50 - q_scale/2),
+                'upper': np.percentile(filtered_data, 50 + q_scale/2)
             }
             restricted_params.append(param)
         
-        print(f"Applying {n_std}-std bounds to {len(restricted_params)} parameters")
+        print(f"Applying {q_scale} scaled-quartile bounds to {len(restricted_params)} parameters")
         print(f"Unrestricted parameters: {[p for p in available_params if p in unrestricted_params]}")
         
         # Generate samples in batches with rejection sampling
@@ -314,7 +342,7 @@ class PhylogeneticParameterFitter:
                 
                 # Additional constraint for n_sequences_tips
                 if (accept_sample and 'n_sequences_tips' in sample.index and 
-                    sample['n_sequences_tips'] <= min_n_sequences_tips):
+                    (sample['n_sequences_tips'] <= min_n_sequences_tips or sample['n_sequences_tips'] >= max_n_sequences_tips)):
                     accept_sample = False
                 
                 if accept_sample:
@@ -326,13 +354,21 @@ class PhylogeneticParameterFitter:
         
         if accepted_samples:
             result = pd.DataFrame(accepted_samples)
+            
+            print("Applying bias correction to log-transformed parameters")
+            for param, correction_factor in bias_corrections.items():
+                if param + '_log' in result.columns:
+                    #Apply correction in log space
+                    result[param+'_log'] += np.log(correction_factor)
+                    print(f"    {param}: correction factor = {correction_factor:.3f}")
+            
             acceptance_rate = len(accepted_samples) / total_attempts * 100
             print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
-            print(f"Samples constrained to within {n_std} standard deviation(s) for {len(restricted_params)} parameters")
+            print(f"Samples constrained to within {q_scale} standard deviation(s) for {len(restricted_params)} parameters")
             print(f"{len(unrestricted_params & set(available_params))} parameters left unrestricted")
             return result.iloc[:n_samples]  # Return exactly n_samples
         else:
-            print(f"Failed to generate sufficient samples within {n_std}-std bounds")
+            print(f"Failed to generate sufficient samples within {q_scale}-std bounds")
             return None
     
     def validate_fit(self, output_folder, param_group='key_parameters'):

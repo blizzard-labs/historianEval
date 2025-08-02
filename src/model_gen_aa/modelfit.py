@@ -244,7 +244,7 @@ class PhylogeneticParameterFitter:
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
                                                min_n_sequences_tips=20, max_n_sequences_tips=100,
-                                               q_scale=98, bias_correction=True):
+                                               q_scale=100, bias_correction=True):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
         Excludes certain parameters from bounds constraints (best_B* model selection parameters)
