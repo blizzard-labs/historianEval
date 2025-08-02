@@ -122,8 +122,10 @@ class PhylogeneticParameterFitter:
         
         # Common distributions to test
         distributions = [
-            stats.norm, stats.lognorm, stats.gamma, stats.expon, 
-            stats.beta, stats.weibull_min, stats.chi2
+            stats.norm, stats.lognorm, stats.gamma, stats.beta, stats.expon,
+            stats.weibull_min, stats.uniform, stats.chi2, stats.invgamma,
+            stats.pareto, stats.genextreme, stats.gumbel_r, stats.gumbel_l,
+            stats.logistic, stats.laplace, stats.t, stats.genpareto
         ]
         
         self.fitted_distributions = {}
@@ -241,8 +243,8 @@ class PhylogeneticParameterFitter:
         return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, q_scale=95,
-                                               bias_correction=True):
+                                               min_n_sequences_tips=20, max_n_sequences_tips=100,
+                                               q_scale=98, bias_correction=True):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
         Excludes certain parameters from bounds constraints (best_B* model selection parameters)
@@ -269,6 +271,7 @@ class PhylogeneticParameterFitter:
         
         # Define parameters to exclude from bounds constraints (model selection indicators)
         unrestricted_params = {
+            'n_sequence_tips',
             'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
             'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
             'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN',
@@ -339,7 +342,7 @@ class PhylogeneticParameterFitter:
                 
                 # Additional constraint for n_sequences_tips
                 if (accept_sample and 'n_sequences_tips' in sample.index and 
-                    sample['n_sequences_tips'] <= min_n_sequences_tips):
+                    (sample['n_sequences_tips'] <= min_n_sequences_tips or sample['n_sequences_tips'] >= max_n_sequences_tips)):
                     accept_sample = False
                 
                 if accept_sample:
