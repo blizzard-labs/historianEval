@@ -2,8 +2,9 @@
 """
 Phylogenetic Parameter Distribution Fitting Script
 
-This script fits joint distributions to phylogenetic parameters extracted from TreeFam alignments
-for use in realistic sequence simulation with indel-seq-gen.
+This script fits individual joint distributions for each birth-death model configuration
+to phylogenetic parameters extracted from TreeFam alignments for use in realistic 
+sequence simulation with indel-seq-gen.
 """
 
 
@@ -34,92 +35,118 @@ from sklearn.preprocessing import StandardScaler
 
 class PhylogeneticParameterFitter:
     """
-    Class for fitting distributions to phylogenetic parameters
+    Class for fitting distributions to phylogenetic parameters with individual BD models
     """
     
     def __init__(self, csv_file):
         """Initialize with CSV file containing TreeFam parameters"""
         self.data = pd.read_csv(csv_file)
         self.fitted_distributions = {}
-        self.joint_model = None
+        self.bd_models = {}  # Store individual models for each BD configuration
+        self.bd_model_probs = {}  # Store probability of each BD model
         self.parameter_groups = self._define_parameter_groups()
         
     def _define_parameter_groups(self):
         """Define logical groups of parameters for joint modeling"""
         
-        #n_sequences, alignment_length, gamma_shape, prop_invariant, insertion_rate, deletion_rate, insertion_events, deletion_events
-        #mean_insertion_length, mean_deletion_length, total_gaps, indel_to_substitution_ration, rf_length_distance
-        
-        # n_sequences, gamma_shape, prop_invariant, insertion_rate, deletion_rate, mean_insertion_length, mean_deletion_length, rf_length_distance
-        '''
+        # Core parameters that will be included in each BD-specific model
         return {
-            'amino_acid_frequencies': [col for col in self.data.columns if col.startswith('freq_')],
-            'substitution_model': ['gamma_shape', 'prop_invariant'],
-            'indel_parameters': ['indel_rate', 'mean_indel_length'],
-            'tree_parameters': ['tree_length', 'crown_age', 'n_tips'],
-            'diversification': ['speciation_rate', 'extinction_rate', 'net_diversification'],
-            'sequence_properties': ['n_sequences', 'alignment_length', 'total_gaps'],
-            'key_parameters' : ['n_sequences', 'gamma_shape', 'prop_invariant',
-                                'insertion_rate', 'deletion_rate',
-                                'mean_insertion_length', 'mean_deletion_length',
-                                'rf_length_distance']
+            'core_parameters': ['n_sequences_tips', 'alignment_length', 'crown_age',
+                               'gamma_shape', 'prop_invariant',
+                               'insertion_rate', 'deletion_rate',
+                               'mean_insertion_length', 'mean_deletion_length',
+                               'normalized_colless_index', 'gamma',
+                               'best_BD_speciation_rate', 'best_BD_extinction_rate',
+                               'best_BD_speciation_alpha', 'best_BD_extinction_alpha']
         }
-        '''
+    
+    def _get_bd_model_columns(self):
+        """Get birth-death model indicator columns"""
+        bd_cols = [col for col in self.data.columns if col.startswith('best_B') and not col.startswith('best_BD')]
+        return bd_cols
+    
+    def _split_data_by_bd_model(self):
+        """Split data into separate datasets for each BD model"""
+        bd_cols = self._get_bd_model_columns()
         
-        return {
-            'key_parameters' : ['n_sequences_tips', 'alignment_length', 'crown_age',
-                                'gamma_shape', 'prop_invariant',
-                                'insertion_rate', 'deletion_rate',
-                                'mean_insertion_length', 'mean_deletion_length',
-                                'normalized_colless_index', 'gamma',
-                                'best_BD_speciation_rate', 'best_BD_extinction_rate',
-                                'best_BD_speciation_alpha', 'best_BD_extinction_alpha',
-                                'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST', 'best_BCSTDEXP', 'best_BEXPDEXP',
-                                'best_BLINDEXP', 'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN']
-        }
-
+        if not bd_cols:
+            print("Warning: No BD model columns found!")
+            return {'default': self.data}
+        
+        bd_datasets = {}
+        
+        for bd_col in bd_cols:
+            # Get rows where this BD model is selected (value = 1)
+            bd_data = self.data[self.data[bd_col] == 1].copy()
+            
+            if len(bd_data) > 0:
+                # Remove all BD indicator columns from this dataset
+                bd_data = bd_data.drop(columns=bd_cols)
+                bd_datasets[bd_col] = bd_data
+                print(f"BD model '{bd_col}': {len(bd_data)} samples")
+            else:
+                print(f"BD model '{bd_col}': 0 samples (skipping)")
+        
+        # Calculate model probabilities
+        total_samples = sum(len(dataset) for dataset in bd_datasets.values())
+        self.bd_model_probs = {model: len(dataset)/total_samples 
+                              for model, dataset in bd_datasets.items()}
+        
+        print(f"\nBD Model Probabilities:")
+        for model, prob in self.bd_model_probs.items():
+            print(f"  {model}: {prob:.3f}")
+        
+        return bd_datasets
     
     def preprocess_data(self):
-        """Clean and preprocess the data"""
-        # Remove non-numeric columns and handle missing values
-        numeric_cols = self.data.select_dtypes(include=[np.number]).columns
-        self.numeric_data = self.data[numeric_cols].copy()
+        """Clean and preprocess the data for each BD model"""
+        # Split data by BD model first
+        self.bd_datasets = self._split_data_by_bd_model()
         
-        # Handle missing values
-        self.numeric_data = self.numeric_data.dropna()
+        # Preprocess each BD model dataset separately
+        self.bd_numeric_data = {}
         
-        # Log-transform rate parameters (they're often log-normal)
-        rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length',
-                       'best_BD_speciation_rate', 'best_BD_extinction_rate']
+        for bd_model, bd_data in self.bd_datasets.items():
+            print(f"\nPreprocessing data for BD model: {bd_model}")
+            
+            # Remove non-numeric columns and handle missing values
+            numeric_cols = bd_data.select_dtypes(include=[np.number]).columns
+            numeric_data = bd_data[numeric_cols].copy()
+            
+            # Handle missing values
+            numeric_data = numeric_data.dropna()
+            
+            # Log-transform rate parameters (they're often log-normal)
+            rate_params = ['gamma_shape', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 
+                          'mean_deletion_length', 'best_BD_speciation_rate', 'best_BD_extinction_rate']
+            
+            for param in rate_params:
+                if param in numeric_data.columns:
+                    # Add small constant to avoid log(0)
+                    numeric_data[param + '_log'] = np.log(numeric_data[param] + 1e-10)
+            
+            # Logit-transform proportions
+            prop_params = ['prop_invariant'] + [col for col in numeric_data.columns if col.startswith('freq_')]
+            
+            for param in prop_params:
+                if param in numeric_data.columns:
+                    # Logit transform: log(p/(1-p)), handling edge cases
+                    p = numeric_data[param].clip(1e-10, 1-1e-10)
+                    numeric_data[param + '_logit'] = np.log(p / (1 - p))
+            
+            self.bd_numeric_data[bd_model] = numeric_data
+            print(f"  Preprocessed shape: {numeric_data.shape}")
         
-        for param in rate_params:
-            if param in self.numeric_data.columns:
-                # Add small constant to avoid log(0)
-                self.numeric_data[param + '_log'] = np.log(self.numeric_data[param] + 1e-10)
-        
-        # Logit-transform proportions
-        prop_params = ['prop_invariant'] + [col for col in self.numeric_data.columns if col.startswith('freq_')]
-        
-        for param in prop_params:
-            if param in self.numeric_data.columns:
-                # Logit transform: log(p/(1-p)), handling edge cases
-                p = self.numeric_data[param].clip(1e-10, 1-1e-10)
-                self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
-        
-        #Store transformation info for bias correction
+        # Store transformation info for bias correction
         self.transformations = {
-            'log_params' : [p for p in rate_params if p in self.numeric_data.columns],
-            'logit_params' : [p for p in prop_params if p in self.numeric_data.columns]
+            'log_params': [p for p in rate_params if any(p in data.columns for data in self.bd_numeric_data.values())],
+            'logit_params': [p for p in prop_params if any(p in data.columns for data in self.bd_numeric_data.values())]
         }
         
-        print(f"Preprocessed data shape: {self.numeric_data.shape}")
-        return self.numeric_data
+        return self.bd_numeric_data
     
     def fit_marginal_distributions(self, param_subset=None):
-        """Fit marginal distributions to individual parameters"""
-        if param_subset is None:
-            param_subset = self.numeric_data.columns
-        
+        """Fit marginal distributions to individual parameters for each BD model"""
         # Common distributions to test
         distributions = [
             stats.norm, stats.lognorm, stats.gamma, stats.beta, stats.expon,
@@ -130,209 +157,246 @@ class PhylogeneticParameterFitter:
         
         self.fitted_distributions = {}
         
-        for param in param_subset:
-            if param not in self.numeric_data.columns:
-                continue
-                
-            data = self.numeric_data[param].dropna()
-            if len(data) < 10:  # Skip if too few data points
-                continue
-                
-            best_dist = None
-            best_params = None
-            best_aic = np.inf
+        for bd_model, numeric_data in self.bd_numeric_data.items():
+            print(f"\nFitting marginal distributions for BD model: {bd_model}")
+            self.fitted_distributions[bd_model] = {}
             
-            print(f"Fitting distributions for {param}...")
+            param_cols = param_subset if param_subset else numeric_data.columns
             
-            for dist in distributions:
-                try:
-                    # Fit distribution
-                    if dist == stats.beta:
-                        # Beta distribution needs data in [0,1]
-                        if data.min() < 0 or data.max() > 1:
-                            continue
-                    
-                    params = dist.fit(data)
-                    
-                    # Calculate AIC
-                    loglik = np.sum(dist.logpdf(data, *params))
-                    aic = 2 * len(params) - 2 * loglik
-                    
-                    if aic < best_aic:
-                        best_aic = aic
-                        best_dist = dist
-                        best_params = params
-                        
-                except Exception as e:
+            for param in param_cols:
+                if param not in numeric_data.columns:
                     continue
-            
-            if best_dist is not None:
-                self.fitted_distributions[param] = {
-                    'distribution': best_dist,
-                    'params': best_params,
-                    'aic': best_aic
-                }
-                print(f"  Best fit: {best_dist.name} (AIC: {best_aic:.2f})")
-            else:
-                print(f"  No suitable distribution found for {param}")
+                    
+                data = numeric_data[param].dropna()
+                if len(data) < 10:  # Skip if too few data points
+                    continue
+                    
+                best_dist = None
+                best_params = None
+                best_aic = np.inf
+                
+                print(f"  Fitting distributions for {param}...")
+                
+                for dist in distributions:
+                    try:
+                        # Fit distribution
+                        if dist == stats.beta:
+                            # Beta distribution needs data in [0,1]
+                            if data.min() < 0 or data.max() > 1:
+                                continue
+                        
+                        params = dist.fit(data)
+                        
+                        # Calculate AIC
+                        loglik = np.sum(dist.logpdf(data, *params))
+                        aic = 2 * len(params) - 2 * loglik
+                        
+                        if aic < best_aic:
+                            best_aic = aic
+                            best_dist = dist
+                            best_params = params
+                            
+                    except Exception as e:
+                        continue
+                
+                if best_dist is not None:
+                    self.fitted_distributions[bd_model][param] = {
+                        'distribution': best_dist,
+                        'params': best_params,
+                        'aic': best_aic
+                    }
+                    print(f"    Best fit: {best_dist.name} (AIC: {best_aic:.2f})")
+                else:
+                    print(f"    No suitable distribution found for {param}")
     
-    def fit_joint_distribution_copula(self, param_group='key_parameters'):
-        """Fit joint distribution using copulas"""
+    def fit_joint_distribution_copula(self, param_group='core_parameters'):
+        """Fit joint distribution using copulas for each BD model"""
         if not COPULAS_AVAILABLE:
             print("Copulas not available, using multivariate normal instead")
             return self.fit_joint_distribution_mvn(param_group)
         
         params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
         
-        if len(available_params) < 2:
-            print(f"Not enough parameters available for {param_group}")
-            return None
-        
-        # Get data for joint modeling
-        joint_data = self.numeric_data[available_params].dropna()
-        
-        if len(joint_data) < 10:
-            print(f"Not enough samples for joint modeling of {param_group}")
-            return None
-        
-        print(f"Fitting joint distribution for {param_group} with {len(available_params)} parameters...")
-        
-        # Fit copula
-        self.joint_model = GaussianMultivariate()
-        self.joint_model.fit(joint_data)
-        
-        print(f"Joint model fitted successfully for {param_group}")
-        return self.joint_model
-    
-    def fit_joint_distribution_mvn(self, param_group='key_parameters'):
-        """Fit multivariate normal distribution as fallback"""
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        if len(available_params) < 2:
-            print(f"Not enough parameters available for {param_group}")
-            return None
-        
-        # Get data for joint modeling
-        joint_data = self.numeric_data[available_params].dropna()
-        
-        if len(joint_data) < 10:
-            print(f"Not enough samples for joint modeling of {param_group}")
-            return None
-        
-        print(f"Fitting multivariate normal for {param_group} with {len(available_params)} parameters...")
-        
-        # Standardize data
-        scaler = StandardScaler()
-        scaled_data = scaler.fit_transform(joint_data)
-        
-        # Fit multivariate normal
-        mean = np.mean(scaled_data, axis=0)
-        cov = np.cov(scaled_data.T)
-        
-        self.joint_model = {
-            'type': 'multivariate_normal',
-            'mean': mean,
-            'cov': cov,
-            'scaler': scaler,
-            'param_names': available_params
-        }
-        
-        print(f"Multivariate normal fitted successfully for {param_group}")
-        return self.joint_model
-    
-    def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, max_n_sequences_tips=100,
-                                               q_scale=100, bias_correction=True):
-        """
-        Enhanced rejection sampling with parameter-specific bounds and replacement strategy
-        Excludes certain parameters from bounds constraints (best_B* model selection parameters)
-        
-        Parameters:
-        - n_std: Number of standard deviations to use as bounds (default 1.5)
-        - q_scale: Range of intermediate values (i.e. middle 60% of data)
-        """
-        if self.joint_model is None:
-            print("No joint model fitted. Please fit a joint distribution first.")
-            return None
-        
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        bias_corrections = {}
-        if bias_correction and hasattr(self, 'transformations'):
-            for param in self.transformations.get('log_params', []):
-                if param in self.numeric_data.columns:
-                    original_mean = self.numeric_data[param].mean()
-                    log_values = np.log(self.numeric_data[param] + 1e-10)
-                    naive_back_transform = np.exp(log_values.mean())
-                    bias_corrections[param] = original_mean / naive_back_transform
-        
-        # Define parameters to exclude from bounds constraints (model selection indicators)
-        unrestricted_params = {
-            'n_sequence_tips',
-            'best_BCSTDCST', 'best_BEXPDCST', 'best_BLINDCST',
-            'best_BCSTDEXP', 'best_BEXPDEXP', 'best_BLINDEXP', 
-            'best_BCSTDLIN', 'best_BEXPDLIN', 'best_BLINDLIN',
-            'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
-        }
-        
-        # Calculate bounds for each parameter (excluding unrestricted ones)
-        param_bounds = {}
-        restricted_params = []
-        
-        for param in available_params:
-            if param in unrestricted_params:
-                continue  # Skip bounds calculation for unrestricted parameters
-                
-            data = self.numeric_data[param].dropna()
+        for bd_model, numeric_data in self.bd_numeric_data.items():
+            print(f"\nFitting joint distribution for BD model: {bd_model}")
             
-            #Remove outliers
-            q1 = np.percentile(data, 25)
-            q3 = np.percentile(data, 75)
-            lower_bound = q1 - 1.5 * (q3 - q1)
-            upper_bound = q3 + 1.5 * (q3 - q1)
+            available_params = [p for p in params if p in numeric_data.columns]
             
-            filtered_data = data[(data >= lower_bound) & (data <= upper_bound)]
+            if len(available_params) < 2:
+                print(f"  Not enough parameters available for {bd_model}")
+                continue
             
-            median = np.percentile(filtered_data, 50), 
+            # Get data for joint modeling
+            joint_data = numeric_data[available_params].dropna()
             
-            param_bounds[param] = {
-                'median': median,
-                'lower': np.percentile(filtered_data, 50 - q_scale/2),
-                'upper': np.percentile(filtered_data, 50 + q_scale/2)
+            if len(joint_data) < 10:
+                print(f"  Not enough samples for joint modeling of {bd_model}")
+                continue
+            
+            print(f"  Fitting with {len(available_params)} parameters and {len(joint_data)} samples...")
+            
+            # Fit copula
+            joint_model = GaussianMultivariate()
+            joint_model.fit(joint_data)
+            
+            self.bd_models[bd_model] = {
+                'model': joint_model,
+                'param_names': available_params,
+                'n_samples': len(joint_data)
             }
-            restricted_params.append(param)
-        
-        print(f"Applying {q_scale} scaled-quartile bounds to {len(restricted_params)} parameters")
-        print(f"Unrestricted parameters: {[p for p in available_params if p in unrestricted_params]}")
-        
-        # Generate samples in batches with rejection sampling
-        accepted_samples = []
-        total_attempts = 0
-        batch_size = max(100, n_samples * 2)
-        
-        while len(accepted_samples) < n_samples and total_attempts < 100000:
-            # Generate a batch of samples
-            if COPULAS_AVAILABLE and hasattr(self.joint_model, 'sample'):
-                batch_samples = self.joint_model.sample(batch_size)
-            else:
-                if self.joint_model['type'] == 'multivariate_normal':
-                    samples_scaled = np.random.multivariate_normal(
-                        self.joint_model['mean'], 
-                        self.joint_model['cov'], 
-                        batch_size
-                    )
-                    batch_samples = self.joint_model['scaler'].inverse_transform(samples_scaled)
-                    batch_samples = pd.DataFrame(batch_samples, columns=self.joint_model['param_names'])
             
-            # Apply rejection criteria
-            for idx in range(len(batch_samples)):
-                sample = batch_samples.iloc[idx]
+            print(f"  Joint model fitted successfully for {bd_model}")
+        
+        return self.bd_models
+    
+    def fit_joint_distribution_mvn(self, param_group='core_parameters'):
+        """Fit multivariate normal distribution as fallback for each BD model"""
+        params = self.parameter_groups[param_group]
+        
+        for bd_model, numeric_data in self.bd_numeric_data.items():
+            print(f"\nFitting multivariate normal for BD model: {bd_model}")
+            
+            available_params = [p for p in params if p in numeric_data.columns]
+            
+            if len(available_params) < 2:
+                print(f"  Not enough parameters available for {bd_model}")
+                continue
+            
+            # Get data for joint modeling
+            joint_data = numeric_data[available_params].dropna()
+            
+            if len(joint_data) < 10:
+                print(f"  Not enough samples for joint modeling of {bd_model}")
+                continue
+            
+            print(f"  Fitting with {len(available_params)} parameters and {len(joint_data)} samples...")
+            
+            # Standardize data
+            scaler = StandardScaler()
+            scaled_data = scaler.fit_transform(joint_data)
+            
+            # Fit multivariate normal
+            mean = np.mean(scaled_data, axis=0)
+            cov = np.cov(scaled_data.T)
+            
+            self.bd_models[bd_model] = {
+                'type': 'multivariate_normal',
+                'mean': mean,
+                'cov': cov,
+                'scaler': scaler,
+                'param_names': available_params,
+                'n_samples': len(joint_data)
+            }
+            
+            print(f"  Multivariate normal fitted successfully for {bd_model}")
+        
+        return self.bd_models
+    
+    def sample_bd_model(self):
+        """Sample a BD model according to the learned probabilities"""
+        if not self.bd_model_probs:
+            return list(self.bd_models.keys())[0] if self.bd_models else None
+        
+        models = list(self.bd_model_probs.keys())
+        probs = list(self.bd_model_probs.values())
+        return np.random.choice(models, p=probs)
+    
+    def sample_parameters(self, n_samples=100, param_group='core_parameters',
+                         min_n_sequences_tips=20, max_n_sequences_tips=100,
+                         q_scale=100, bias_correction=True):
+        """
+        Sample parameters from the appropriate BD model
+        """
+        if not self.bd_models:
+            print("No BD models fitted. Please fit joint distributions first.")
+            return None
+        
+        all_samples = []
+        
+        for i in range(n_samples):
+            # Sample BD model
+            bd_model = self.sample_bd_model()
+            
+            if bd_model not in self.bd_models:
+                continue
+            
+            model_info = self.bd_models[bd_model]
+            available_params = model_info['param_names']
+            
+            # Calculate bias corrections for this BD model
+            bias_corrections = {}
+            if bias_correction and hasattr(self, 'transformations'):
+                numeric_data = self.bd_numeric_data[bd_model]
+                for param in self.transformations.get('log_params', []):
+                    if param in numeric_data.columns:
+                        original_mean = numeric_data[param].mean()
+                        log_values = np.log(numeric_data[param] + 1e-10)
+                        naive_back_transform = np.exp(log_values.mean())
+                        bias_corrections[param] = original_mean / naive_back_transform
+            
+            # Define parameters to exclude from bounds constraints
+            unrestricted_params = {
+                'n_sequences_tips',
+                'best_BD_speciation_alpha', 'best_BD_extinction_alpha'
+            }
+            
+            # Calculate bounds for this BD model
+            param_bounds = {}
+            restricted_params = []
+            numeric_data = self.bd_numeric_data[bd_model]
+            
+            for param in available_params:
+                if param in unrestricted_params:
+                    continue
+                    
+                data = numeric_data[param].dropna()
+                
+                if len(data) < 5:
+                    continue
+                
+                # Remove outliers
+                q1 = np.percentile(data, 25)
+                q3 = np.percentile(data, 75)
+                lower_bound = q1 - 1.5 * (q3 - q1)
+                upper_bound = q3 + 1.5 * (q3 - q1)
+                
+                filtered_data = data[(data >= lower_bound) & (data <= upper_bound)]
+                
+                if len(filtered_data) < 5:
+                    filtered_data = data
+                
+                param_bounds[param] = {
+                    'median': np.percentile(filtered_data, 50),
+                    'lower': np.percentile(filtered_data, 50 - q_scale/2),
+                    'upper': np.percentile(filtered_data, 50 + q_scale/2)
+                }
+                restricted_params.append(param)
+            
+            # Generate samples with rejection sampling
+            max_attempts = 100000
+            attempts = 0
+            
+            while attempts < max_attempts:
+                attempts += 1
+                
+                # Generate sample from this BD model
+                if COPULAS_AVAILABLE and hasattr(model_info.get('model'), 'sample'):
+                    sample_df = model_info['model'].sample(1)
+                    sample = sample_df.iloc[0]
+                else:
+                    if model_info.get('type') == 'multivariate_normal':
+                        sample_scaled = np.random.multivariate_normal(
+                            model_info['mean'], 
+                            model_info['cov'], 
+                            1
+                        )[0]
+                        sample_array = model_info['scaler'].inverse_transform([sample_scaled])[0]
+                        sample = pd.Series(sample_array, index=model_info['param_names'])
+                
+                # Apply rejection criteria
                 accept_sample = True
                 
-                # Check bounds only for restricted parameters
+                # Check bounds for restricted parameters
                 for param in restricted_params:
                     if param in sample.index:
                         value = sample[param]
@@ -342,102 +406,106 @@ class PhylogeneticParameterFitter:
                 
                 # Additional constraint for n_sequences_tips
                 if (accept_sample and 'n_sequences_tips' in sample.index and 
-                    (sample['n_sequences_tips'] <= min_n_sequences_tips or sample['n_sequences_tips'] >= max_n_sequences_tips)):
+                    (sample['n_sequences_tips'] <= min_n_sequences_tips or 
+                     sample['n_sequences_tips'] >= max_n_sequences_tips)):
                     accept_sample = False
                 
                 if accept_sample:
-                    accepted_samples.append(sample)
-                    if len(accepted_samples) >= n_samples:
-                        break
-            
-            total_attempts += batch_size
+                    # Apply bias corrections
+                    sample_dict = sample.to_dict()
+                    for param, correction_factor in bias_corrections.items():
+                        if param + '_log' in sample_dict:
+                            sample_dict[param + '_log'] += np.log(correction_factor)
+                    
+                    # Add BD model indicator
+                    sample_dict['bd_model'] = bd_model
+                    all_samples.append(sample_dict)
+                    break
         
-        if accepted_samples:
-            result = pd.DataFrame(accepted_samples)
+        if all_samples:
+            result = pd.DataFrame(all_samples)
+            print(f"Generated {len(result)} samples from {len(set(result['bd_model']))} BD models")
             
-            print("Applying bias correction to log-transformed parameters")
-            for param, correction_factor in bias_corrections.items():
-                if param + '_log' in result.columns:
-                    #Apply correction in log space
-                    result[param+'_log'] += np.log(correction_factor)
-                    print(f"    {param}: correction factor = {correction_factor:.3f}")
+            # Print BD model distribution in samples
+            bd_counts = result['bd_model'].value_counts()
+            print("BD model distribution in samples:")
+            for model, count in bd_counts.items():
+                print(f"  {model}: {count} ({count/len(result)*100:.1f}%)")
             
-            acceptance_rate = len(accepted_samples) / total_attempts * 100
-            print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
-            print(f"Samples constrained to within {q_scale} standard deviation(s) for {len(restricted_params)} parameters")
-            print(f"{len(unrestricted_params & set(available_params))} parameters left unrestricted")
-            return result.iloc[:n_samples]  # Return exactly n_samples
+            return result
         else:
-            print(f"Failed to generate sufficient samples within {q_scale}-std bounds")
+            print("Failed to generate sufficient samples")
             return None
     
-    def validate_fit(self, output_folder, param_group='key_parameters'):
-        """Validate the fitted joint distribution with organized subplots"""
-        if self.joint_model is None:
-            print("No joint model to validate")
+    def validate_fit(self, output_folder, param_group='core_parameters'):
+        """Validate the fitted joint distributions for each BD model"""
+        if not self.bd_models:
+            print("No BD models to validate")
             return
         
-        # Generate samples
-        samples = self.sample_parameters(n_samples=1000, param_group=param_group)
+        # Generate samples for each BD model separately
+        all_validation_results = {}
         
-        if samples is None:
+        for bd_model in self.bd_models.keys():
+            print(f"\nValidating BD model: {bd_model}")
+            
+            # Generate samples specifically from this BD model
+            model_samples = []
+            model_info = self.bd_models[bd_model]
+            
+            # Generate 500 samples from this specific model
+            for _ in range(500):
+                if COPULAS_AVAILABLE and hasattr(model_info.get('model'), 'sample'):
+                    sample_df = model_info['model'].sample(1)
+                    sample = sample_df.iloc[0]
+                else:
+                    if model_info.get('type') == 'multivariate_normal':
+                        sample_scaled = np.random.multivariate_normal(
+                            model_info['mean'], 
+                            model_info['cov'], 
+                            1
+                        )[0]
+                        sample_array = model_info['scaler'].inverse_transform([sample_scaled])[0]
+                        sample = pd.Series(sample_array, index=model_info['param_names'])
+                
+                model_samples.append(sample)
+            
+            if model_samples:
+                samples_df = pd.DataFrame(model_samples)
+                all_validation_results[bd_model] = samples_df
+        
+        # Create validation plots for each BD model
+        for bd_model, samples in all_validation_results.items():
+            self._create_bd_model_validation_plot(output_folder, bd_model, samples)
+        
+        # Create summary comparison across all BD models
+        self._create_bd_models_summary_plot(output_folder, all_validation_results)
+
+    def _create_bd_model_validation_plot(self, output_folder, bd_model, samples):
+        """Create validation plot for a specific BD model"""
+        original_data = self.bd_numeric_data[bd_model]
+        available_params = [p for p in samples.columns if p in original_data.columns]
+        
+        if len(available_params) == 0:
             return
         
-        # Compare distributions
-        params = self.parameter_groups[param_group]
-        available_params = [p for p in params if p in self.numeric_data.columns and p in samples.columns]
-        
-        # Group parameters by category for better organization
-        param_categories = self._categorize_parameters(available_params)
-        
-        # Create separate plots for each category or one large organized plot
+        # Limit to most important parameters for readability
         if len(available_params) > 12:
-            self._create_categorized_plots(output_folder, param_categories, samples)
-        else:
-            self._create_single_organized_plot(output_folder, available_params, samples)
+            important_params = ['n_sequences_tips', 'alignment_length', 'crown_age', 
+                              'gamma_shape', 'prop_invariant', 'insertion_rate', 
+                              'deletion_rate', 'mean_insertion_length', 'mean_deletion_length']
+            available_params = [p for p in important_params if p in available_params][:12]
         
-        # Create summary statistics plot
-        self._create_summary_stats_plot(output_folder, available_params, samples)
-
-    def _categorize_parameters(self, available_params):
-        """Categorize parameters for better organization"""
-        categories = {
-            'Tree Structure': [p for p in available_params if any(keyword in p.lower() for keyword in 
-                            ['n_sequences', 'crown_age', 'colless', 'gamma'])],
-            'Sequence Evolution': [p for p in available_params if any(keyword in p.lower() for keyword in 
-                                ['alignment_length', 'gamma_shape', 'prop_invariant'])],
-            'Indel Parameters': [p for p in available_params if any(keyword in p.lower() for keyword in 
-                                ['insertion', 'deletion'])],
-            'Birth-Death Models': [p for p in available_params if p.startswith('best_B')]
-        }
-        
-        # Add any uncategorized parameters to a general category
-        categorized = set()
-        for cat_params in categories.values():
-            categorized.update(cat_params)
-        
-        uncategorized = [p for p in available_params if p not in categorized]
-        if uncategorized:
-            categories['Other'] = uncategorized
-        
-        # Remove empty categories
-        categories = {k: v for k, v in categories.items() if v}
-        
-        return categories
-
-    def _create_single_organized_plot(self, output_folder, available_params, samples):
-        """Create a single well-organized plot for all parameters"""
         n_params = len(available_params)
         n_cols = min(4, n_params)
         n_rows = (n_params + n_cols - 1) // n_cols
         
-        # Dynamic figure size
         fig_width = n_cols * 5
         fig_height = n_rows * 4
         
         fig, axes = plt.subplots(n_rows, n_cols, figsize=(fig_width, fig_height))
+        fig.suptitle(f'Parameter Validation: {bd_model}', fontsize=16, fontweight='bold')
         
-        # Handle different subplot configurations
         if n_params == 1:
             axes = [axes]
         elif n_rows == 1:
@@ -449,61 +517,21 @@ class PhylogeneticParameterFitter:
         
         for i, param in enumerate(available_params):
             ax = axes_flat[i]
-            self._plot_parameter_comparison(ax, param, samples)
+            self._plot_parameter_comparison(ax, param, samples, original_data)
         
         # Hide unused subplots
         for i in range(n_params, len(axes_flat)):
             axes_flat[i].set_visible(False)
         
-        plt.tight_layout(pad=2.0)
-        plt.savefig(os.path.join(output_folder, 'param_fits.png'), 
-                dpi=300, bbox_inches='tight')
+        plt.tight_layout()
+        safe_bd_model = bd_model.replace('_', '-').lower()
+        plt.savefig(os.path.join(output_folder, f'validation_{safe_bd_model}.png'), 
+                   dpi=300, bbox_inches='tight')
         plt.close()
 
-    def _create_categorized_plots(self, output_folder, param_categories, samples):
-        """Create separate plots for each parameter category"""
-        for category, params in param_categories.items():
-            if not params:
-                continue
-                
-            n_params = len(params)
-            n_cols = min(3, n_params)
-            n_rows = (n_params + n_cols - 1) // n_cols
-            
-            fig_width = n_cols * 5
-            fig_height = n_rows * 4
-            
-            fig, axes = plt.subplots(n_rows, n_cols, figsize=(fig_width, fig_height))
-            fig.suptitle(f'{category} Parameters', fontsize=16, fontweight='bold')
-            
-            if n_params == 1:
-                axes = [axes]
-            elif n_rows == 1:
-                axes = axes.reshape(1, -1) if n_cols > 1 else [axes]
-            elif n_cols == 1:
-                axes = axes.reshape(-1, 1)
-            
-            axes_flat = axes.flatten() if n_params > 1 else axes
-            
-            for i, param in enumerate(params):
-                ax = axes_flat[i]
-                self._plot_parameter_comparison(ax, param, samples)
-            
-            # Hide unused subplots
-            for i in range(n_params, len(axes_flat)):
-                axes_flat[i].set_visible(False)
-            
-            plt.tight_layout(pad=2.0)
-            
-            # Save with category name
-            safe_category = category.replace(' ', '_').lower()
-            plt.savefig(os.path.join(output_folder, f'param_fits_{safe_category}.png'), 
-                    dpi=300, bbox_inches='tight')
-            plt.close()
-
-    def _plot_parameter_comparison(self, ax, param, samples):
+    def _plot_parameter_comparison(self, ax, param, samples, original_data):
         """Plot comparison for a single parameter"""
-        orig_data = self.numeric_data[param].dropna()
+        orig_data = original_data[param].dropna()
         samp_data = samples[param].dropna()
         
         # Determine appropriate number of bins
@@ -511,9 +539,9 @@ class PhylogeneticParameterFitter:
         
         # Create histograms with better styling
         ax.hist(orig_data, bins=n_bins, alpha=0.6, 
-            label='Original', density=True, color='skyblue', edgecolor='black')
+               label='Original', density=True, color='skyblue', edgecolor='black')
         ax.hist(samp_data, bins=n_bins, alpha=0.6, 
-            label='Sampled', density=True, color='orange', edgecolor='black')
+               label='Sampled', density=True, color='orange', edgecolor='black')
         
         # Improve titles and labels
         clean_param_name = param.replace('_', ' ').title()
@@ -529,95 +557,72 @@ class PhylogeneticParameterFitter:
         
         stats_text = f'Orig: μ={orig_mean:.3f}, σ={orig_std:.3f}\nSamp: μ={samp_mean:.3f}, σ={samp_std:.3f}'
         ax.text(0.02, 0.98, stats_text, transform=ax.transAxes, 
-            verticalalignment='top', fontsize=8, 
-            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+               verticalalignment='top', fontsize=8, 
+               bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
-    def _create_summary_stats_plot(self, output_folder, available_params, samples):
-        """Create a summary statistics comparison plot"""
+    def _create_bd_models_summary_plot(self, output_folder, all_validation_results):
+        """Create summary comparison across all BD models"""
+        fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+        fig.suptitle('BD Models Summary Comparison', fontsize=16, fontweight='bold')
         
-        # Calculate summary statistics
-        stats_data = []
-        for param in available_params:
-            orig_data = self.numeric_data[param].dropna()
-            samp_data = samples[param].dropna()
-            
-            # KS test for distribution comparison
-            ks_stat, ks_pvalue = kstest(samp_data, lambda x: stats.percentileofscore(orig_data, x)/100)
-            
-            stats_data.append({
-                'Parameter': param.replace('_', ' ').title(),
-                'Original_Mean': np.mean(orig_data),
-                'Sampled_Mean': np.mean(samp_data),
-                'Original_Std': np.std(orig_data),
-                'Sampled_Std': np.std(samp_data),
-                'KS_Statistic': ks_stat,
-                'KS_P_Value': ks_pvalue
-            })
+        # Model sample counts
+        model_counts = {model: len(samples) for model, samples in all_validation_results.items()}
+        ax1 = axes[0, 0]
+        bars = ax1.bar(range(len(model_counts)), list(model_counts.values()))
+        ax1.set_xlabel('BD Model')
+        ax1.set_ylabel('Training Samples')
+        ax1.set_title('Training Sample Counts by BD Model')
+        ax1.set_xticks(range(len(model_counts)))
+        ax1.set_xticklabels([model.replace('best_', '') for model in model_counts.keys()], 
+                           rotation=45, ha='right')
         
-        stats_df = pd.DataFrame(stats_data)
+        # Parameter coverage comparison
+        ax2 = axes[0, 1]
+        param_coverage = {}
+        for model, samples in all_validation_results.items():
+            param_coverage[model] = len(samples.columns)
         
-        # Create comparison plots
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
+        bars = ax2.bar(range(len(param_coverage)), list(param_coverage.values()))
+        ax2.set_xlabel('BD Model')
+        ax2.set_ylabel('Number of Parameters')
+        ax2.set_title('Parameter Coverage by BD Model')
+        ax2.set_xticks(range(len(param_coverage)))
+        ax2.set_xticklabels([model.replace('best_', '') for model in param_coverage.keys()], 
+                           rotation=45, ha='right')
         
-        # Mean comparison
-        ax1.scatter(stats_df['Original_Mean'], stats_df['Sampled_Mean'], alpha=0.7)
-        ax1.plot([stats_df['Original_Mean'].min(), stats_df['Original_Mean'].max()], 
-                [stats_df['Original_Mean'].min(), stats_df['Original_Mean'].max()], 
-                'r--', alpha=0.8)
-        ax1.set_xlabel('Original Mean')
-        ax1.set_ylabel('Sampled Mean')
-        ax1.set_title('Mean Comparison')
-        ax1.grid(True, alpha=0.3)
+        # Model probabilities
+        ax3 = axes[1, 0]
+        if self.bd_model_probs:
+            models = list(self.bd_model_probs.keys())
+            probs = list(self.bd_model_probs.values())
+            bars = ax3.bar(range(len(models)), probs)
+            ax3.set_xlabel('BD Model')
+            ax3.set_ylabel('Probability')
+            ax3.set_title('BD Model Selection Probabilities')
+            ax3.set_xticks(range(len(models)))
+            ax3.set_xticklabels([model.replace('best_', '') for model in models], 
+                               rotation=45, ha='right')
         
-        # Std comparison
-        ax2.scatter(stats_df['Original_Std'], stats_df['Sampled_Std'], alpha=0.7)
-        ax2.plot([stats_df['Original_Std'].min(), stats_df['Original_Std'].max()], 
-                [stats_df['Original_Std'].min(), stats_df['Original_Std'].max()], 
-                'r--', alpha=0.8)
-        ax2.set_xlabel('Original Std')
-        ax2.set_ylabel('Sampled Std')
-        ax2.set_title('Standard Deviation Comparison')
-        ax2.grid(True, alpha=0.3)
+        # Parameter distribution comparison (example with one key parameter)
+        ax4 = axes[1, 1]
+        key_param = 'n_sequences_tips'  # Choose a parameter that should be in all models
         
-        # KS statistics
-        bars = ax3.bar(range(len(stats_df)), stats_df['KS_Statistic'])
-        ax3.set_xlabel('Parameter Index')
-        ax3.set_ylabel('KS Statistic')
-        ax3.set_title('Kolmogorov-Smirnov Test Statistics')
-        ax3.set_xticks(range(len(stats_df)))
-        ax3.set_xticklabels([p[:10] + '...' if len(p) > 10 else p 
-                            for p in stats_df['Parameter']], rotation=45)
+        for model, samples in all_validation_results.items():
+            if key_param in samples.columns:
+                ax4.hist(samples[key_param], alpha=0.5, label=model.replace('best_', ''), 
+                        density=True, bins=20)
         
-        # Color bars by p-value
-        for i, (bar, pval) in enumerate(zip(bars, stats_df['KS_P_Value'])):
-            if pval < 0.01:
-                bar.set_color('red')
-            elif pval < 0.05:
-                bar.set_color('orange')
-            else:
-                bar.set_color('green')
-        
-        # P-values
-        ax4.bar(range(len(stats_df)), -np.log10(stats_df['KS_P_Value'] + 1e-10))
-        ax4.set_xlabel('Parameter Index')
-        ax4.set_ylabel('-log10(p-value)')
-        ax4.set_title('KS Test P-Values (-log10 scale)')
-        ax4.axhline(y=-np.log10(0.05), color='r', linestyle='--', alpha=0.7, label='p=0.05')
-        ax4.set_xticks(range(len(stats_df)))
-        ax4.set_xticklabels([p[:10] + '...' if len(p) > 10 else p 
-                            for p in stats_df['Parameter']], rotation=45)
-        ax4.legend()
+        ax4.set_xlabel(key_param.replace('_', ' ').title())
+        ax4.set_ylabel('Density')
+        ax4.set_title(f'{key_param.replace("_", " ").title()} Distribution by BD Model')
+        ax4.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
         
         plt.tight_layout()
-        plt.savefig(os.path.join(output_folder, 'param_fits_summary.png'), 
-                dpi=300, bbox_inches='tight')
+        plt.savefig(os.path.join(output_folder, 'bd_models_summary.png'), 
+                   dpi=300, bbox_inches='tight')
         plt.close()
-        
-        # Save statistics to CSV
-        stats_df.to_csv(os.path.join(output_folder, 'fit_validation_stats.csv'), index=False)
-        print(f"Validation statistics saved to {output_folder}/fit_validation_stats.csv")
     
-    def export_for_simulation(self, param_group='key_parameters', n_samples=100):
+    def export_for_simulation(self, param_group='core_parameters', n_samples=100):
         """Export parameters in format suitable for indel-seq-gen"""
         samples = self.sample_parameters(n_samples, param_group)
         
@@ -646,69 +651,52 @@ class PhylogeneticParameterFitter:
             if col in ['n_sequences_tips', 'alignment_length']:
                 export_data[col] = export_data[col].astype(int)
             
-            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 'mean_deletion_length', 'normalized_colless_index', 'best_BD_speciation_alpha', 'best_BD_extinction_alpha']:
+            if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 
+                      'mean_deletion_length', 'normalized_colless_index', 'best_BD_speciation_alpha', 
+                      'best_BD_extinction_alpha']:
                 export_data[col] = np.maximum(export_data[col], 0)
+        
+        # Create one-hot encoding from bd_model column
+        if 'bd_model' in export_data.columns:
+            # Create one-hot columns for each BD model
+            bd_models = export_data['bd_model'].unique()
+            for bd_model in bd_models:
+                export_data[bd_model] = (export_data['bd_model'] == bd_model).astype(int)
             
-        one_hot_cols = [c for c in export_data.columns if c.startswith('best_B') and not c.startswith('best_BD')]
-        max_idx = export_data[one_hot_cols].idxmax(axis=1)
-        export_data[one_hot_cols] = 0
+            # Remove the original bd_model column
+            export_data = export_data.drop(columns=['bd_model'])
         
-        for i, colname in enumerate(max_idx):
-            export_data.at[i, colname] = 1
-
-        export_data = self.enforce_onehot_constraint(export_data)
-        export_data['indel_rate'] = export_data['insertion_rate'] + export_data['deletion_rate']
+        # Calculate indel_rate
+        if 'insertion_rate' in export_data.columns and 'deletion_rate' in export_data.columns:
+            export_data['indel_rate'] = export_data['insertion_rate'] + export_data['deletion_rate']
         
-        return export_data
-    
-    
-    def enforce_onehot_constraint(self, export_data):
-        """Ensure exactly one birth-death model is selected per row"""
-        one_hot_cols = [c for c in export_data.columns if c.startswith('best_B') and not c.startswith('best_BD')]
-        
-        if not one_hot_cols:
-            return export_data
-        
-        # Get model probabilities from training data
-        original_probs = self.numeric_data[one_hot_cols].mean()
-        
-        for idx in export_data.index:
-            row_values = export_data.loc[idx, one_hot_cols]
-            
-            if isinstance(row_values, pd.Series):
-                if row_values.sum() == 0:
-                    # All zeros - sample according to original distribution
-                    chosen_model = np.random.choice(one_hot_cols, p=original_probs.values)
-                    export_data.loc[idx, one_hot_cols] = 0
-                    export_data.loc[idx, chosen_model] = 1
-                elif row_values.sum() != 1:
-                    # Multiple selections or non-binary values - use softmax
-                    probabilities = np.exp(row_values) / np.sum(np.exp(row_values))
-                    chosen_model = np.random.choice(one_hot_cols, p=probabilities)
-                    export_data.loc[idx, one_hot_cols] = 0
-                    export_data.loc[idx, chosen_model] = 1
-            
         return export_data
     
     def plot_parameter_correlations(self, output_folder):
-        """Plot correlation matrix of parameters"""
-        # Focus on most relevant parameters
-        key_params = []
-        for group in self.parameter_groups.values():
-            key_params.extend([p for p in group if p in self.numeric_data.columns])
-        
-        if len(key_params) > 20:  # Limit to avoid overcrowding
-            key_params = key_params[:20]
-        
-        corr_data = self.numeric_data[key_params].corr()
-        
-        plt.figure(figsize=(12, 10))
-        sns.heatmap(corr_data, annot=True, cmap='coolwarm', center=0,
-                   square=True, fmt='.2f')
-        plt.title('Parameter Correlation Matrix')
-        plt.tight_layout()
-        plt.savefig(os.path.join(output_folder, 'parameter_correlations.png'), dpi = 300)
-        plt.close()
+        """Plot correlation matrix of parameters for each BD model"""
+        for bd_model, numeric_data in self.bd_numeric_data.items():
+            # Focus on most relevant parameters
+            key_params = []
+            for group in self.parameter_groups.values():
+                key_params.extend([p for p in group if p in numeric_data.columns])
+            
+            if len(key_params) > 20:  # Limit to avoid overcrowding
+                key_params = key_params[:20]
+            
+            if len(key_params) < 2:
+                continue
+            
+            corr_data = numeric_data[key_params].corr()
+            
+            plt.figure(figsize=(12, 10))
+            sns.heatmap(corr_data, annot=True, cmap='coolwarm', center=0,
+                       square=True, fmt='.2f')
+            plt.title(f'Parameter Correlation Matrix: {bd_model}')
+            plt.tight_layout()
+            
+            safe_bd_model = bd_model.replace('_', '-').lower()
+            plt.savefig(os.path.join(output_folder, f'correlations_{safe_bd_model}.png'), dpi=300)
+            plt.close()
 
 def main():
     print("Starting parameter fitting workflow...")
@@ -730,13 +718,15 @@ def main():
         print(f"Creating output folder: {output_folder}")
         os.makedirs(output_folder)
     
-    parameter_group = 'key_parameters'
-    print(f'Loaded model: {model_path}')
+    parameter_group = 'core_parameters'
+    
     if parameter_file != 'none':
         if not os.path.exists(parameter_file):
             print(f"Error: Parameter file '{parameter_file}' does not exist.")
             sys.exit(1)
             
+        print(f'Loading parameter file: {parameter_file}')
+        
         #Initialize the fitter with the parameter file
         fitter = PhylogeneticParameterFitter(parameter_file)
         
@@ -744,27 +734,34 @@ def main():
         print("Preprocessing data...")
         fitter.preprocess_data()
         
-        # Plot correlations
-        print("Plotting parameter correlations...")
+        # Plot correlations for each BD model
+        print("Plotting parameter correlations for each BD model...")
         fitter.plot_parameter_correlations(output_folder)
         
-        # Fit marginal distributions
-        print("Fitting marginal distributions...")
+        # Fit marginal distributions for each BD model
+        print("Fitting marginal distributions for each BD model...")
         fitter.fit_marginal_distributions()
         
-        # Fit joint distribution for amino acid frequencies
-        #print("Fitting joint distribution for amino acid frequencies...")
+        # Fit joint distribution for each BD model
+        print("Fitting joint distributions for each BD model...")
         fitter.fit_joint_distribution_copula(parameter_group)
         
-        # Validate fit
-        print("Validating fit...")
+        # Validate fit for each BD model
+        print("Validating fits for each BD model...")
         fitter.validate_fit(output_folder, parameter_group)
         
-        with open(os.path.join(output_folder, 'model.pkl'), 'wb') as f:
+        # Save the complete fitter object
+        with open(os.path.join(output_folder, 'bd_models.pkl'), 'wb') as f:
             pickle.dump(fitter, f, pickle.HIGHEST_PROTOCOL)
-        print(f"Joint distributions saved to {output_folder}/model.pkl")
+        print(f"BD models saved to {output_folder}/bd_models.pkl")
         
     elif model_path != 'none':
+        if not os.path.exists(model_path):
+            print(f"Error: Model file '{model_path}' does not exist.")
+            sys.exit(1)
+            
+        print(f'Loading model: {model_path}')
+        
         with open(model_path, 'rb') as f:
             fitter = pickle.load(f)
     
@@ -777,10 +774,24 @@ def main():
             print("First few parameter sets:")
             print(simulation_params.head())
             
+            # Show BD model distribution in the exported parameters
+            bd_cols = [col for col in simulation_params.columns if col.startswith('best_B') and not col.startswith('best_BD')]
+            if bd_cols:
+                print("\nBD model distribution in exported parameters:")
+                for bd_col in bd_cols:
+                    count = simulation_params[bd_col].sum()
+                    if count > 0:
+                        print(f"  {bd_col}: {count} ({count/len(simulation_params)*100:.1f}%)")
+            
             # Save to CSV
             simulation_params.to_csv(os.path.join(output_folder, 'simulated_phylo_parameters.csv'), index=False)
             print(f"Parameters saved to '{os.path.join(output_folder, 'simulated_phylo_parameters.csv')}'")
-    
+            
+            # Create a summary of the exported parameters
+            summary_stats = simulation_params.describe()
+            summary_stats.to_csv(os.path.join(output_folder, 'parameter_summary_stats.csv'))
+            print(f"Parameter summary statistics saved to '{os.path.join(output_folder, 'parameter_summary_stats.csv')}'")
+
 
 if __name__ == "__main__":
     main()
@@ -794,6 +805,8 @@ if __name__ == "__main__":
     print("new_params = fitter.sample_parameters(n_samples=10)")
     print("print(new_params)")
     print("\n# Export for indel-seq-gen:")
-    print("indel_params = fitter.export_for_simulation('indel_parameters', n_samples=10)")
+    print("indel_params = fitter.export_for_simulation('core_parameters', n_samples=10)")
     print("print(indel_params)")
+    print("\n# The exported parameters will include BD model indicators as one-hot encoded columns")
+    print("# Each row will have exactly one BD model set to 1, others set to 0")
     '''
