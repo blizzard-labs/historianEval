@@ -293,13 +293,13 @@ def main():
     print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_top_params() 
     print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}============================')
-    '''
+    
     mc.cleanup_params(mc.params_wr_file)
     print(f'Cleaned up tables- ELAPSED TIME: {time.time() - start}============================')
-    
+    '''
     mc.generate_model(mc.params_wc_file)
     print(f'Generated model- ELAPSED TIME: {time.time() - start}============================')
-    mc.sample_model(n_samples=200)
+    mc.sample_model(n_samples=500)
     print(f'Sampled from model- ELAPSED TIME: {time.time() - start}============================')
     
     print('COMPLEETTEEEETETETETE!!!!')
