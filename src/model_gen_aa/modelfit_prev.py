@@ -106,12 +106,6 @@ class PhylogeneticParameterFitter:
                 p = self.numeric_data[param].clip(1e-10, 1-1e-10)
                 self.numeric_data[param + '_logit'] = np.log(p / (1 - p))
         
-        #Store transformation info for bias correction
-        self.transformations = {
-            'log_params' : [p for p in rate_params if p in self.numeric_data.columns],
-            'logit_params' : [p for p in prop_params if p in self.numeric_data.columns]
-        }
-        
         print(f"Preprocessed data shape: {self.numeric_data.shape}")
         return self.numeric_data
     
@@ -241,8 +235,7 @@ class PhylogeneticParameterFitter:
         return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, n_std=1.5,
-                                               bias_correction=True):
+                                               min_n_sequences_tips=20, n_std=1.5):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
         Excludes certain parameters from bounds constraints (best_B* model selection parameters)
@@ -256,15 +249,6 @@ class PhylogeneticParameterFitter:
         
         params = self.parameter_groups[param_group]
         available_params = [p for p in params if p in self.numeric_data.columns]
-        
-        bias_corrections = {}
-        if bias_correction and hasattr(self, 'transformations'):
-            for param in self.transformations.get('log_params', []):
-                if param in self.numeric_data.columns:
-                    original_mean = self.numeric_data[param].mean()
-                    log_values = np.log(self.numeric_data[param] + 1e-10)
-                    naive_back_transform = np.exp(log_values.mean())
-                    bias_corrections[param] = original_mean / naive_back_transform
         
         # Define parameters to exclude from bounds constraints (model selection indicators)
         unrestricted_params = {
@@ -342,14 +326,6 @@ class PhylogeneticParameterFitter:
         
         if accepted_samples:
             result = pd.DataFrame(accepted_samples)
-            
-            print("Applying bias correction to log-transformed parameters")
-            for param, correction_factor in bias_corrections.items():
-                if param + '_log' in result.columns:
-                    #Apply correction in log space
-                    result[param+'_log'] += np.log(correction_factor)
-                    print(f"    {param}: correction factor = {correction_factor:.3f}")
-            
             acceptance_rate = len(accepted_samples) / total_attempts * 100
             print(f"Generated {len(result)} samples with {acceptance_rate:.1f}% acceptance rate")
             print(f"Samples constrained to within {n_std} standard deviation(s) for {len(restricted_params)} parameters")
