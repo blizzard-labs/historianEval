@@ -241,7 +241,7 @@ class PhylogeneticParameterFitter:
         return self.joint_model
     
     def sample_parameters(self, n_samples=100, param_group='key_parameters', 
-                                               min_n_sequences_tips=20, n_std=1.5,
+                                               min_n_sequences_tips=20, q_scale=70,
                                                bias_correction=True):
         """
         Enhanced rejection sampling with parameter-specific bounds and replacement strategy
@@ -249,6 +249,7 @@ class PhylogeneticParameterFitter:
         
         Parameters:
         - n_std: Number of standard deviations to use as bounds (default 1.5)
+        - q_scale: Range of intermediate values (i.e. middle 60% of data)
         """
         if self.joint_model is None:
             print("No joint model fitted. Please fit a joint distribution first.")
@@ -283,17 +284,25 @@ class PhylogeneticParameterFitter:
                 continue  # Skip bounds calculation for unrestricted parameters
                 
             data = self.numeric_data[param].dropna()
-            mean = np.mean(data)
-            std = np.std(data)
+            
+            #Remove outliers
+            q1 = np.percentile(data, 25)
+            q3 = np.percentile(data, 75)
+            lower_bound = q1 - 1.5 * (q3 - q1)
+            upper_bound = q3 + 1.5 * (q3 - q1)
+            
+            filtered_data = data[(data >= lower_bound) & (data <= upper_bound)]
+            
+            median = np.percentile(filtered_data, 50), 
+            
             param_bounds[param] = {
-                'mean': mean,
-                'std': std,
-                'lower': mean - n_std * std,
-                'upper': mean + n_std * std
+                'median': median,
+                'lower': np.percentile(filtered_data, 50 - q_scale/2),
+                'upper': np.percentile(filtered_data, 50 + q_scale/2)
             }
             restricted_params.append(param)
         
-        print(f"Applying {n_std}-std bounds to {len(restricted_params)} parameters")
+        print(f"Applying {q_scale} scaled-quartile bounds to {len(restricted_params)} parameters")
         print(f"Unrestricted parameters: {[p for p in available_params if p in unrestricted_params]}")
         
         # Generate samples in batches with rejection sampling
@@ -320,7 +329,6 @@ class PhylogeneticParameterFitter:
                 sample = batch_samples.iloc[idx]
                 accept_sample = True
                 
-                '''
                 # Check bounds only for restricted parameters
                 for param in restricted_params:
                     if param in sample.index:
@@ -328,8 +336,6 @@ class PhylogeneticParameterFitter:
                         if not (param_bounds[param]['lower'] <= value <= param_bounds[param]['upper']):
                             accept_sample = False
                             break
-                '''
-                
                 
                 # Additional constraint for n_sequences_tips
                 if (accept_sample and 'n_sequences_tips' in sample.index and 
