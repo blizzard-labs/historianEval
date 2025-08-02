@@ -373,7 +373,7 @@ class PhylogeneticParameterFitter:
                 restricted_params.append(param)
             
             # Generate samples with rejection sampling
-            max_attempts = 50000
+            max_attempts = 10000
             attempts = 0
             
             print('Beginning rejection sampling...')
