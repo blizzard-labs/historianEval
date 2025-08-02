@@ -320,6 +320,7 @@ class PhylogeneticParameterFitter:
                 sample = batch_samples.iloc[idx]
                 accept_sample = True
                 
+                '''
                 # Check bounds only for restricted parameters
                 for param in restricted_params:
                     if param in sample.index:
@@ -327,6 +328,8 @@ class PhylogeneticParameterFitter:
                         if not (param_bounds[param]['lower'] <= value <= param_bounds[param]['upper']):
                             accept_sample = False
                             break
+                '''
+                
                 
                 # Additional constraint for n_sequences_tips
                 if (accept_sample and 'n_sequences_tips' in sample.index and 

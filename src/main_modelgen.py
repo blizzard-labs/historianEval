@@ -286,12 +286,14 @@ def main():
     
     start = time.time()
     #*PFAM SOCP TYPES PIPELINE
+    '''
     mc.cleanup_pfam_data()
     print(f'Cleaned data- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_substitution_params()
     print(f'Extracted substitution params- ELAPSED TIME: {time.time() - start}============================')
     mc.extract_top_params() 
     print(f'Extracted topology parameters- ELAPSED TIME: {time.time() - start}============================')
+    '''
     mc.cleanup_params(mc.params_wr_file)
     print(f'Cleaned up tables- ELAPSED TIME: {time.time() - start}============================')
     
