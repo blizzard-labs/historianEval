@@ -112,7 +112,8 @@ class ProteinParameterExtractor:
                 "-t", "user",
                 "--utree", tree_file,
                 "-p", "6",
-                "-m", model
+                "-m", model,
+                "&"
             ]
         else:
             cmd = [
@@ -122,11 +123,12 @@ class ProteinParameterExtractor:
                 "-d", "aa",  # Specify amino acid data type
                 "-t", "ml",
                 "-p", "6",   # Number of threads 
-                "-m", model
+                "-m", model,
+                "&"
             ]
         
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=6000)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=180000)
             if result.returncode == 0:
                 return self.parse_modeltest_output(output_prefix)
             else:
