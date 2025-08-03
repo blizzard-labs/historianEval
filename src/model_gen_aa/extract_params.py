@@ -128,7 +128,7 @@ class ProteinParameterExtractor:
             ]
         
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=180000)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=6000)
             if result.returncode == 0:
                 return self.parse_modeltest_output(output_prefix)
             else:

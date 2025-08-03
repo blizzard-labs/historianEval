@@ -15,11 +15,12 @@ Metrics -----
 * Convergence (ESS, MCT)
 * Parameter Accuracy
 
-Experiment 1: 15 sequences / category (3 total): mamX_10k, mam21_10k, etc. etc.
+
+Experiment 1: 6 sequences / category (24 total): SCOP type 1/2/3/4 ... low indel (small, large), medium indel (small, large), high indel (small, large)
 * Constants: Fixed number of iterations, same substitution/indel models
 * DV: SP, TC, RF, RFL, Convergence, Wall-clock, parameter Accuracy
 
-Experiment 2: 5 sequences / category (3 total): 
+Experiment 2: 6 sequences / category (24 total): SCOP type 1/2/3/4 ... low indel (small, large), medium indel (small, large), high indel (small, large)
 * Constants: Convergence metric boundary, same substitution/indel models
 * DV: SP, TC, RF, RFL, Wall-clock, parameter Accuracy
 
