@@ -1,0 +1,2 @@
+n_sequences_tips,alignment_length,crown_age,gamma_shape,prop_invariant,insertion_rate,deletion_rate,mean_insertion_length,mean_deletion_length,normalized_colless_index,gamma,best_BD_speciation_rate,best_BD_extinction_rate,best_BD_speciation_alpha,best_BD_extinction_alpha,best_BLINDCST,best_BLINDLIN,indel_rate
+26,81,2.730346516841194,2.162415824317687,0.024594393650722888,0.3162267864940473,0.22479257290793928,3.1523689623732776,3.9714096189148465,0.24805915243340254,-4.404891791602495,2.78633236007736e-16,0.0005923904559047987,0.47104836702851327,0.0,1,0,0.5410193594019865

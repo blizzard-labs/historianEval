@@ -16,13 +16,42 @@ Metrics -----
 * Parameter Accuracy
 
 
-Experiment 1: 6 sequences / category (24 total): SCOP type 1/2/3/4 ... low indel (small, large), medium indel (small, large), high indel (small, large)
-* Constants: Fixed number of iterations, same substitution/indel models
-* DV: SP, TC, RF, RFL, Convergence, Wall-clock, parameter Accuracy
+Convergence: ESS has reached target of 200 means burn-in is over (how long ESS takes to reach 200)
+Mixing: ESS after X iterations/time
 
-Experiment 2: 6 sequences / category (24 total): SCOP type 1/2/3/4 ... low indel (small, large), medium indel (small, large), high indel (small, large)
-* Constants: Convergence metric boundary, same substitution/indel models
-* DV: SP, TC, RF, RFL, Wall-clock, parameter Accuracy
+Experiment 1: Testing convergence with fixed number of iterations (convergence/iteration)
+* IVs: Number of iterations (time plot)
+* DVs (at each iteration): ESS, 
+
+Experiment 2: Testing convergence with fixed amount of time (convergence/time)
+
+
+
+====== Experiment 1: Mixing and Convergence ======
+Experimental Set-up:
+    For each sequenence in (1 sequences/category ~ 4 sequences):
+        Run Historian/Baliphy for ______ iterations
+            * provide exact parameters and model
+        For each iteration (x):
+            Record current wall-clock time (y1)
+            Record to log (y2):
+                * Current parameter likelihood
+                * Current topology likelihood
+        
+        Measure time/iterations to Burn-in: parameter/topology (ESS == 200)
+        Measure ESS after _____ iterations: parameter/topology
+        Measure ESS after _____ time: parameter/topology
+
+
+====== Experiment 2: Accuracy and Parameter Recovery ======
+Experimental Set-up:
+    For each sequence in (5 sequences/category ~ 20 sequences):
+        Run Historian/Baliphy for _____ iterations
+            * provide model (not other parameters)
+            Measure wall-clock time
+
+        Calculate metrics: SP, TC, RF, RFL, Parameter Accuracy, etc.
+
 
 Output Statistics Tables (seq_1/results)----
 
