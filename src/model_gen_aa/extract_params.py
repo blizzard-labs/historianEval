@@ -112,9 +112,7 @@ class ProteinParameterExtractor:
                 "-t", "user",
                 "--utree", tree_file,
                 "-p", "6",
-                "-m", model,
-                "&"
-            ]
+                "-m", model            ]
         else:
             cmd = [
                 self.modeltest_path,
@@ -123,8 +121,7 @@ class ProteinParameterExtractor:
                 "-d", "aa",  # Specify amino acid data type
                 "-t", "ml",
                 "-p", "6",   # Number of threads 
-                "-m", model,
-                "&"
+                "-m", model
             ]
         
         try:
@@ -589,6 +586,7 @@ class ProteinParameterExtractor:
                 
             else:
                 print(f"  - Using fallback parameter estimation")
+                print(f'Model-test params: {modeltest_params}')
                 # Fallback to basic estimation
                 protein_params = self.estimate_protein_parameters(alignment)
                 if protein_params is None:
