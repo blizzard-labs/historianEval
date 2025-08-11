@@ -62,19 +62,19 @@ class BDTreeOptimizer:
             r0 = present_rate / (math.exp(max_time * alpha))
             
             for t in time_points:
-                rates.append(r0 * math.exp(t * alpha))
+                rates.append(max(0, r0 * math.exp(t * alpha)))
             
         elif function.lower() == 'lin':
             #r(t) = r0 + alpha * t ==> r0 = r(t) - alpha * t
             r0 = present_rate - alpha * max_time
             
             for t in time_points:
-                rates.append(r0 + alpha * t)
+                rates.append(max(0, r0 + alpha * t))
         
         return rates
             
        
-    def generate_bd_tree(self, max_time=10.0, max_attempts=5):
+    def generate_bd_tree(self, max_time=10.0, max_attempts=15):
         """
         Generate a birth-death tree based on the specified model.
         
@@ -82,11 +82,16 @@ class BDTreeOptimizer:
             DendroPy Tree object
         """
         
+        max_time = self.crown_age
+        
         success = False
         
         while not success and (max_attempts > 0):
             birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[1:4], self.birth_alpha, max_time=max_time)
             death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
+            
+            print(birth_rates)
+            print(death_rates)
             
             assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
             
@@ -204,6 +209,79 @@ class BDTreeOptimizer:
             Euclidean distance
         """
         return np.linalg.norm(tree_stats - self.target_vector)
+    
+    def _perform_nni_operation(self, tree: dendropy.Tree) -> dendropy.Tree:
+        """
+        Perform a single NNI operation on the tree.
+        
+        NNI (Nearest Neighbor Interchange) swaps two subtrees around an internal edge.
+        For an internal edge connecting nodes A and B, where A has children A1, A2 and 
+        B has children B1, B2, we can swap A2 with B1 or A2 with B2.
+        
+        Args:
+            tree: Input tree to modify
+            
+        Returns:
+            Modified tree after NNI operation
+        """
+        tree_copy = tree.clone()
+        
+        # Get all internal edges (edges connecting two internal nodes)
+        internal_edges = []
+        for node in tree_copy.preorder_node_iter():
+            if (not node.is_leaf() and 
+                node.parent_node is not None and 
+                not node.parent_node.is_leaf()):
+                internal_edges.append(node)
+        
+        if len(internal_edges) < 1:
+            return tree_copy  # Can't perform NNI on tree with no internal edges
+        
+        # Select a random internal edge
+        selected_node = random.choice(internal_edges)
+        parent_node = selected_node.parent_node
+        
+        # Get children of both nodes
+        selected_children = list(selected_node.child_nodes())
+        parent_children = list(parent_node.child_nodes())
+        
+        # We need exactly 2 children for each node to perform NNI
+        if len(selected_children) != 2 or len(parent_children) != 2:
+            return tree_copy  # Can't perform NNI on non-binary nodes
+        
+        # Find the child of parent that is not the selected node
+        other_parent_child = None
+        for child in parent_children:
+            if child != selected_node:
+                other_parent_child = child
+                break
+        
+        if other_parent_child is None:
+            return tree_copy  # Error in tree structure
+        
+        # Perform NNI operation
+        try:
+            # Randomly choose which child of selected_node to swap
+            child_to_swap = random.choice(selected_children)
+            
+            # Remove the child from selected_node
+            selected_node.remove_child(child_to_swap)
+            
+            # Remove other_parent_child from parent_node
+            parent_node.remove_child(other_parent_child)
+            
+            # Add other_parent_child to selected_node
+            selected_node.add_child(other_parent_child)
+            
+            # Add child_to_swap to parent_node
+            parent_node.add_child(child_to_swap)
+            
+        except Exception as e:
+            print(f"Warning: NNI operation failed: {e}")
+            return tree_copy
+        
+        return tree_copy
+    
     
     def perform_spr_move(self, tree: dendropy.Tree) -> dendropy.Tree:
         """
@@ -335,6 +413,7 @@ class BDTreeOptimizer:
         """
         # Generate initial tree
         self.current_tree = self.generate_bd_tree()
+        print('Initial tree: ', self.current_tree._as_newick_string())
         if self.current_tree is None:
             print('Simulated annealing failed: Initial tree could not be generated')
             sys.exit()
@@ -356,7 +435,7 @@ class BDTreeOptimizer:
         
         while temperature > min_temp and iteration < max_iterations:
             # Generate neighbor through SPR move
-            neighbor_tree = self.perform_spr_move(self.current_tree)
+            neighbor_tree = self._perform_nni_operation(self.current_tree)
             neighbor_stats = self.calculate_tree_statistics(neighbor_tree)
             neighbor_distance = self.calculate_distance(neighbor_stats)
             
@@ -386,6 +465,7 @@ class BDTreeOptimizer:
                       f"current_dist={current_distance:.6f}, best_dist={self.best_distance:.6f}")
         
         print(f"\nOptimization completed!")
+        print('Final tree: ', self.current_tree._as_newick_string())
         print(f"Final best distance: {self.best_distance:.6f}")
         print(f"Final best stats: {self.calculate_tree_statistics(self.best_tree)}")
         print(f"Target vector: {self.target_vector}")
@@ -410,6 +490,7 @@ def main():
     parser.add_argument("--target_gamma", type=float, default=0.0,
                        help="Target gamma statistic")
     parser.add_argument("--num_taxa", type=int, default=20, help="Number of taxa in the tree")
+    parser.add_argument("--crown_age", type=float, default = 10, help="Crown age of tree")
     parser.add_argument("--initial_temp", type=float, default=1.0, help="Initial temperature")
     parser.add_argument("--cooling_rate", type=float, default=0.95, help="Cooling rate")
     parser.add_argument("--max_iterations", type=int, default=1000, help="Maximum iterations")
@@ -426,7 +507,8 @@ def main():
         death_alpha=args.death_alpha,
         target_colless=args.target_colless,
         target_gamma=args.target_gamma,
-        num_taxa=args.num_taxa
+        num_taxa=args.num_taxa,
+        crown_age=args.crown_age
     )
     
     # Run optimization

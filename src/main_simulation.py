@@ -61,6 +61,7 @@ class evolSimulator:
                     "--target_colless", str(row['normalized_colless_index']),
                     "--target_gamma", str(row['gamma']),
                     "--num_taxa", str(row['n_sequences_tips']),
+                    "--crown_age", str(row['crown_age']),
                     "--max_iterations", str(max_iterations),
                     "--output", os.path.join(seq_folder, 'guide.tree')
                 ]
@@ -197,10 +198,10 @@ class evolSimulator:
                 f.write(f'   [deletemodel] NB {del_q_val} 1\n')
                 f.write(f'   [insertrate] {insert_rate}\n')
                 f.write(f'   [deleterate] {delete_rate}\n\n')
-                f.write(f'[TREE] treename ', mcontent, '\n')
+                f.write('[TREE] treename '+ mcontent+'\n')
                 f.write(f'[PARTITIONS] partitionname\n')
                 f.write(f'  [treename modelname {seq_length}]\n\n')
-                f.write(f'[EVOLVE] partitionname 1 simulated')
+                f.write(f'[EVOLVE] partitionname 1 simulated  ')
                 
         else:
             #Write the IDL strings to files
@@ -359,6 +360,8 @@ def main():
     print(f'Generated tree topologies- ELAPSED TIME: {time.time() - start}============================')
     es.runIndelible()
     print(f'Ran Indelible- ELAPSED TIME: {time.time() - start}============================')
+    
+    print('COMPLEETTEEEETETETETE!!!!')
     
 
 if __name__ == '__main__':

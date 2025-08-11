@@ -11,6 +11,7 @@ sequence simulation with indel-seq-gen.
 import os
 import sys
 import pickle
+import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -301,6 +302,37 @@ class PhylogeneticParameterFitter:
         probs = list(self.bd_model_probs.values())
         return np.random.choice(models, p=probs)
     
+    def generate_pop_string(self, b_rate_string, d_rate_string, num_increments, initial_pop):
+        pops = [initial_pop]
+        
+        for i in range(num_increments):
+            pops.append(int((b_rate_string[i] - d_rate_string[i]) * pops[i]))
+        
+        return pops
+    
+    def generate_rate_strings(self, present_rate, function, alpha, max_time=1, num_intervals=5):
+        time_points = np.linspace(0, max_time, num_intervals)
+        rates = []
+        
+        if function.lower() == 'cst':
+            rates = [present_rate]*num_intervals
+            
+        elif function.lower() == 'exp':
+            #r(t) = r0 * exp(t * alpha) ==> r0 = r(t) / (exp(t * alpha))
+            r0 = present_rate / (math.exp(max_time * alpha))
+            
+            for t in time_points:
+                rates.append(max(0, r0 * math.exp(t * alpha)))
+            
+        elif function.lower() == 'lin':
+            #r(t) = r0 + alpha * t ==> r0 = r(t) - alpha * t
+            r0 = present_rate - alpha * max_time
+            
+            for t in time_points:
+                rates.append(max(0, r0 + alpha * t))
+        
+        return rates
+    
     def sample_parameters(self, n_samples=100, param_group='core_parameters',
                          min_n_sequences_tips=20, max_n_sequences_tips=100,
                          q_scale=100, bias_correction=True):
@@ -412,6 +444,30 @@ class PhylogeneticParameterFitter:
                      sample['n_sequences_tips'] >= max_n_sequences_tips)):
                     accept_sample = False
                 
+                # Additional constraint for non-extinct trees #!New feature... not yet tested!!!
+                
+                if accept_sample: #TODO: Add to if statement... check if each parameter of sample exists within sample.index
+                    best_model = None
+                    for col in sample.index:
+                        if (col.startswith('best_B') and not col.startswith('best_BD')) and sample[col] == 1:
+                            best_model = col.replace('best_', '')
+                            break
+                    
+                    birth_rates = self.generate_rate_strings(sample['best_BD_speciation_rate'], best_model[1:4], sample['best_BD_speciation_alpha'], max_time=sample['crown_age'])
+                    death_rates = self.generate_rate_strings(sample['best_BD_extinction_rate'], best_model[5:], sample['best_BD_extinction_alpha'], max_time=sample['crown_age'])
+                    
+                    if birth_rates[0] < death_rates[0]:
+                        accept_sample = False
+                    '''
+                    #Population survives first two increments
+                    pop_string = self.generate_pop_string(birth_rates, death_rates, 2, sample['n_sequence_tips'])
+                    
+                    for pop in pop_string:
+                        if pop <= 0:
+                            accept_sample = False
+                    '''
+                    
+                                    
                 if accept_sample:
                     # Apply bias corrections
                     sample_dict = sample.to_dict()
