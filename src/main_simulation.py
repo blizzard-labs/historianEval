@@ -354,7 +354,7 @@ class evolSimulator:
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
-    def runSoftwareSequence(self, sequence_folder, iter_cap):
+    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=350):
         #Fixed number of iterations
         #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
         #Final Measure: SP, TC, RF, RFL, etc.
@@ -380,9 +380,18 @@ class evolSimulator:
             "-model", matrix_path,
             "-gamma", str(5),
             "-shape", str(key_params['gamma_shape']),
-            "-samples", str(iter_cap / n_seqs),
+            "-samples", str(iter_cap_per_seq),
             "-trace", os.path.join(sequence_folder, 'historian/trace.log'),
             "-v5"
+        ]
+        
+        #python historian_parser.py trace5.log parsed_trace.log --trees
+        historian_parser_cmd = [
+            "python",
+            "src/simulation/historian_parser.py",
+            os.path.join(sequence_folder, 'historian/trace.log'),
+            os.path.join(sequence_folder, 'historian/parsed_trace.log'),
+            "--trees"
         ]
         
         #bali-phy tools/testArena/seq_1/sequences.fasta -I "rs07(rate=0.1,mean_length=2)" -S lg08
@@ -391,7 +400,7 @@ class evolSimulator:
             'bali-phy',
             os.path.join(sequence_folder, 'sequences.fasta'),
             '-A', 'Amino-Acids',
-            '-i', str(iter_cap),
+            '-i', str(iter_cap_per_seq * n_seqs),
             '-n', os.path.join(sequence_folder, 'baliphy'),
             '-S', 'lg08 +> Rates.gamma(5, alpha=' + str(key_params['gamma_shape']) + ')' + #' +> inv(p_inv=' + str(key_params['prop_invariant']) + ')',
             '-I', '"rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')"'
@@ -414,6 +423,13 @@ class evolSimulator:
             print(f'Error running historian on {sequence_folder}: {e}')
         elapsed_h = start - time.time()
         
+        try:
+            print('Parsing historian trace...')
+            subprocess.run(historian_parser_cmd, check=True)
+            print(f'Historian trace parsed successfully on {sequence_folder}')
+        except subprocess.CalledProcessError as e:
+            print(f'Error parsing historian trace on {sequence_folder}: {e}')
+        
         start = time.time()
         try:
             print('Running baliphy...')
@@ -429,6 +445,27 @@ class evolSimulator:
         elapsed_b = start - time.time()
         
         return elapsed_h, elapsed_b
+
+    def runBenchmark(self, sequence_folders=[]):
+        if len(sequence_folders) == 0:
+            for folder in os.listdir('data/simulation'):
+                for seq_folder in os.listdir(os.path.join('data/simulation', folder)):
+                    if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
+                        sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))
+        
+        #Experiment String | Sequence Number | Number of Iterations | Wall-Clock Time | Time/Iteration | Burn-in Period | 
+        results = []
+        
+        for seq_folder in sequence_folders:
+            seq_results = {}
+            seq_results['path'] = seq_folder
+            
+            seq_results['elapsed_historian'], seq_results['elapsed_baliphy'] = self.runSoftwareSequence(seq_folder)
+            
+            results.append(seq_results)
+
+        return results
+            
 
 def main():
     print('Begun script...')
@@ -447,6 +484,7 @@ def main():
     start = time.time()
     #*PFAM SOCP TYPES PIPELINE
     
+    '''
     es.generate_treetop_with_params(max_iterations=1000)
     print(f'Generated tree topologies- ELAPSED TIME: {time.time() - start}============================')
     es.runIndelible()
@@ -454,6 +492,10 @@ def main():
     
     es.cleanupSimFolders()
     print(f'Cleaned up simulation folders- ELAPSED TIME: {time.time() - start}============================')
+    '''
+    
+    es.runBenchmark()
+    print(f'Ran benchmark- ELAPSED TIME: {time.time() - start}============================')
     
     print('COMPLEETTEEEETETETETE!!!!')
 
