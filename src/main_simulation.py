@@ -311,20 +311,21 @@ class evolSimulator:
         
         for line in contents.strip().split('\n'):
             parts = line.strip().split()
-
-            if parts[0] == '[rates]' and len(parts) == 4:
-                key_params['prop_invariant'] = float(parts[1])
-                key_params['gamma_shape'] = float(parts[2])
             
-            if parts[0] == '[insertrate]' and len(parts) == 2:
-                key_params['insertrate'] = float(parts[1])
-            if parts[0] == '[deleterate]' and len(parts) == 2:
-                key_params['deleterate'] = float(parts[1])
+            if parts:
+                if parts[0] == '[rates]' and len(parts) == 4:
+                    key_params['prop_invariant'] = float(parts[1])
+                    key_params['gamma_shape'] = float(parts[2])
+                
+                if parts[0] == '[insertrate]' and len(parts) == 2:
+                    key_params['insertrate'] = float(parts[1])
+                if parts[0] == '[deleterate]' and len(parts) == 2:
+                    key_params['deleterate'] = float(parts[1])
 
-            if parts[0] == '[insertmodel]' and len(parts) == 4:
-                key_params['insertext'] = 1 - float(parts[2])
-            if parts[0] == '[deletemodel]' and len(parts) == 4:
-                key_params['deleteext'] = 1 - float(parts[2])
+                if parts[0] == '[insertmodel]' and len(parts) == 4:
+                    key_params['insertext'] = 1 - float(parts[2])
+                if parts[0] == '[deletemodel]' and len(parts) == 4:
+                    key_params['deleteext'] = 1 - float(parts[2])
         
         with open(matrix_path, 'r') as f:
             matrix_contents = f.read()
@@ -339,18 +340,19 @@ class evolSimulator:
         key_params["indelext"] = 1 - 1/key_params['avg_length']
                 
         with open(os.path.join(sequence_folder, 'historian', 'lg.json'), 'w') as f:
-            for line in matrix_contents:
+            for line in matrix_contents.split('\n'):
                 parse_line = line.strip().split()
-                if "insrate" in parse_line[0] and len(parse_line) == 2:
-                    f.write(f'  "insrate": {key_params["indelrate"]},\n')
-                elif "delrate" in parse_line[0] and len(parse_line) == 2:
-                    f.write(f'  "delrate": {key_params["indelrate"]},\n')
-                elif "insextprob" in parse_line[0] and len(parse_line) == 2:
-                    f.write(f'  "insextprob": {key_params["indelext"]},\n')
-                elif "delextprob" in parse_line[0] and len(parse_line) == 2:
-                    f.write(f'  "delextprob": {key_params["indelext"]},\n')
-                else:
-                    f.write(line)
+                if parse_line:
+                    if "insrate" in parse_line[0] and len(parse_line) == 2:
+                        f.write(f'  "insrate": {key_params["indelrate"]},\n')
+                    elif "delrate" in parse_line[0] and len(parse_line) == 2:
+                        f.write(f'  "delrate": {key_params["indelrate"]},\n')
+                    elif "insextprob" in parse_line[0] and len(parse_line) == 2:
+                        f.write(f'  "insextprob": {key_params["indelext"]},\n')
+                    elif "delextprob" in parse_line[0] and len(parse_line) == 2:
+                        f.write(f'  "delextprob": {key_params["indelext"]},\n')
+                    else:
+                        f.write(line + '\n')
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
@@ -394,21 +396,23 @@ class evolSimulator:
             "--trees"
         ]
         
-        #bali-phy tools/testArena/seq_1/sequences.fasta -I "rs07(rate=0.1,mean_length=2)" -S lg08
+        # bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507)' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)"
         #Currently not including invariant sites to maintain consistency with historian
         baliphy_cmd = [
-            'bali-phy',
-            os.path.join(sequence_folder, 'sequences.fasta'),
-            '-A', 'Amino-Acids',
-            '-i', str(iter_cap_per_seq * n_seqs),
-            '-n', os.path.join(sequence_folder, 'baliphy'),
-            '-S', 'lg08 +> Rates.gamma(5, alpha=' + str(key_params['gamma_shape']) + ')' + #' +> inv(p_inv=' + str(key_params['prop_invariant']) + ')',
-            '-I', '"rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')"'
+            "bali-phy",
+            os.path.join(sequence_folder, "sequences.fasta"),
+            "-A", "Amino-Acids",
+            "-i", str(iter_cap_per_seq * n_seqs),
+            "-n", os.path.join(sequence_folder, "baliphy"),
+            "-S", "lg08 +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ")", #" +> inv(p_inv=" + str(key_params["prop_invariant"]) + ")",
+            '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
         
+        '''
         start = time.time()
         try:
             print('Running historian...')
+            print(historian_cmd)
             log_path = os.path.join(sequence_folder, 'historian', 'historian.log')
             with open(log_path, 'w') as log_f:
                 #subprocess.run(historian_cmd, check=True)
@@ -429,10 +433,13 @@ class evolSimulator:
             print(f'Historian trace parsed successfully on {sequence_folder}')
         except subprocess.CalledProcessError as e:
             print(f'Error parsing historian trace on {sequence_folder}: {e}')
+        '''
+        
         
         start = time.time()
         try:
             print('Running baliphy...')
+            print(' '.join(baliphy_cmd))
             log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
             with open(log_path, 'w') as log_f:
                 #subprocess.run(baliphy_cmd, check=True)
@@ -444,7 +451,8 @@ class evolSimulator:
             print(f'Error running Baliphy on {sequence_folder}: {e}')
         elapsed_b = start - time.time()
         
-        return elapsed_h, elapsed_b
+        #return elapsed_h, elapsed_b
+        return 0, elapsed_b
 
     def runBenchmark(self, sequence_folders=[]):
         if len(sequence_folders) == 0:
