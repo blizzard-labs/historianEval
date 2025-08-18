@@ -408,7 +408,7 @@ class evolSimulator:
             '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
         
-        '''
+        
         start = time.time()
         try:
             print('Running historian...')
@@ -433,7 +433,7 @@ class evolSimulator:
             print(f'Historian trace parsed successfully on {sequence_folder}')
         except subprocess.CalledProcessError as e:
             print(f'Error parsing historian trace on {sequence_folder}: {e}')
-        '''
+        
         
         
         start = time.time()
@@ -451,8 +451,8 @@ class evolSimulator:
             print(f'Error running Baliphy on {sequence_folder}: {e}')
         elapsed_b = start - time.time()
         
-        #return elapsed_h, elapsed_b
-        return 0, elapsed_b
+        return elapsed_h, elapsed_b
+
 
     def runBenchmark(self, sequence_folders=[]):
         if len(sequence_folders) == 0:
