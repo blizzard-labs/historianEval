@@ -74,7 +74,7 @@ class BDTreeOptimizer:
         return rates
             
        
-    def generate_bd_tree(self, max_time=10.0, max_attempts=15):
+    def generate_bd_tree(self, max_time=10.0, max_attempts=30):
         """
         Generate a birth-death tree based on the specified model.
         
@@ -90,8 +90,9 @@ class BDTreeOptimizer:
             birth_rates = self.generate_rate_strings(self.birth_rate, self.bd_model[1:4], self.birth_alpha, max_time=max_time)
             death_rates = self.generate_rate_strings(self.death_rate, self.bd_model[5:], self.death_alpha, max_time=max_time)
             
-            print(birth_rates)
-            print(death_rates)
+            print('Alpha val:', self.birth_alpha, ' ',self.death_alpha)
+            print('Birth rates: ', birth_rates)
+            print('Death rates: ',death_rates)
             
             assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
             

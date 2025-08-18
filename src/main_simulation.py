@@ -7,6 +7,7 @@ import pandas as pd
 import subprocess
 import random
 import time
+from Bio import SeqIO
 
 class evolSimulator:
     def __init__(self, parameters_file, consensus_tree_file="none", tag='none'):
@@ -71,8 +72,7 @@ class evolSimulator:
             except subprocess.CalledProcessError as e:
                 print(f'Error generating topology for sequence {idx+1}: {e}')
         print('Generated all guide tree topologies!')
-
-    
+        
     def generate_treetop_with_distance(self):
         try:
             cmd = [
@@ -171,23 +171,21 @@ class evolSimulator:
         
         #Modifying structure of the tree file to be compatible with indel-seq-gen
         mcontent = re.sub(r'\)\d+:', r'):', content)
-        #TODO: Add sequence length, indel dist to the tree file
         
         seq_length = self.params['alignment_length'].iloc[seq_num - 1]
-        #seq_length = random.randint(100, 250) #! Random sequence length for now... (stack overflows for large sequences)
         
         insert_rate = self.params['insertion_rate'].iloc[seq_num - 1]
         delete_rate = self.params['deletion_rate'].iloc[seq_num - 1]
         mean_insert_length = self.params['mean_insertion_length'].iloc[seq_num - 1]
         mean_delete_length = self.params['mean_deletion_length'].iloc[seq_num - 1]
         
-        max_gap = 20 #! Maximum gap length is set to 20, must be changed in the future
+        max_gap = 20 #! Maximum gap length is set to 20, can be changed in the future
         ins_idl, del_idl = self.generate_idl_strings(insert_rate, mean_insert_length, 
                                                     delete_rate, mean_delete_length,
                                                     max_length=max_gap, format=format) 
         
-        ins_q_val = 1 / (mean_insert_length + 1)
-        del_q_val = 1 / (mean_delete_length + 1)
+        ins_q_val = 1 / (mean_insert_length)
+        del_q_val = 1 / (mean_delete_length)
         
         if format == "indelible":
             with open(os.path.join(target_folder, n_name), 'w') as f:
@@ -275,32 +273,129 @@ class evolSimulator:
         
         print(f'Completed running indelible on all sequences')
         
-    def runSoftwareSequence(self, sequence_folder, iterations=1000):
-        if os.path.exists(os.path.join(sequence_folder, 'sim.seq')):
-            os.rename(os.path.join(sequence_folder, 'sim.seq'),
-                    os.path.join(sequence_folder, 'raw_seq.fasta'))
+    def cleanupSimFolders(self):
+        for seq in os.listdir(self.output_folder):
+            seq_folder = os.path.join(self.output_folder, seq)
+            if os.path.isdir(seq_folder):
+                os.makedirs(os.path.join(seq_folder, 'control_files'), exist_ok=True)
+                
+                # Move control files
+                os.rename(os.path.join(seq_folder, 'control.txt'), os.path.join(seq_folder, 'control.txt').replace('control.txt', 'control_files/control.txt'))
+                os.rename(os.path.join(seq_folder, 'LOG.txt'), os.path.join(seq_folder, 'LOG.txt').replace('LOG.txt', 'control_files/LOG.txt'))
+                
+                # Rename the raw sequence file
+                os.rename(os.path.join(seq_folder, 'simulated.fas'), os.path.join(seq_folder, 'sequences.fasta'))
+                
+                # Convert the simulated TRUE file to fasta format
+                records = SeqIO.parse(os.path.join(seq_folder, 'simulated_TRUE.phy'), 'phylip-relaxed')
+                SeqIO.write(records, os.path.join(seq_folder, 'alignment.fasta'), 'fasta')
+                os.rename(os.path.join(seq_folder, 'simulated_TRUE.phy'), os.path.join(seq_folder, 'simulated_TRUE.phy').replace('simulated_TRUE.phy', 'control_files/simulated_TRUE.phy'))
+                
+                # Extract the guide tree and save as a newick file
+                with open(os.path.join(seq_folder, 'trees.txt'), 'r') as f:
+                    tree_string = f.read().strip().split('\n')[-1].split()[-1].strip()
+                
+                with open(os.path.join(seq_folder, 'guide.tree'), 'w') as f:
+                    f.write(tree_string + '\n')
+                
+                # Move the guide tree to control files
+                os.rename(os.path.join(seq_folder, 'trees.txt'), os.path.join(seq_folder, 'trees.txt').replace('trees.txt', 'control_files/trees.txt'))
+                
+    
+    def configure_historian_control_file(self, sequence_folder, matrix_path="data/matrices/lg.json"):
+        indelible_control_path = os.path.join(sequence_folder, 'control_files/control.txt')
+        with open(indelible_control_path, 'r') as f:
+            contents = f.read()
+        
+        key_params = {}
+        
+        for line in contents.strip().split('\n'):
+            parts = line.strip().split()
+
+            if parts[0] == '[rates]' and len(parts) == 4:
+                key_params['prop_invariant'] = float(parts[1])
+                key_params['gamma_shape'] = float(parts[2])
+            
+            if parts[0] == '[insertrate]' and len(parts) == 2:
+                key_params['insertrate'] = float(parts[1])
+            if parts[0] == '[deleterate]' and len(parts) == 2:
+                key_params['deleterate'] = float(parts[1])
+
+            if parts[0] == '[insertmodel]' and len(parts) == 4:
+                key_params['insertext'] = 1 - float(parts[2])
+            if parts[0] == '[deletemodel]' and len(parts) == 4:
+                key_params['deleteext'] = 1 - float(parts[2])
+        
+        with open(matrix_path, 'r') as f:
+            matrix_contents = f.read()
+        
+        def tr(value):
+            return 1/(1 - value)
+        
+        #Calculate weighted average for indel extension
+        key_params['avg_length'] = (tr(key_params["insertext"]) * key_params['insertrate'] + tr(key_params["deleteext"]) * key_params['deleterate']) / (key_params["insertrate"] + key_params["deleterate"])
+        
+        key_params["indelrate"] = (key_params["insertrate"] + key_params["deleterate"]) / 2
+        key_params["indelext"] = 1 - 1/key_params['avg_length']
+                
+        with open(os.path.join(sequence_folder, 'historian', 'lg.json'), 'w') as f:
+            for line in matrix_contents:
+                parse_line = line.strip().split()
+                if "insrate" in parse_line[0] and len(parse_line) == 2:
+                    f.write(f'  "insrate": {key_params["indelrate"]},\n')
+                elif "delrate" in parse_line[0] and len(parse_line) == 2:
+                    f.write(f'  "delrate": {key_params["indelrate"]},\n')
+                elif "insextprob" in parse_line[0] and len(parse_line) == 2:
+                    f.write(f'  "insextprob": {key_params["indelext"]},\n')
+                elif "delextprob" in parse_line[0] and len(parse_line) == 2:
+                    f.write(f'  "delextprob": {key_params["indelext"]},\n')
+                else:
+                    f.write(line)
+        
+        return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
+        
+    def runSoftwareSequence(self, sequence_folder, iter_cap):
+        #Fixed number of iterations
+        #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
+        #Final Measure: SP, TC, RF, RFL, etc.
+        
+        #Fixed in sampling: LG08 Parameters,
         
         os.makedirs(os.path.join(sequence_folder, 'historian'), exist_ok=True)
         os.makedirs(os.path.join(sequence_folder, 'baliphy'), exist_ok=True)
         
-        #track wall-clock time, mcmc mixing
+        n_seqs = 0
+        for record in SeqIO.parse(os.path.join(sequence_folder, 'sequences.fasta'), 'fasta'):
+            n_seqs += 1
+        
+        key_params, matrix_path = self.configure_historian_control_file(sequence_folder)
+        
+        #./tools/historian reconstruct -seqs tools/testArena/seq_1/sequences.fasta -mcmc -model data/matrices/lg.json -gamma 5 -shape 1.8572344303576052 -samples 15 -trace tools/testArena/seq_1/historian/trace.log -v5
+        #Indelible uses 5 gamma categories by default, so we set it to 5 here
         historian_cmd = [
             "./tools/historian",
             "reconstruct",
-            "-seqs", os.path.join(sequence_folder, 'raw_seq.fasta'),
-            "-v5",
+            "-seqs", os.path.join(sequence_folder, 'sequences.fasta'),
             "-mcmc",
-            #"-samples", str(iterations)
-        ] #Redirect stdout and stderr to a log file
-        
-        baliphy_cmd = [
-            "bali-phy",
-            os.path.join(sequence_folder, 'raw_seq.fasta'),
-            "-A", "Amino-Acids",
-            "-i", str(iterations),
-            "-n", os.path.join(sequence_folder, 'baliphy/results'),
+            "-model", matrix_path,
+            "-gamma", str(5),
+            "-shape", str(key_params['gamma_shape']),
+            "-samples", str(iter_cap / n_seqs),
+            "-trace", os.path.join(sequence_folder, 'historian/trace.log'),
+            "-v5"
         ]
         
+        #bali-phy tools/testArena/seq_1/sequences.fasta -I "rs07(rate=0.1,mean_length=2)" -S lg08
+        #Currently not including invariant sites to maintain consistency with historian
+        baliphy_cmd = [
+            'bali-phy',
+            os.path.join(sequence_folder, 'sequences.fasta'),
+            '-A', 'Amino-Acids',
+            '-i', str(iter_cap),
+            '-n', os.path.join(sequence_folder, 'baliphy'),
+            '-S', 'lg08 +> Rates.gamma(5, alpha=' + str(key_params['gamma_shape']) + ')' + #' +> inv(p_inv=' + str(key_params['prop_invariant']) + ')',
+            '-I', '"rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')"'
+        ]
         
         start = time.time()
         try:
@@ -309,26 +404,32 @@ class evolSimulator:
             with open(log_path, 'w') as log_f:
                 #subprocess.run(historian_cmd, check=True)
                 subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True)
+            
+            os.rename(os.path.join(sequence_folder, 'historian', 'trace.log.1'),
+                    os.path.join(sequence_folder, 'historian', 'trace.log'))
+            
             print(f'Historian ran successfully on {sequence_folder}')
+            
         except subprocess.CalledProcessError as e:
             print(f'Error running historian on {sequence_folder}: {e}')
         elapsed_h = start - time.time()
         
-        
         start = time.time()
         try:
             print('Running baliphy...')
-            baliphy_log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
-            with open(baliphy_log_path, 'w') as baliphy_log_f:
-                subprocess.run(baliphy_cmd, check=True)
-                #subprocess.run(baliphy_cmd, stdout=baliphy_log_f, stderr=baliphy_log_f, check=True)
+            log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
+            with open(log_path, 'w') as log_f:
+                #subprocess.run(baliphy_cmd, check=True)
+                subprocess.run(baliphy_cmd, stdout=log_f, stderr=log_f, check=True)
+            
             print(f'Baliphy ran successfully on {sequence_folder}')
+            
         except subprocess.CalledProcessError as e:
-            print(f'Error running baliphy on {sequence_folder}: {e}')
+            print(f'Error running Baliphy on {sequence_folder}: {e}')
         elapsed_b = start - time.time()
         
         return elapsed_h, elapsed_b
-    
+
 def main():
     print('Begun script...')
     if len(sys.argv) < 3:
@@ -341,28 +442,20 @@ def main():
     label = sys.argv[2]
     consensus = sys.argv[3] if len(sys.argv) > 3 else 'none'
     
-    '''
-    results_h = {}
-    results_b = {}
-    
-    es = evolSimulator(parameters, consensus, label)
-
-    #es.generate_treetop_with_distance()
-    es.runIndelSeqGen()  # Example for sequence number 1, can be looped for all sequences
-    #results_h['wall_clock_time'], results_b['wall_clock_time'] = es.runSoftwareSequence(os.path.join(es.output_folder, 'seq_25')) 
-    '''
-    
     es = evolSimulator(parameters, tag=label, consensus_tree_file=consensus)
     
     start = time.time()
     #*PFAM SOCP TYPES PIPELINE
+    
     es.generate_treetop_with_params(max_iterations=1000)
     print(f'Generated tree topologies- ELAPSED TIME: {time.time() - start}============================')
     es.runIndelible()
     print(f'Ran Indelible- ELAPSED TIME: {time.time() - start}============================')
     
-    print('COMPLEETTEEEETETETETE!!!!')
+    es.cleanupSimFolders()
+    print(f'Cleaned up simulation folders- ELAPSED TIME: {time.time() - start}============================')
     
+    print('COMPLEETTEEEETETETETE!!!!')
 
 if __name__ == '__main__':
     main()

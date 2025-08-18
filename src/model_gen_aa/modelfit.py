@@ -19,6 +19,7 @@ import seaborn as sns
 from scipy import stats
 from scipy.stats import kstest, anderson
 import warnings
+import dendropy
 warnings.filterwarnings('ignore')
 
 # Try to import copulas - install with: pip install copulas
@@ -333,6 +334,112 @@ class PhylogeneticParameterFitter:
         
         return rates
     
+    def generate_bd_tree(self, pbirth_rate, pdeath_rate, bd_model, birth_alpha, death_alpha, max_time=10.0, max_attempts=15):
+        """
+        Generate a birth-death tree based on the specified model.
+        
+        Returns:
+            DendroPy Tree object
+        """
+        
+        success = False
+        
+        while not success and (max_attempts > 0):
+            birth_rates = self.generate_rate_strings(pbirth_rate, bd_model[1:4], birth_alpha, max_time=max_time)
+            death_rates = self.generate_rate_strings(pdeath_rate, bd_model[5:], death_alpha, max_time=max_time)
+
+            assert len(birth_rates) == len(death_rates), "Birth and death rate lists must have same length"
+            
+            num_intervals = len(birth_rates)
+            interval_duration = max_time / num_intervals
+            
+            # Start with a single lineage at max_time
+
+            tree = dendropy.Tree()
+            root = dendropy.Node()
+            root.age = max_time
+            tree.seed_node = root
+
+            active_nodes = [root]
+            current_time = max_time
+            
+            # Simulate each time interval (going forward in time)
+            for i in range(num_intervals): 
+                birth_rate = birth_rates[i]
+                death_rate = death_rates[i]
+                interval_end = current_time - interval_duration
+                
+                new_active_nodes = []
+                
+                for node in active_nodes:
+                    # Simulate births and deaths in this interval
+                    node_time = current_time
+                    
+                    while node_time > interval_end:
+                        # Time to next event (birth or death)
+                        total_rate = birth_rate + death_rate
+                        if total_rate <= 0:
+                            node_time = interval_end
+                            break
+                            
+                        dt = np.random.exponential(1.0 / total_rate)
+                        node_time -= dt
+                        
+                        if node_time <= interval_end:
+                            break
+                        
+                        # Determine if birth or death
+                        if np.random.random() < birth_rate / total_rate:
+                            # Birth event - create two child nodes
+                            left_child = dendropy.Node()
+                            right_child = dendropy.Node()
+                            left_child.age = node_time
+                            right_child.age = node_time
+                            
+                            node.add_child(left_child)
+                            node.add_child(right_child)
+                            
+                            # Set edge lengths
+                            left_child.edge.length = current_time - node_time
+                            right_child.edge.length = current_time - node_time
+                            
+                            # Update active nodes
+                            new_active_nodes.extend([left_child, right_child])
+                            break  # This lineage split
+                        else:
+                            # Death event - lineage goes extinct
+                            break  # This lineage dies
+                    else:
+                        # Lineage survives the interval
+                        new_active_nodes.append(node)
+                
+                active_nodes = new_active_nodes
+                current_time = interval_end
+                
+                if not active_nodes:  # All lineages extinct
+                    break
+            
+            # Set final edge lengths to present (time 0)
+            for node in active_nodes:
+                if node.edge and node.edge.length is not None:
+                    node.edge.length += current_time
+                elif node.edge:
+                    node.edge.length = current_time
+            
+            # Only keep trees with surviving lineages
+            if not active_nodes:
+                max_attempts -= 1
+            else:
+                success = True
+                # Assign taxa to tips
+                tree.randomly_assign_taxa(create_required_taxa=True)
+        if success: 
+            print('Treebuilding success!')
+        
+        return success
+    
+    
+    
     def sample_parameters(self, n_samples=100, param_group='core_parameters',
                          min_n_sequences_tips=20, max_n_sequences_tips=100,
                          q_scale=100, bias_correction=True):
@@ -447,17 +554,23 @@ class PhylogeneticParameterFitter:
                 # Additional constraint for non-extinct trees #!New feature... not yet tested!!!
                 
                 if accept_sample: #TODO: Add to if statement... check if each parameter of sample exists within sample.index
-                    best_model = None
-                    for col in sample.index:
-                        if (col.startswith('best_B') and not col.startswith('best_BD')) and sample[col] == 1:
-                            best_model = col.replace('best_', '')
-                            break
+                    best_model = bd_model.replace('best_','')
                     
+                    accept_sample = self.generate_bd_tree(sample['best_BD_speciation_rate'], sample['best_BD_extinction_rate'], best_model, sample['best_BD_speciation_alpha'], sample['best_BD_extinction_alpha'], max_time=sample['crown_age'])
+                        
+                    
+                    '''
                     birth_rates = self.generate_rate_strings(sample['best_BD_speciation_rate'], best_model[1:4], sample['best_BD_speciation_alpha'], max_time=sample['crown_age'])
                     death_rates = self.generate_rate_strings(sample['best_BD_extinction_rate'], best_model[5:], sample['best_BD_extinction_alpha'], max_time=sample['crown_age'])
                     
-                    if birth_rates[0] < death_rates[0]:
+                    if np.float64(birth_rates[0]) <= np.float64(death_rates[0]):
                         accept_sample = False
+                    else:
+                        print('\naccepted sample, ', birth_rates[0], ', ', death_rates[0])
+                        print('acepted... alpha:', sample['best_BD_speciation_alpha'])
+                    '''
+                    
+                    
                     '''
                     #Population survives first two increments
                     pop_string = self.generate_pop_string(birth_rates, death_rates, 2, sample['n_sequence_tips'])
@@ -714,8 +827,7 @@ class PhylogeneticParameterFitter:
                 export_data[col] = export_data[col].astype(int)
             
             if col in ['prop_invariant', 'insertion_rate', 'deletion_rate', 'mean_insertion_length', 
-                      'mean_deletion_length', 'normalized_colless_index', 'best_BD_speciation_alpha', 
-                      'best_BD_extinction_alpha']:
+                      'mean_deletion_length', 'normalized_colless_index']:
                 export_data[col] = np.maximum(export_data[col], 0)
         
         # Create one-hot encoding from bd_model column

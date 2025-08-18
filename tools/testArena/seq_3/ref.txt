@@ -1,0 +1,4 @@
+bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507)' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)" &
+
+wc -l tools/testArena/seq_3/baliphy-1/C1.log
+
