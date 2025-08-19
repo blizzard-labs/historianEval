@@ -396,7 +396,9 @@ class evolSimulator:
             "--trees"
         ]
         
-        # bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507)' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)"
+        frequencies = "pi={'A':0.079066, 'R':0.055941, 'N':0.041977, 'D':0.053052, 'C':0.012937, 'Q':0.040767, 'E':0.071586, 'G':0.057337, 'H':0.022355, 'I':0.062157, 'L':0.099081, 'K':0.064600, 'M':0.022951, 'F':0.042302, 'P':0.044040, 'S':0.061197, 'T':0.053287, 'W':0.012066, 'Y':0.034155, 'V':0.069147}"
+        
+        # bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507) ' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)"
         #Currently not including invariant sites to maintain consistency with historian
         baliphy_cmd = [
             "bali-phy",
@@ -404,7 +406,7 @@ class evolSimulator:
             "-A", "Amino-Acids",
             "-i", str(iter_cap_per_seq * n_seqs),
             "-n", os.path.join(sequence_folder, "baliphy"),
-            "-S", "lg08 +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ")", #" +> inv(p_inv=" + str(key_params["prop_invariant"]) + ")",
+            "-S", "lg08 +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ") +> f(" + frequencies + ")" ,
             '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
         
@@ -472,6 +474,11 @@ class evolSimulator:
             
             results.append(seq_results)
 
+        with open(os.path.join(self.output_folder, 'benchmark_results.csv'), 'w') as f:
+            f.write('path,elapsed_historian,elapsed_baliphy\n')
+            for res in results:
+                f.write(f"{res['path']},{res['elapsed_historian']},{res['elapsed_baliphy']}\n")
+        
         return results
             
 
