@@ -1,4 +1,1 @@
-*.log
-*.fastas
-*.log.1
-*.trees
+data/simulation
