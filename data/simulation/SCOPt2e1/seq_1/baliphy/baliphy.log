@@ -1,8 +1,36 @@
-Created directory "data/simulation/SCOPt2e1/seq_1/baliphy-2" for output files.
+Created directory "data/simulation/SCOPt2e1/seq_1/baliphy-1" for output files.
 
-[1msubstitution model 1:1.1:[1;31m error:[0m[1m
-   • invalid character: '
-  [1;34m|[0m
-[1;34m1[0m [1;34m| [0m[1;31m'[0mlg08 +> Rates.gamma(5, alpha=1.5442508099876162)'
-  [1;34m|[0m [1;31m^[0m
+tree ~ uniform_tree(taxa, gamma(0.5, 1/length(@taxa)))
+subst rates = constant
+indel rates = map(|x:pow(x, sigma)|, ~iidMap(branches(tree), logNormal(0, 1))) where {sigma ~ logLaplace(-3, 1)}
 
+Partition [1;35mP1[0m:
+    file = [1m[1mdata/simulation/SCOPt2e1/seq_1/sequences.fasta[0m[0m
+    alphabet = [1mAmino-Acids[0m
+    subst = [1mlg08 +> f(pi=lg08_freq) +> Rates.gamma(n=5, alpha=1.54425080998762)[0m ([1;34mS1[0m)
+    indel = [1mrs07[0m ([1;31mI1[0m)
+    scale ~ [1mgamma(0.5, 2)[0m ([0;32mScale1[0m)
+
+Insertion/deletion model [1;31mI1[0m priors:
+    rs07:rate = 0.468742006833985
+    rs07:mean_length = 5.94397973432072
+
+Run info written to "data/simulation/SCOPt2e1/seq_1/baliphy-1/C1.run.json"
+
+Beginning MCMC computations.
+   - Sampled [1;34mnumerical parameters[0m logged to "data/simulation/SCOPt2e1/seq_1/baliphy-1/C1.log" as TSV
+   - Sampled [1;32mtrees[0m logged to "data/simulation/SCOPt2e1/seq_1/baliphy-1/C1.trees"
+   - Sampled [1;31malignments[0m logged to "data/simulation/SCOPt2e1/seq_1/baliphy-1/C1.P<partition>.fastas"
+
+BAli-Phy does NOT detect how many iterations is sufficient:
+   You need to monitor convergence and kill it when done.
+   Maximum number of iterations set to 32000.
+
+You can examine 'C1.log' using BAli-Phy tool statreport (command-line) or the BEAST program Tracer (graphical).
+See the manual at http://www.bali-phy.org/README.xhtml for further information.
+
+Work:
+  start: Thu Aug 21 14:55:42 2025
+    end: Fri Aug 22 15:00:24 2025
+  total (elapsed) time: 1days 0h 4m 39s (86679.820s)
+  total (CPU) time: 22h 49m 14s (82154.742s)

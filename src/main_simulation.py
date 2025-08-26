@@ -356,7 +356,7 @@ class evolSimulator:
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
-    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=350):
+    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=2000):
         #Fixed number of iterations
         #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
         #Final Measure: SP, TC, RF, RFL, etc.
@@ -371,7 +371,7 @@ class evolSimulator:
             n_seqs += 1
         
         key_params, matrix_path = self.configure_historian_control_file(sequence_folder)
-        
+
         #./tools/historian reconstruct -seqs tools/testArena/seq_1/sequences.fasta -mcmc -model data/matrices/lg.json -gamma 5 -shape 1.8572344303576052 -samples 15 -trace tools/testArena/seq_1/historian/trace.log -v5
         #Indelible uses 5 gamma categories by default, so we set it to 5 here
         historian_cmd = [
@@ -395,23 +395,21 @@ class evolSimulator:
             os.path.join(sequence_folder, 'historian/parsed_trace.log'),
             "--trees"
         ]
-        
-        frequencies = "pi={'A':0.079066, 'R':0.055941, 'N':0.041977, 'D':0.053052, 'C':0.012937, 'Q':0.040767, 'E':0.071586, 'G':0.057337, 'H':0.022355, 'I':0.062157, 'L':0.099081, 'K':0.064600, 'M':0.022951, 'F':0.042302, 'P':0.044040, 'S':0.061197, 'T':0.053287, 'W':0.012066, 'Y':0.034155, 'V':0.069147}"
-        
+                
         # bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507) ' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)"
         #Currently not including invariant sites to maintain consistency with historian
         baliphy_cmd = [
             "bali-phy",
             os.path.join(sequence_folder, "sequences.fasta"),
             "-A", "Amino-Acids",
-            "-i", str(iter_cap_per_seq * n_seqs),
+            "-i", str(2 * iter_cap_per_seq * n_seqs),
             "-n", os.path.join(sequence_folder, "baliphy"),
-            "-S", "lg08 +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ") +> f(" + frequencies + ")" ,
+            "-S", "lg08 +> f(lg08_freq) +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ")",
             '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
         
-        
         start = time.time()
+        
         try:
             print('Running historian...')
             print(historian_cmd)
@@ -427,7 +425,7 @@ class evolSimulator:
             
         except subprocess.CalledProcessError as e:
             print(f'Error running historian on {sequence_folder}: {e}')
-        elapsed_h = start - time.time()
+        elapsed_h = time.time() - start
         
         try:
             print('Parsing historian trace...')
@@ -451,17 +449,18 @@ class evolSimulator:
             
         except subprocess.CalledProcessError as e:
             print(f'Error running Baliphy on {sequence_folder}: {e}')
-        elapsed_b = start - time.time()
-        
+        elapsed_b = time.time() - start
+
         return elapsed_h, elapsed_b
 
 
     def runBenchmark(self, sequence_folders=[]):
         if len(sequence_folders) == 0:
             for folder in os.listdir('data/simulation'):
-                for seq_folder in os.listdir(os.path.join('data/simulation', folder)):
-                    if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
-                        sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))
+                if folder.endswith('e1'):
+                    for seq_folder in os.listdir(os.path.join('data/simulation', folder)):
+                        if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
+                            sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))
         
         #Experiment String | Sequence Number | Number of Iterations | Wall-Clock Time | Time/Iteration | Burn-in Period | 
         results = []

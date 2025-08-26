@@ -1,8 +1,0 @@
-Created directory "data/simulation/SCOPt3e2/seq_4/baliphy-3" for output files.
-
-[1msubstitution model 1:1.1:[1;31m error:[0m[1m
-   • invalid character: '
-  [1;34m|[0m
-[1;34m1[0m [1;34m| [0m[1;31m'[0mlg08 +> Rates.gamma(5, alpha=2.777092029142569)'
-  [1;34m|[0m [1;31m^[0m
-
