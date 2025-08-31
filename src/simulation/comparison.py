@@ -1,22 +1,23 @@
-#!/usr/bin/env python3
-
-import argparse
 import os
 import sys
-import re
-import subprocess
-import pandas as pd
 from ete3 import Tree
+import subprocess
+import re
+import pandas as pd
 
-class mcmcCompare:
-    def __init__(self, historian_trace, baliphy_folder, truth_folder, results_file):
-        self.historian_trace = historian_trace
-        self.baliphy_folder = baliphy_folder
-        self.truth_folder = truth_folder
-        self.results_file = results_file
+class outputCompare:
+    def __init__(self, output_folder, results_file='comparison_results.csv'):
+        self.results = {}
         
-        self.df = pd.DataFrame()
-        
+        if not os.isdir(output_folder):
+            os.makedirs(output_folder, exist_ok=True)
+            
+        self.output_folder = output_folder
+        self.results_file = os.path.join(output_folder, results_file)
+    
+    
+    def compute_posterior_decoding
+    
     def compute_sp_scores(self, reference, estimate):
         log_path = os.path.join(self.truth_folder, "sp_scores.log")
         
@@ -70,9 +71,10 @@ class mcmcCompare:
                 else:
                     # These are floats
                     result[key] = float(match.group(1))
-    
+        self.results = self.results | result
+        
         return result
-
+    
     def calculate_rfl_distance(self, tree1, tree2, k=1):
         """
         Calculate RFL (RF with Lengths) distance between two trees.
@@ -159,49 +161,39 @@ class mcmcCompare:
             results['n_common_leaves'] = len(common_leaves)
             results['rfl_distance'] = self.calculate_rfl_distance(tree1, tree2, k=2)
             
+            self.results = self.results | results
+            
             return results
         except Exception as e:
             raise Exception(f"Error processing trees: {str(e)}")
+        
+    def export_results(self):
+        """Export comparison results to a CSV file."""
+        if not self.results:
+            print("No results to export.")
+            return
+        
+        df = pd.DataFrame([self.results])
+        df.to_csv(self.results_file, sep='\t', index=False)
+        print(f"Results exported to {self.results_file}")
+    
 
-    def analyze_baliphy_ess(self):
-        cmd = [
-            "bp-analyze"
-        ]
-        
-        analysis_path = os.path.join(self.baliphy_folder, 'analyze.log')
-        
-        try:
-            working_dir = os.path.join(self.baliphy_folder, 'results-1')
-            with open(analysis_path, 'w') as f: 
-                subprocess.run(cmd, cwd=working_dir, stdout= f, stderr=f, check=True)
-        except subprocess.CalledProcessError as e:
-            print(f'Error analyzing baliphy output: {e}')
-        
-        with open(analysis_path, 'r') as f:
-            content = f.read()
-        
-        results = {}
-        for line_num, line in enumerate(content):
-            line = line.strip()
-            if line.startswith('NOTE: min_ESS (scalar)    = '):
-                results['ess_scalar'] = str(line[27:].strip())
-            elif line.startswith('NOTE: min_ESS (partition)    = '):
-                results['ess_top'] = str(line[30:].strip())
-            elif line.startswith('NOTE: ASDSF = '):
-                results['asdsf'] = str(line[14:].strip())
-            elif line.startswith('NOTE: MSDSF = '):
-                results['msdsf'] = str(line[14:].strip())
-            #TODO: Add other tags, with same format
-            #NOTE: PSRF-80%CI = NA
-            #NOTE: PSRF-RCF = NA
-        return results
-    
-    def analyze_historian_ess(self):
-        pass
-    
 def main():
-    #mc = mcmcCompare()
-    pass
+    if len(sys.argv) < 6:
+        print("Usage: python comparison.py <true.tree> <sim.tree> <true.fasta> <sim.fasta> <output_folder>")
+        print("Example: ")
+
+    #cut-range C1.P1.fastas --skip=200 | alignment-chop-internal --tree treetraceCCD1-MAP.tree | alignment-max > C1-max.fasta
+    
+    true_treefile = sys.argv[1]
+    sim_treefile = sys.argv[2]
+    true_fastafile = sys.argv[3]
+    sim_fastafile = sys.argv[4]
+    
+    output_folder = sys.argv[5]
+    #Initialize comparison object
+    
+
 
 if __name__ == '__main__':
     main()

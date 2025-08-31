@@ -15,6 +15,7 @@ Metrics -----
 * Convergence (ESS, MCT)
 * Parameter Accuracy
 
+Posterior Decoding: cut-range C1.P1.fastas --skip=200 | alignment-chop-internal --tree treetraceCCD1-MAP.tree | alignment-max > C1-max.fasta
 
 Convergence: ESS has reached target of 200 means burn-in is over (how long ESS takes to reach 200)
 Mixing: ESS after X iterations/time

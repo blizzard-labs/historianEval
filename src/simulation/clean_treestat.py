@@ -64,6 +64,23 @@ def merge_trace_files(treetrace_file, parsed_trace_file, output_file='trace.log'
     tree_merge_col = None
     parsed_merge_col = None
     
+    # For indels
+    indels_col = "indels" if "indels" in parsed_df.columns else "#indels" if "#indels" in parsed_df.columns else None
+
+    # For substitutions
+    substs_col = "substitutions" if "substitutions" in parsed_df.columns else "#substs" if "#substs" in parsed_df.columns else None
+
+    # Select columns (add other columns as needed)
+    selected_cols = ["iter", 'likelihood']
+    if indels_col:
+        selected_cols.append(indels_col)
+    if substs_col:
+        selected_cols.append(substs_col)
+
+    parsed_df = parsed_df[selected_cols]
+    treetrace_df = treetrace_df[['state', 'CCD1 RF distance', 'CCD1 information content (log(p))', 'Colless tree-imbalance', 'Tree Length', 'Tree Topology']]
+    
+    
     # Find the iteration column in each file
     if 'state' in treetrace_df.columns:
         tree_merge_col = 'state'
