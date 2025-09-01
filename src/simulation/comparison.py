@@ -218,7 +218,7 @@ class outputCompare:
             return
         
         df = pd.DataFrame([self.results])
-        df.to_csv(self.results_file, sep='\t', index=False)
+        df.to_csv(self.results_file, sep=',', index=False)
         print(f"Results exported to {self.results_file}")
 
 def main():
