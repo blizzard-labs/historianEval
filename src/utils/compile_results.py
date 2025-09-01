@@ -37,6 +37,59 @@ def compile_results(model_gen_dir, simulation_dir, results_dir):
     benchmark_df['tool'] = benchmark_df['tool'].str.replace('elapsed_', '')
     benchmark_df.loc[benchmark_df['tool'] == 'baliphy', 'tool'] = 'baliphy-1'
 
+    def extract_mcmc_parameters(mcmc_file):
+        """
+        Extract specific parameters from mcmc_statistics.csv file.
+        Returns a dictionary with the extracted parameters.
+        """
+        if not os.path.exists(mcmc_file):
+            return {}
+        
+        try:
+            mcmc_df = pd.read_csv(mcmc_file)
+            
+            # Initialize result dictionary
+            mcmc_params = {}
+            
+            # Debug: Print all parameter names to help identify the correct ones
+            print(f"Parameters found in {mcmc_file}: {mcmc_df['Parameter'].tolist()}")
+            
+            # Extract percent_unique_topologies - try multiple variations
+            percent_unique_patterns = ['Percent_unique_topologies', 'percent_unique_topologies', 'Tree Topology', 'topology']
+            for pattern in percent_unique_patterns:
+                percent_unique_row = mcmc_df[mcmc_df['Parameter'].str.contains(pattern, case=False, na=False)]
+                if not percent_unique_row.empty:
+                    # Try different column names for the value
+                    for col in ['Mean', 'Percent_unique_topologies', 'Value']:
+                        if col in mcmc_df.columns and col == 'Percent_unique_topologies':
+                            print(col)
+                            mcmc_params['percent_unique_topologies'] = percent_unique_row.iloc[0][col]
+                            break
+                    break
+            
+            # Extract likelihood ESS
+            likelihood_row = mcmc_df[mcmc_df['Parameter'].str.contains('likelihood', case=False, na=False)]
+            if not likelihood_row.empty:
+                mcmc_params['likelihood_ess'] = likelihood_row.iloc[0]['ESS'] if 'ESS' in mcmc_df.columns else None
+            
+            # Extract n_samples - try multiple variations
+            n_samples_patterns = ['N_samples', 'n_samples', 'samples', 'iter']
+            for pattern in n_samples_patterns:
+                n_samples_row = mcmc_df[mcmc_df['Parameter'].str.contains(pattern, case=False, na=False)]
+                if not n_samples_row.empty:
+                    # Try different column names for the mode/value
+                    for col in ['N_samples', 'Value']:
+                        if 'N_samples' in mcmc_df.columns:
+                            mcmc_params['n_samples'] = n_samples_row.iloc[0][col]
+                            break
+                    break
+            
+            return mcmc_params
+            
+        except Exception as e:
+            print(f"Error reading {mcmc_file}: {e}")
+            return {}
+
     # Ensure results directory exists
     os.makedirs(results_dir, exist_ok=True)
 
@@ -69,15 +122,27 @@ def compile_results(model_gen_dir, simulation_dir, results_dir):
                 historian_output_file = os.path.join(historian_base_path, 'outputStats', 'comparison_results.csv')
 
                 if os.path.exists(historian_mcmc_file) and os.path.exists(historian_output_file):
-                    mcmc_stats = pd.read_csv(historian_mcmc_file).to_dict('records')[0]
-                    output_stats = pd.read_csv(historian_output_file).to_dict('records')[0]
+                    # Extract specific MCMC parameters
+                    mcmc_params = extract_mcmc_parameters(historian_mcmc_file)
+                    
+                    # Get output stats (keeping original functionality)
+                    output_stats = pd.read_csv(historian_output_file).to_dict('records')[0] if os.path.exists(historian_output_file) else {}
+                    
+                    # Get wall clock time
                     wall_clock_time_series = benchmark_df[(benchmark_df['scop_type'] == scop_type_num) & 
                                                    (benchmark_df['experiment'] == i) & 
                                                    (benchmark_df['seq_id'] == seq_id) & 
                                                    (benchmark_df['tool'] == 'historian')]['wall_clock_s']
-                    if not wall_clock_time_series.empty:
-                        wall_clock_time = wall_clock_time_series.values[0]
-                        historian_data.append({**seq_params.to_dict(), 'sequence_name': seq_name_with_scop, **mcmc_stats, **output_stats, 'wall_clock_s': wall_clock_time})
+                    wall_clock_time = wall_clock_time_series.values[0] if not wall_clock_time_series.empty else None
+                    
+                    # Combine all data
+                    historian_data.append({
+                        **seq_params.to_dict(), 
+                        'sequence_name': seq_name_with_scop, 
+                        **mcmc_params, 
+                        **output_stats, 
+                        'wall_clock_s': wall_clock_time
+                    })
 
                 # Process BAli-Phy
                 baliphy_base_path = os.path.join(simulation_dir, sim_label, f'seq_{seq_id}', 'baliphy-1')
@@ -85,15 +150,27 @@ def compile_results(model_gen_dir, simulation_dir, results_dir):
                 baliphy_output_file = os.path.join(baliphy_base_path, 'outputStats', 'comparison_results.csv')
 
                 if os.path.exists(baliphy_mcmc_file) and os.path.exists(baliphy_output_file):
-                    mcmc_stats = pd.read_csv(baliphy_mcmc_file).to_dict('records')[0]
-                    output_stats = pd.read_csv(baliphy_output_file).to_dict('records')[0]
+                    # Extract specific MCMC parameters
+                    mcmc_params = extract_mcmc_parameters(baliphy_mcmc_file)
+                    
+                    # Get output stats (keeping original functionality)
+                    output_stats = pd.read_csv(baliphy_output_file).to_dict('records')[0] if os.path.exists(baliphy_output_file) else {}
+                    
+                    # Get wall clock time
                     wall_clock_time_series = benchmark_df[(benchmark_df['scop_type'] == scop_type_num) & 
                                                    (benchmark_df['experiment'] == i) & 
                                                    (benchmark_df['seq_id'] == seq_id) & 
                                                    (benchmark_df['tool'] == 'baliphy-1')]['wall_clock_s']
-                    if not wall_clock_time_series.empty:
-                        wall_clock_time = wall_clock_time_series.values[0]
-                        baliphy_data.append({**seq_params.to_dict(), 'sequence_name': seq_name_with_scop, **mcmc_stats, **output_stats, 'wall_clock_s': wall_clock_time})
+                    wall_clock_time = wall_clock_time_series.values[0] if not wall_clock_time_series.empty else None
+                    
+                    # Combine all data
+                    baliphy_data.append({
+                        **seq_params.to_dict(), 
+                        'sequence_name': seq_name_with_scop, 
+                        **mcmc_params, 
+                        **output_stats, 
+                        'wall_clock_s': wall_clock_time
+                    })
 
     if historian_data:
         historian_df = pd.DataFrame(historian_data)
