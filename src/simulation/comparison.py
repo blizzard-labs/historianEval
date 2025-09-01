@@ -9,21 +9,51 @@ class outputCompare:
     def __init__(self, output_folder, results_file='comparison_results.csv'):
         self.results = {}
         
-        if not os.isdir(output_folder):
+        if not os.path.isdir(output_folder):
             os.makedirs(output_folder, exist_ok=True)
             
         self.output_folder = output_folder
         self.results_file = os.path.join(output_folder, results_file)
+        
+        for file in os.listdir(os.path.dirname(output_folder)):
+            if file.endswith('.fastas'):
+                self.posterior_alignments = os.path.join(os.path.dirname(output_folder), file)
+            elif file.endswith('MAP.tree'):
+                self.map_tree = os.path.join(os.path.dirname(output_folder), file)
+            
+        for file in os.listdir(os.path.dirname(os.path.dirname(output_folder))):
+            if file.endswith('alignment.fasta'):
+                self.truth_alignment = os.path.join(os.path.dirname(os.path.dirname(output_folder)), file)
+            elif file.endswith('guide.tree'):
+                self.truth_tree = os.path.join(os.path.dirname(os.path.dirname(output_folder)), file)
+        
+        
+    def compute_posterior_decoding(self):
+        #cut-range C1.P1.fastas --skip=200 | alignment-chop-internal --tree treetraceCCD1-MAP.tree | alignment-max > C1-max.fasta
+        cmd = [
+            'cut-range', self.posterior_alignments, '--skip=200', '|',
+            'alignment-chop-internal', '--tree', self.map_tree, '|',
+            'alignment-max', '>', os.path.join(self.output_folder, 'posterior_decoded.fasta')
+        ]
+        
+        try:
+            subprocess.run(' '.join(cmd), shell=True, check=True)
+            self.decoded_alignment = os.path.join(self.output_folder, 'posterior_decoded.fasta')
+            
+            print(f'Posterior decoding successfully run on {self.posterior_alignments}')
+        except subprocess.CalledProcessError as e:
+            print(f'Error running posterior decoding on {self.map_tree}: {e}')
     
-    
-    def compute_posterior_decoding
-    
-    def compute_sp_scores(self, reference, estimate):
-        log_path = os.path.join(self.truth_folder, "sp_scores.log")
+    def compute_sp_scores(self):
+        if not hasattr(self, 'decoded_alignment'):
+            raise ValueError("Decoded alignment not found. Please run compute_posterior_decoding() first.")
+        
+        reference, estimate = self.truth_alignment, self.decoded_alignment
+        log_path = os.path.join(self.output_folder, "sp_scores.log")
         
         cmd = [
             "java", "-jar",
-            "tools/FastSP",
+            "tools/FastSP.jar",
             "-r", reference,
             "-e", estimate
         ]
@@ -58,6 +88,7 @@ class outputCompare:
         'tc': r'TC\s+([\d.]+)'
         }
         
+        print('Extracting SP scores from log file...')
         for key, pattern in patterns.items():
             match = re.search(pattern, contents)
             if match:
@@ -116,27 +147,35 @@ class outputCompare:
             
             return splits
         
-        # Get splits with branch lengths for both trees
-        splits1 = get_splits_with_lengths(tree1)
-        splits2 = get_splits_with_lengths(tree2)
-        
-        # Calculate RFL distance
-        rfl_distance = 0.0
-        
-        # Get all unique splits from both trees
-        all_splits = set(splits1.keys()) | set(splits2.keys())
-        
-        for split in all_splits:
-            length1 = splits1.get(split, 0.0)  # Length 0 if split not in tree1
-            length2 = splits2.get(split, 0.0)  # Length 0 if split not in tree2
+        try:
+            # Get splits with branch lengths for both trees
+            splits1 = get_splits_with_lengths(tree1)
+            splits2 = get_splits_with_lengths(tree2)
             
-            # Add the absolute difference raised to power k
-            rfl_distance += abs(length1 - length2) ** k
-        
-        return rfl_distance
+            # Calculate RFL distance
+            rfl_distance = 0.0
+            
+            # Get all unique splits from both trees
+            all_splits = set(splits1.keys()) | set(splits2.keys())
+            
+            for split in all_splits:
+                length1 = splits1.get(split, 0.0)  # Length 0 if split not in tree1
+                length2 = splits2.get(split, 0.0)  # Length 0 if split not in tree2
+                
+                # Add the absolute difference raised to power k
+                rfl_distance += abs(length1 - length2) ** k
+            
+            return rfl_distance
+        except Exception as e:
+            print(f"Error calculating RFL distance: {e}")
+            return None
 
 
     def compute_rf_scores(self, tree1_path, tree2_path):
+        if not hasattr(self, 'truth_tree') or not hasattr(self, 'map_tree'):
+            raise ValueError("Truth tree or MAP tree not found. Please ensure they are set correctly.")
+        
+        tree1_path, tree2_path = self.truth_tree, self.map_tree
         # Validate input files
         if not os.path.exists(tree1_path):
             raise FileNotFoundError(f"Tree file not found: {tree1_path}")
@@ -148,13 +187,18 @@ class outputCompare:
             
             # Load trees from Newick files
             tree1 = Tree(tree1_path, format=1)
-            tree2 = Tree(tree2_path, format=1)
-            
+                        
+            with open(tree2_path, 'r') as f:
+                newick_str2 = re.sub(r'\[&posterior=[^\]]+\]', '', f.read().strip()) + ';'
+                
+            tree2 = Tree(newick_str2, format=1)
+                        
             tree1_leaves = set(tree1.get_leaf_names())
             tree2_leaves = set(tree2.get_leaf_names())
             common_leaves = tree1_leaves.intersection(tree2_leaves)
-            
-            rf_result = tree1.compare(tree2, unrooted=True)
+                        
+                        
+            rf_result = tree1.robinson_foulds(tree2)
             
             results['rf_distance'] = rf_result[0]
             results['max_rf_distance'] = rf_result[1]
@@ -176,23 +220,33 @@ class outputCompare:
         df = pd.DataFrame([self.results])
         df.to_csv(self.results_file, sep='\t', index=False)
         print(f"Results exported to {self.results_file}")
-    
 
 def main():
-    if len(sys.argv) < 6:
-        print("Usage: python comparison.py <true.tree> <sim.tree> <true.fasta> <sim.fasta> <output_folder>")
-        print("Example: ")
-
-    #cut-range C1.P1.fastas --skip=200 | alignment-chop-internal --tree treetraceCCD1-MAP.tree | alignment-max > C1-max.fasta
+    if len(sys.argv) < 2:
+        print("Usage: python comparison.py <output_folder> [results_file]")
+        print("Example: python src/simulation/comparison.py data/simulation/SCOPt4e1/seq_1/historian/outputStats comparison_results.csv")
     
-    true_treefile = sys.argv[1]
-    sim_treefile = sys.argv[2]
-    true_fastafile = sys.argv[3]
-    sim_fastafile = sys.argv[4]
+    output_folder = sys.argv[1]
+    results_file = sys.argv[2] if len(sys.argv) > 2 else 'comparison_results.csv'
     
-    output_folder = sys.argv[5]
     #Initialize comparison object
+    compare = outputCompare(output_folder, results_file)
     
+    print("Beginning comparison for folder:", output_folder, "==========================")
+    try:
+        print('Computing posterior decoding alignment...')
+        compare.compute_posterior_decoding()
+        print('Computing SP scores...')
+        sp_scores = compare.compute_sp_scores()
+        print('Computing RF scores...')
+        rf_scores = compare.compute_rf_scores(compare.truth_tree, compare.map_tree)
+        
+        print("SP Scores:", sp_scores)
+        print("RF Scores:", rf_scores)
+        
+        compare.export_results()
+    except Exception as e:
+        print(f"Error during comparison: {e}")
 
 
 if __name__ == '__main__':

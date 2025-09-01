@@ -66,6 +66,106 @@ def remove_internal_nodes_baliphy(input_file):
     
     return out_trees
 
+def extract_sequences_historian(input_file, output_fasta_file):
+    """
+    Extract sequence alignments from Historian trace.log file and create FASTA format file.
+    
+    Args:
+        input_file (str): Path to input trace.log file
+        output_fasta_file (str): Path to output .fastas file
+    """
+    
+    print(f"Extracting sequences from {input_file}...")
+    
+    sequence_iterations = []
+    taxa_order = []
+    
+    with open(input_file, 'r') as f:
+        content = f.read()
+    
+    # Split by Stockholm headers to get iterations
+    iterations = content.split('# STOCKHOLM 1.0')
+    if iterations and not iterations[0].strip():
+        iterations = iterations[1:]  # Remove empty first element
+    
+    sequence_count = 0
+    
+    for iteration_idx, iteration_content in enumerate(iterations):
+        lines = iteration_content.strip().split('\n')
+        
+        current_sequences = OrderedDict()
+        in_alignment_section = False
+        
+        for idx, line in enumerate(lines):
+            line = line.strip()
+            
+            # Skip comment lines, parameter lines, and tree lines
+            if (line.startswith('#') or 
+                line.startswith('tree ') or 
+                line.startswith('Tree ') or
+                line.startswith('//') or
+                not line):
+                continue
+            
+            # Skip lines that are just gaps/stars/placeholders
+            if line.replace('x', '').replace('-', '').replace('X', '').replace('*', '').strip() == '':
+                continue
+            
+            '''
+            # Skip internal node lines
+            if line.startswith('node'):
+                continue
+            '''
+            
+            if lines[idx - 1].strip().startswith("#=GF NH"):
+                in_alignment_section = True
+            
+            # Look for sequence data lines
+            parts = line.split()
+            if len(parts) >= 2 and in_alignment_section:
+                potential_taxon = parts[0]
+                potential_sequence = parts[1] if len(parts) > 1 else ""
+                
+                #print('potential_taxon:', potential_taxon)
+                #print('potential_sequence:', potential_sequence)
+                
+                # Check if this looks like sequence data (contains common sequence characters)
+                if (potential_sequence and 
+                    len(potential_sequence) > 10 and
+                    any(char in potential_sequence for char in 'ATCGRYSWKMBDHVNX')):
+                    
+                    current_sequences[potential_taxon] = potential_sequence
+                    
+                    # Store taxa order from first iteration
+                    if iteration_idx == 1 and potential_taxon not in taxa_order:
+                        taxa_order.append(potential_taxon)
+        
+        if current_sequences:
+            sequence_iterations.append(current_sequences)
+            sequence_count += 1
+    
+    print(f"Found {len(taxa_order)} taxa: {taxa_order}")
+    print(f"Extracted sequences from {sequence_count} iterations")
+    
+    if not sequence_iterations:
+        print("No sequence data found in the trace file!")
+        return 0
+    
+    # Write FASTA format file with all iterations
+    with open(output_fasta_file, 'w') as f:
+        for iter_idx, sequences in enumerate(sequence_iterations):
+            f.write(f"iterations = {iter_idx}\n\n")
+            
+            # Write sequences in consistent order
+            for taxon in taxa_order:
+                if taxon in sequences:
+                    f.write(f">{taxon}\n")
+                    f.write(f"{sequences[taxon]}\n")
+            
+            f.write("\n\n\n")  # Separate iterations
+    
+    print(f"FASTA sequences file written to {output_fasta_file}")
+    return len(sequence_iterations)
 
 def extract_trees(input_file, output_trees_file):
     """
@@ -319,12 +419,15 @@ def configure_baliphy_trees(input_file, output_trees_file):
 
 def main():
     if len(sys.argv) < 4:
-        print("Usage: python mcmc_trace_parser.py <format> <input_trace.log> <output_trace.txt> [--trees]")
+        print("Usage: python mcmc_trace_parser.py <format> <input_trace.log> <output_trace.txt> [--trees] [--sequences]")
         print("Example: python mcmc_trace_parser.py historian trace.log parsed_trace.txt")
-        print("Example with trees: python mcmc_trace_parser.py trace.log parsed_trace.txt --trees")
+        print("Example with trees: python mcmc_trace_parser.py historian trace.log parsed_trace.txt --trees")
+        print("Example with sequences: python mcmc_trace_parser.py historian trace.log parsed_trace.txt --sequences")
+        print("Example with both: python mcmc_trace_parser.py historian trace.log parsed_trace.txt --trees --sequences")
         print("")
         print("Options:")
-        print("  --trees    Also extract trees and create NEXUS .trees file for TreeStat2")
+        print("  --trees       Also extract trees and create NEXUS .trees file for TreeStat2")
+        print("  --sequences   Also extract posterior sequences and create FASTA .fastas file")
         sys.exit(1)
     
     format_type = sys.argv[1].lower()
@@ -336,8 +439,9 @@ def main():
     
     output_file = sys.argv[3]
     extract_trees_flag = '--trees' in sys.argv
+    extract_sequences_flag = '--sequences' in sys.argv
     
-    # Determine trees output filename
+    # Determine output filenames
     if extract_trees_flag:
         if output_file.endswith('.txt'):
             trees_file = output_file.replace('.txt', '.trees')
@@ -345,6 +449,12 @@ def main():
             trees_file = output_file + '.trees'
         else:
             trees_file = output_file
+    
+    if extract_sequences_flag:
+        if output_file.endswith('.txt'):
+            sequences_file = output_file.replace('.txt', '.fastas')
+        else:
+            sequences_file = os.path.splitext(output_file)[0] + '.fastas'
     
     if format_type == 'historian':
         print("Using Historian format parser...")
@@ -366,6 +476,11 @@ def main():
             if extract_trees_flag:
                 n_trees = extract_trees(input_file, trees_file)
             
+            # Extract sequences if requested
+            n_sequence_iterations = 0
+            if extract_sequences_flag:
+                n_sequence_iterations = extract_sequences_historian(input_file, sequences_file)
+            
             print(f"\nSummary:")
             print(f"  Iterations processed: {n_iterations}")
             print(f"  Parameters extracted: {n_params}")
@@ -375,6 +490,11 @@ def main():
                 print(f"  Trees extracted: {n_trees}")
                 print(f"  Output trees file: {trees_file}")
                 print(f"  Format: NEXUS (compatible with TreeStat2)")
+            
+            if extract_sequences_flag:
+                print(f"  Sequence iterations extracted: {n_sequence_iterations}")
+                print(f"  Output sequences file: {sequences_file}")
+                print(f"  Format: FASTA (posterior.fastas)")
             
         except FileNotFoundError:
             print(f"Error: Could not find input file '{input_file}'")
