@@ -105,3 +105,28 @@ POSSIBLE IMPROVEMENTS -------
 * NNI integration into phased/batched simulated annealing
 * Add estimated max gap dist (extract_params.py and modelfit.py)
 * Adding rooting method to pfam data
+
+
+
+
+Evaluation Procedure--------
+1. Run Historian/BAliphy on Dataset: 
+    python src/simulation/main.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1
+2. Parse Historian Trace File:
+    python src/simulation/trace_parser.py historian data/simulation/SCOPt1e1/seq_1/historian/trace.log data/simulation/SCOPt1e1/seq_1/historian/parsed_trace.log --trees --sequences
+3. Parse BAliphy Trace File: 
+    python src/simulation/trace_parser.py baliphy data/simulation/SCOPt1e1/seq_1/baliphy-1/C1.trees data/simulation/SCOPt1e1/seq_1/baliphy-1/cleaned.trees --trees
+4. Run TreeStat2 on Each cleaned tree trace file (save as 'treetrace.log')
+    Parameters: CCD1 RF distance, CCD1 information content (log(p)), Colless tree-imbalance, Tree Length, Tree Topology
+5. Combine/Clean TreeStat Output
+    python src/simulation/clean_treestat.py data/simulation/SCOPt1e1/seq_1/historian/treetrace.log data/simulation/SCOPt1e1/seq_1/historian/parsed_trace.log data/simulation/SCOPt1e1/seq_1/historian/combined_trace.log
+    python src/simulation/clean_treestat.py data/simulation/SCOPt1e1/seq_1/baliphy-1/treetrace.log data/simulation/SCOPt1e1/seq_1/baliphy-1/C1.log data/simulation/SCOPt1e1/seq_1/baliphy-1/combined_trace.log
+6. Compute MCMC Statistics
+    python src/simulation/convergence.py data/simulation/SCOPt1e1/seq_1/historian/combined_trace.log data/simulation/SCOPt1e1/seq_1/historian/mcmcStats
+    python src/simulation/convergence.py data/simulation/SCOPt1e1/seq_1/baliphy-1/combined_trace.log data/simulation/SCOPt1e1/seq_1/baliphy-1/mcmcStats
+7. Compute Output Statistics
+    python src/simulation/comparison.py data/simulation/SCOPt1e1/seq_1/historian/outputStats comparison_results.csv
+    python src/simulation/comparison.py data/simulation/SCOPt1e1/seq_1/baliphy-1/outputStats comparison_results.csv
+
+8. Compile Statistics
+    python src/utils/compile_results.py data/model_gen data/simulation data/results

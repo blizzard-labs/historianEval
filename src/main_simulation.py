@@ -462,7 +462,6 @@ class evolSimulator:
                         if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
                             sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))
         
-        #Experiment String | Sequence Number | Number of Iterations | Wall-Clock Time | Time/Iteration | Burn-in Period | 
         results = []
         
         for seq_folder in sequence_folders:
@@ -485,6 +484,7 @@ def main():
     print('Begun script...')
     if len(sys.argv) < 3:
         print('Usage: python src/simulation/main.py <parameters_file> <tag> [consensus_tree]')
+        print("Example: python src/simulation/main.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1")
     
     
     #Pipeline: generate guide trees --> run indel-seq-gen --> organize output files --> run historian/baliphy on raw sequences --> evaluate results
