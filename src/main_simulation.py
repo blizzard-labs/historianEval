@@ -8,6 +8,7 @@ import subprocess
 import random
 import time
 from Bio import SeqIO
+import concurrent.futures
 
 class evolSimulator:
     def __init__(self, parameters_file, consensus_tree_file="none", tag='none'):
@@ -365,11 +366,8 @@ class evolSimulator:
         
         os.makedirs(os.path.join(sequence_folder, 'historian'), exist_ok=True)
         os.makedirs(os.path.join(sequence_folder, 'baliphy'), exist_ok=True)
-        
-        n_seqs = 0
-        for record in SeqIO.parse(os.path.join(sequence_folder, 'sequences.fasta'), 'fasta'):
-            n_seqs += 1
-        
+
+        n_seqs = sum(1 for _ in SeqIO.parse(os.path.join(sequence_folder, 'sequences.fasta'), 'fasta'))
         key_params, matrix_path = self.configure_historian_control_file(sequence_folder)
 
         #./tools/historian reconstruct -seqs tools/testArena/seq_1/sequences.fasta -mcmc -model data/matrices/lg.json -gamma 5 -shape 1.8572344303576052 -samples 15 -trace tools/testArena/seq_1/historian/trace.log -v5
@@ -407,49 +405,52 @@ class evolSimulator:
             "-S", "lg08 +> f(lg08_freq) +> Rates.gamma(5, alpha=" + str(key_params["gamma_shape"]) + ")",
             '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
-        
-        start = time.time()
-        
-        try:
-            print('Running historian...')
-            print(historian_cmd)
+
+        def run_historian():
+            start = time.time()
             log_path = os.path.join(sequence_folder, 'historian', 'historian.log')
-            with open(log_path, 'w') as log_f:
-                #subprocess.run(historian_cmd, check=True)
-                subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True)
-            
-            os.rename(os.path.join(sequence_folder, 'historian', 'trace.log.1'),
-                    os.path.join(sequence_folder, 'historian', 'trace.log'))
-            
-            print(f'Historian ran successfully on {sequence_folder}')
-            
-        except subprocess.CalledProcessError as e:
-            print(f'Error running historian on {sequence_folder}: {e}')
-        elapsed_h = time.time() - start
-        
-        try:
-            print('Parsing historian trace...')
-            subprocess.run(historian_parser_cmd, check=True)
-            print(f'Historian trace parsed successfully on {sequence_folder}')
-        except subprocess.CalledProcessError as e:
-            print(f'Error parsing historian trace on {sequence_folder}: {e}')
-        
-        
-        
-        start = time.time()
-        try:
-            print('Running baliphy...')
-            print(' '.join(baliphy_cmd))
+            try:
+                with open(log_path, 'w') as log_f:
+                    subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True, timeout=15*60*60)
+                # Rename trace file if needed
+                trace1 = os.path.join(sequence_folder, 'historian', 'trace.log.1')
+                trace = os.path.join(sequence_folder, 'historian', 'trace.log')
+                if os.path.exists(trace1):
+                    os.rename(trace1, trace)
+                print(f'Historian ran successfully on {sequence_folder}')
+            except subprocess.TimeoutExpired:
+                print(f'Historian timed out after 15 hours on {sequence_folder}')
+            except subprocess.CalledProcessError as e:
+                print(f'Error running historian on {sequence_folder}: {e}')
+            elapsed = time.time() - start
+            # Parse historian trace
+            try:
+                subprocess.run(historian_parser_cmd, check=True)
+                print(f'Historian trace parsed successfully on {sequence_folder}')
+            except subprocess.CalledProcessError as e:
+                print(f'Error parsing historian trace on {sequence_folder}: {e}')
+            return elapsed
+
+        def run_baliphy():
+            start = time.time()
             log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
-            with open(log_path, 'w') as log_f:
-                #subprocess.run(baliphy_cmd, check=True)
-                subprocess.run(baliphy_cmd, stdout=log_f, stderr=log_f, check=True)
-            
-            print(f'Baliphy ran successfully on {sequence_folder}')
-            
-        except subprocess.CalledProcessError as e:
-            print(f'Error running Baliphy on {sequence_folder}: {e}')
-        elapsed_b = time.time() - start
+            try:
+                with open(log_path, 'w') as log_f:
+                    subprocess.run(baliphy_cmd, stdout=log_f, stderr=log_f, check=True, timeout=15*60*60)
+                print(f'Baliphy ran successfully on {sequence_folder}')
+            except subprocess.TimeoutExpired:
+                print(f'Baliphy timed out after 15 hours on {sequence_folder}')
+            except subprocess.CalledProcessError as e:
+                print(f'Error running Baliphy on {sequence_folder}: {e}')
+            elapsed = time.time() - start
+            return elapsed
+
+        # Run historian and baliphy in parallel
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_h = executor.submit(run_historian)
+            future_b = executor.submit(run_baliphy)
+            elapsed_h = future_h.result()
+            elapsed_b = future_b.result()
 
         return elapsed_h, elapsed_b
 
@@ -461,22 +462,25 @@ class evolSimulator:
                     for seq_folder in os.listdir(os.path.join('data/simulation', folder)):
                         if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
                             sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))
-        
+
         results = []
-        
-        for seq_folder in sequence_folders:
+
+        def process_seq(seq_folder):
             seq_results = {}
             seq_results['path'] = seq_folder
-            
             seq_results['elapsed_historian'], seq_results['elapsed_baliphy'] = self.runSoftwareSequence(seq_folder)
-            
-            results.append(seq_results)
+            return seq_results
+
+        # Process two sequences at a time
+        with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
+            for seq_result in executor.map(process_seq, sequence_folders):
+                results.append(seq_result)
 
         with open(os.path.join(self.output_folder, 'benchmark_results.csv'), 'w') as f:
             f.write('path,elapsed_historian,elapsed_baliphy\n')
             for res in results:
                 f.write(f"{res['path']},{res['elapsed_historian']},{res['elapsed_baliphy']}\n")
-        
+
         return results
             
 
