@@ -40,6 +40,12 @@ class evolSimulator:
         if not os.path.isdir(self.output_folder):
             os.mkdir(self.output_folder)
     
+    def process_seq(self, seq_folder):
+        seq_results = {}
+        seq_results['path'] = seq_folder
+        seq_results['elapsed_historian'], seq_results['elapsed_baliphy'] = self.runSoftwareSequence(seq_folder)
+        return seq_results
+
     def generate_treetop_with_params(self, max_iterations=1000):
         for idx, row in self.params.iterrows():
             seq_folder = os.path.join(self.output_folder, 'seq_' + str(idx + 1))
@@ -357,7 +363,7 @@ class evolSimulator:
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
-    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=2000):
+    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=100000):
         #Fixed number of iterations
         #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
         #Final Measure: SP, TC, RF, RFL, etc.
@@ -471,10 +477,21 @@ class evolSimulator:
             seq_results['elapsed_historian'], seq_results['elapsed_baliphy'] = self.runSoftwareSequence(seq_folder)
             return seq_results
 
-        # Process two sequences at a time
+        
+        # Process two sequences at a time, with progress monitoring
+        print(f"Starting benchmark for {len(sequence_folders)} sequences...")
         with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
-            for seq_result in executor.map(process_seq, sequence_folders):
-                results.append(seq_result)
+            future_to_seq = {executor.submit(self.process_seq, seq_folder): seq_folder for seq_folder in sequence_folders}
+            completed = 0
+            for future in concurrent.futures.as_completed(future_to_seq):
+                seq_folder = future_to_seq[future]
+                try:
+                    result = future.result()
+                    results.append(result)
+                    completed += 1
+                    print(f"[Progress] Completed {completed}/{len(sequence_folders)}: {seq_folder}")
+                except Exception as exc:
+                    print(f"[Error] Sequence {seq_folder} generated an exception: {exc}")
 
         with open(os.path.join(self.output_folder, 'benchmark_results.csv'), 'w') as f:
             f.write('path,elapsed_historian,elapsed_baliphy\n')
@@ -482,13 +499,14 @@ class evolSimulator:
                 f.write(f"{res['path']},{res['elapsed_historian']},{res['elapsed_baliphy']}\n")
 
         return results
+                
             
 
 def main():
     print('Begun script...')
     if len(sys.argv) < 3:
         print('Usage: python src/simulation/main.py <parameters_file> <tag> [consensus_tree]')
-        print("Example: python src/simulation/main.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1")
+        print("Example: python src/main_simulation.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1")
     
     
     #Pipeline: generate guide trees --> run indel-seq-gen --> organize output files --> run historian/baliphy on raw sequences --> evaluate results

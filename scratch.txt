@@ -111,7 +111,7 @@ POSSIBLE IMPROVEMENTS -------
 
 Evaluation Procedure--------
 1. Run Historian/BAliphy on Dataset: 
-    python src/simulation/main.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1
+    python src/main_simulation.py data/model_gen/SCOPtype1/experiment1_parameters.csv SCOPt1e1
 2. Parse Historian Trace File:
     python src/simulation/trace_parser.py historian data/simulation/SCOPt1e1/seq_1/historian/trace.log data/simulation/SCOPt1e1/seq_1/historian/parsed_trace.log --trees --sequences
 3. Parse BAliphy Trace File: 
