@@ -363,7 +363,7 @@ class evolSimulator:
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
-    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=100000):
+    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=100000, timeout_hours=0.0833333, conda_env="phylo"):
         #Fixed number of iterations
         #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
         #Final Measure: SP, TC, RF, RFL, etc.
@@ -394,15 +394,18 @@ class evolSimulator:
         #python historian_parser.py trace5.log parsed_trace.log --trees
         historian_parser_cmd = [
             "python",
-            "src/simulation/historian_parser.py",
+            "src/simulation/trace_parser.py",
             os.path.join(sequence_folder, 'historian/trace.log'),
             os.path.join(sequence_folder, 'historian/parsed_trace.log'),
-            "--trees"
+            "--trees",
+            "--sequences"
         ]
                 
         # bali-phy tools/testArena/seq_3/sequences.fasta -A Amino-Acids -n tools/testArena/seq_3/baliphy -S 'lg08 +> Rates.gamma(5,alpha=1.515285985794507) ' -I "rs07(rate=0.22083670052,mean_length=3.54825557248)"
         #Currently not including invariant sites to maintain consistency with historian
         baliphy_cmd = [
+            #"conda run",
+            #"-n", conda_env,
             "bali-phy",
             os.path.join(sequence_folder, "sequences.fasta"),
             "-A", "Amino-Acids",
@@ -412,12 +415,15 @@ class evolSimulator:
             '-I', 'rs07(rate=' + str(key_params['indelrate'] * 2) + ', mean_length=' + str(key_params['avg_length']) + ')'
         ]
 
+        print('|\t [COMMAND]' + ' '.join(historian_cmd))
+        print('|\t [COMMAND]'+ ' '.join(baliphy_cmd))
+        
         def run_historian():
             start = time.time()
             log_path = os.path.join(sequence_folder, 'historian', 'historian.log')
             try:
                 with open(log_path, 'w') as log_f:
-                    subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True, timeout=15*60*60)
+                    subprocess.run(historian_cmd, stdout=log_f, stderr=log_f, check=True, timeout=timeout_hours*60*60)
                 # Rename trace file if needed
                 trace1 = os.path.join(sequence_folder, 'historian', 'trace.log.1')
                 trace = os.path.join(sequence_folder, 'historian', 'trace.log')
@@ -425,7 +431,7 @@ class evolSimulator:
                     os.rename(trace1, trace)
                 print(f'Historian ran successfully on {sequence_folder}')
             except subprocess.TimeoutExpired:
-                print(f'Historian timed out after 15 hours on {sequence_folder}')
+                print(f'Historian timed out after {timeout_hours} hours on {sequence_folder}')
             except subprocess.CalledProcessError as e:
                 print(f'Error running historian on {sequence_folder}: {e}')
             elapsed = time.time() - start
@@ -442,10 +448,10 @@ class evolSimulator:
             log_path = os.path.join(sequence_folder, 'baliphy', 'baliphy.log')
             try:
                 with open(log_path, 'w') as log_f:
-                    subprocess.run(baliphy_cmd, stdout=log_f, stderr=log_f, check=True, timeout=15*60*60)
+                    subprocess.run(baliphy_cmd, stdout=log_f, stderr=log_f, check=True, timeout=timeout_hours*60*60)
                 print(f'Baliphy ran successfully on {sequence_folder}')
             except subprocess.TimeoutExpired:
-                print(f'Baliphy timed out after 15 hours on {sequence_folder}')
+                print(f'Baliphy timed out after {timeout_hours} hours on {sequence_folder}')
             except subprocess.CalledProcessError as e:
                 print(f'Error running Baliphy on {sequence_folder}: {e}')
             elapsed = time.time() - start
