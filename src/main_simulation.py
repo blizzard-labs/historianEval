@@ -363,7 +363,7 @@ class evolSimulator:
         
         return key_params, os.path.join(sequence_folder, 'historian', 'lg.json')
         
-    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=100000, timeout_hours=0.0833333, conda_env="phylo"):
+    def runSoftwareSequence(self, sequence_folder, iter_cap_per_seq=100000, timeout_hours=2, conda_env="phylo"):
         #Fixed number of iterations
         #Running Measure: total wall-clock, avg. time/iteration, convergence/iteration
         #Final Measure: SP, TC, RF, RFL, etc.
@@ -463,6 +463,7 @@ class evolSimulator:
             future_b = executor.submit(run_baliphy)
             elapsed_h = future_h.result()
             elapsed_b = future_b.result()
+            #elapsed_b = 0 # For testing without bali-phy 
 
         return elapsed_h, elapsed_b
 
@@ -470,7 +471,7 @@ class evolSimulator:
     def runBenchmark(self, sequence_folders=[]):
         if len(sequence_folders) == 0:
             for folder in os.listdir('data/simulation'):
-                if folder.endswith('e1'):
+                if folder.endswith('e2'): #! Restricting to Experiment 2
                     for seq_folder in os.listdir(os.path.join('data/simulation', folder)):
                         if os.path.isdir(os.path.join('data/simulation', folder, seq_folder)):
                             sequence_folders.append(os.path.join('data/simulation', folder, seq_folder))

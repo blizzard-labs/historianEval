@@ -6,6 +6,7 @@ def compile_results(model_gen_dir, simulation_dir, results_dir):
     """
     Compiles results from model generation and simulation into CSV files.
     """
+    
     historian_data = []
     baliphy_data = []
 
@@ -15,6 +16,7 @@ def compile_results(model_gen_dir, simulation_dir, results_dir):
         print(f"Benchmark file not found at {benchmark_file}")
         return
     benchmark_df = pd.read_csv(benchmark_file)
+    
     
     # Process benchmark data to extract scop_type, experiment, and seq_id
     def extract_info(path):
